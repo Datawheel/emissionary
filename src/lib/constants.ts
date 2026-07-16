@@ -4,15 +4,21 @@
  * for gaseous fuels — see data/SOURCES.md for the methodology statement.
  */
 
-/** gCO2 per kWh of thermal energy, direct combustion (country-invariant). */
+/**
+ * gCO2 per kWh of thermal energy, direct combustion (country-invariant).
+ * DESNZ 2025 conversion factors, CO2-only component, GROSS calorific value
+ * basis — the basis on which gas is metered and on which US DOE appliance
+ * efficiencies are measured, so task-model efficiencies pair consistently.
+ * (Net-CV equivalents: natural gas 202.3, LPG 230.0 gCO2/kWh.)
+ */
 export const FUEL_GCO2_PER_KWH_THERMAL: Record<'natural_gas' | 'lpg', number> = {
-  natural_gas: 202,
-  lpg: 227,
+  natural_gas: 182.59,
+  lpg: 214.19,
 };
 
-/** kgCO2 per liter, 100% mineral fuel, tailpipe only. */
-export const PETROL_KGCO2_PER_L = 2.31;
-export const DIESEL_KGCO2_PER_L = 2.68;
+/** kgCO2 per liter, 100% mineral fuel, tailpipe CO2 only (DESNZ 2025). */
+export const PETROL_KGCO2_PER_L = 2.32567;
+export const DIESEL_KGCO2_PER_L = 2.62818;
 
 /**
  * Useful energy to heat 1 L of water from 20 °C to 100 °C:
