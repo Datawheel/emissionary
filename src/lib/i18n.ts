@@ -66,6 +66,10 @@ const STRINGS = {
     en: 'In {clean} this is {ratio}× cleaner than in {dirty}.',
     es: 'En {clean} esto es {ratio}× más limpio que en {dirty}.',
   },
+  same_everywhere: {
+    en: 'This comparison is the same in every country — both sides run on the same energy source, so the grid cancels out.',
+    es: 'Esta comparación es igual en todos los países: ambos lados usan la misma fuente de energía, así que la red se cancela.',
+  },
   takeaway_more: {
     en: 'In {clean}, the same CO₂ gets you {ratio}× more than in {dirty}.',
     es: 'En {clean}, el mismo CO₂ te da {ratio}× más que en {dirty}.',

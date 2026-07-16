@@ -24,6 +24,25 @@ export default function ConversionTable({
   const span = Math.max(maxLog - minLog, 0.01);
   const shown = expanded ? rows : rows.slice(0, 9);
 
+  // same-carrier pairs: the grid cancels — teach that instead of showing 9 identical rows
+  if (maxLog - minLog < 0.02) {
+    return (
+      <section className="card">
+        <h2 style={{ fontSize: '1rem', marginBottom: 8 }}>{t('around_the_world', lang)}</h2>
+        {note && (
+          <p className="takeaway" style={{ marginBottom: 8 }}>
+            {t(note.kind === 'a_cleaner' ? 'takeaway_cleaner' : 'takeaway_more', lang, {
+              clean: note.clean,
+              dirty: note.dirty,
+              ratio: note.ratio,
+            })}
+          </p>
+        )}
+        <p className="muted">{t('same_everywhere', lang)}</p>
+      </section>
+    );
+  }
+
   return (
     <section className="card">
       <h2 style={{ fontSize: '1rem', marginBottom: 8 }}>{t('around_the_world', lang)}</h2>
