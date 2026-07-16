@@ -138,7 +138,7 @@ export default function GameClient({
     <main className="screen">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span className="muted">
-          {t('free_play', lang)} · {flag} · {totals ? `${totals.rounds_played} ${t('rounds_played', lang).toLowerCase()}` : ''}
+          {t('free_play', lang)} · {flag} · #{(totals?.rounds_played ?? 0) + 1}
         </span>
         <span className="score-pill">{sessionScore}</span>
       </div>
