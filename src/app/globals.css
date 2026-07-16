@@ -81,11 +81,15 @@ a {
 }
 
 .header-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   min-height: 36px;
   padding: 4px 10px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.1);
   font-size: 0.85rem;
+  text-decoration: none;
 }
 
 main.screen {
