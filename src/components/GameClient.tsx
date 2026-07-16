@@ -12,6 +12,7 @@ import { formatCO2 } from '@/lib/format';
 import LogSlider from './LogSlider';
 import RevealPanel, { qtyLabel } from './RevealPanel';
 import CountryPicker, { type CountryOption } from './CountryPicker';
+import NamePrompt, { namePromptDismissed } from './NamePrompt';
 
 type Phase = 'country' | 'loading' | 'guess' | 'reveal' | 'error';
 
@@ -20,15 +21,19 @@ export default function GameClient({
   suggested,
   hasPlayer,
   playerCountry,
+  isAnonymous = true,
   lang,
 }: {
   countries: CountryOption[];
   suggested: string;
   hasPlayer: boolean;
   playerCountry: string | null;
+  isAnonymous?: boolean;
   lang: Lang;
 }) {
   const [phase, setPhase] = useState<Phase>(hasPlayer ? 'loading' : 'country');
+  const [showNamePrompt, setShowNamePrompt] = useState(false);
+  const [named, setNamed] = useState(!isAnonymous);
   const [round, setRound] = useState<ClientRound | null>(null);
   const [totals, setTotals] = useState<FreeplayTotals | null>(null);
   const [reveal, setReveal] = useState<GuessResponse | null>(null);
@@ -95,6 +100,10 @@ export default function GameClient({
       setTotals(data.totals);
       setSessionScore((s) => s + data.score);
       setPhase('reveal');
+      // identity prompt after the 3rd Free Play round (spec §10), once, dismissible
+      if (!named && data.totals.rounds_played >= 3 && !namePromptDismissed()) {
+        setShowNamePrompt(true);
+      }
     } catch {
       setPhase('error');
     }
@@ -213,6 +222,16 @@ export default function GameClient({
             <RevealPanel data={reveal} itemA={round.item_a} itemB={round.item_b} lang={lang} />
           )}
         </>
+      )}
+
+      {showNamePrompt && (
+        <NamePrompt
+          lang={lang}
+          onDone={(n) => {
+            setShowNamePrompt(false);
+            if (n) setNamed(true);
+          }}
+        />
       )}
 
       <div className="bottom-bar">

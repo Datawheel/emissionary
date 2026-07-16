@@ -8,11 +8,12 @@ export default async function Home({
   searchParams: Promise<{ lang?: string }>;
 }) {
   const lang = pickLang((await searchParams).lang);
+  const q = `?lang=${lang}`;
   return (
     <>
       <AppHeader lang={lang} />
-      <main className="screen" style={{ paddingTop: 40, gap: 20, textAlign: 'center' }}>
-        <div style={{ fontSize: '3.4rem' }} aria-hidden="true">
+      <main className="screen" style={{ paddingTop: 32, gap: 16, textAlign: 'center' }}>
+        <div style={{ fontSize: '3.2rem' }} aria-hidden="true">
           💨🌍
         </div>
         <h1 style={{ fontSize: '1.9rem', letterSpacing: '-0.01em' }}>
@@ -22,13 +23,33 @@ export default async function Home({
           {t('tagline', lang)}
         </p>
         <Link
-          href={`/play?lang=${lang}`}
+          href={`/daily${q}`}
           className="card"
-          style={{ fontWeight: 800, fontSize: '1.15rem', textDecoration: 'none', padding: '18px' }}
+          style={{ fontWeight: 800, fontSize: '1.15rem', textDecoration: 'none', padding: 18, background: 'var(--ink)', color: 'var(--paper)' }}
         >
-          ▶ {t('free_play', lang)}
+          📅 {t('daily_game', lang)}
         </Link>
-        <p className="muted">{t('daily_game', lang)} — soon</p>
+        <Link
+          href={`/play${q}`}
+          className="card"
+          style={{ fontWeight: 800, fontSize: '1.15rem', textDecoration: 'none', padding: 18 }}
+        >
+          ♾️ {t('free_play', lang)}
+        </Link>
+        <Link href={`/leaderboard${q}`} className="muted" style={{ padding: 8 }}>
+          🏆 {t('leaderboard', lang)}
+        </Link>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 16 }}>
+          <Link href={`/about${q}`} className="muted">
+            {t('about', lang)}
+          </Link>
+          <Link href={`/stats${q}`} className="muted">
+            {t('stats', lang)}
+          </Link>
+          <Link href={lang === 'en' ? '/?lang=es' : '/?lang=en'} className="muted">
+            {lang === 'en' ? 'Español' : 'English'}
+          </Link>
+        </div>
       </main>
     </>
   );
