@@ -196,7 +196,18 @@ export async function submitGuess(
   const items = loadItems();
   const itemA = items.find((i) => i.id === round.item_a)!;
   const itemB = items.find((i) => i.id === round.item_b)!;
-  const cf = getCountry(player.country);
+  // daily rounds: country locks at the first guess and a 2 h session window applies (spec §5, §12)
+  let guessCountry = player.country;
+  if (round.set_date != null) {
+    const { dailyGuessContext, SessionExpiredError } = await import('./daily-service');
+    try {
+      guessCountry = (await dailyGuessContext(player, round)).country;
+    } catch (err) {
+      if (err instanceof SessionExpiredError) throw new GuessError(403, 'daily session expired');
+      throw err;
+    }
+  }
+  const cf = getCountry(guessCountry);
   const factors = loadCountryFactors();
   const qtyA = Number(round.qty_a);
   const ms = Math.max(0, Math.min(input.ms_elapsed ?? 0, 7_200_000));
@@ -229,7 +240,7 @@ export async function submitGuess(
     `INSERT INTO guesses (id, player_id, round_id, country, guess, choice, truth, signed_log_error, score, ms_elapsed)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
      ON CONFLICT (player_id, round_id) DO NOTHING`,
-    [randomUUID(), player.id, roundId, player.country, guessValue, choiceValue, truth, sle, scoreValue, ms],
+    [randomUUID(), player.id, roundId, guessCountry, guessValue, choiceValue, truth, sle, scoreValue, ms],
   );
 
   // idempotency: the stored guess wins on replays (spec §12)

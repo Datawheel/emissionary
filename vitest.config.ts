@@ -10,5 +10,7 @@ export default defineConfig({
   test: {
     include: ['tests/**/*.test.ts'],
     exclude: ['node_modules', '.next', 'tests/e2e/**'],
+    // API test files share one test database — run files sequentially
+    fileParallelism: false,
   },
 });
