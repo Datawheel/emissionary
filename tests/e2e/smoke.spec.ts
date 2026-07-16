@@ -76,8 +76,28 @@ test('daily game completes and shows share card and countdown', async ({ page, c
     await page.getByRole('button', { name: /next round|siguiente/i }).click();
   }
 
-  // completion screen: share text + countdown; identity prompt for anonymous player (spec §10)
+  // completion screen: share text + countdown (no identity prompt mid-game)
   await expect(page.locator('pre').filter({ hasText: /Emissionary #/ })).toBeVisible({ timeout: 15_000 });
   await expect(page.getByText(/next daily game in|próximo juego/i)).toBeVisible();
-  await expect(page.getByRole('dialog')).toBeVisible(); // name prompt after first completed daily
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+
+  // the identity prompt lives on the leaderboard instead
+  await page.goto('/leaderboard');
+  await expect(page.getByRole('dialog')).toBeVisible({ timeout: 15_000 });
+});
+
+test('quant submit is disabled until the slider is touched (anti center-click)', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.goto('/play');
+  await page.getByTestId('confirm-country').click();
+  const slider = page.locator('input.log-slider');
+  const binaryCard = page.locator('.binary-choice button').first();
+  await expect(slider.or(binaryCard)).toBeVisible({ timeout: 15_000 });
+  if (await slider.isVisible()) {
+    const submit = page.getByRole('button', { name: /lock in|confirmar/i });
+    await expect(submit).toBeDisabled();
+    await slider.focus();
+    await page.keyboard.press('ArrowLeft');
+    await expect(submit).toBeEnabled();
+  }
 });

@@ -13,12 +13,17 @@ export function L(text: Localized, lang: Lang): string {
 /** UI string catalog. Every user-facing string in the app lives here (design §M4). */
 const STRINGS = {
   app_name: { en: 'Emissionary', es: 'Emissionary' },
-  tagline: { en: 'Spread the word about emissions.', es: 'Difunde la palabra sobre las emisiones.' },
+  tagline: { en: 'How good is your carbon intuition?', es: '¿Qué tan buena es tu intuición sobre el CO₂?' },
+  subtitle: {
+    en: 'Test your knowledge of everyday emissions — one comparison at a time.',
+    es: 'Pon a prueba lo que sabes de las emisiones cotidianas, comparación a comparación.',
+  },
   play: { en: 'Play', es: 'Jugar' },
   daily_game: { en: 'Daily Game', es: 'Juego diario' },
   free_play: { en: 'Free Play', es: 'Juego libre' },
   leaderboard: { en: 'Leaderboard', es: 'Clasificación' },
   submit_guess: { en: 'Lock in my guess', es: 'Confirmar mi respuesta' },
+  move_slider_hint: { en: 'Slide to guess', es: 'Desliza para responder' },
   next_round: { en: 'Next round', es: 'Siguiente ronda' },
   which_emits_more: { en: 'Which emits more CO₂?', es: '¿Cuál emite más CO₂?' },
   equals_question: { en: 'emits the same CO₂ as…', es: 'emite el mismo CO₂ que…' },
@@ -28,7 +33,11 @@ const STRINGS = {
   points: { en: 'points', es: 'puntos' },
   total: { en: 'Total', es: 'Total' },
   how_computed: { en: 'How we computed this', es: 'Cómo lo calculamos' },
-  around_the_world: { en: 'The same comparison around the world', es: 'La misma comparación en el mundo' },
+  around_the_world: { en: 'Around the world', es: 'En el mundo' },
+  conversion_context: {
+    en: '{clue} is worth this much {item} in each country:',
+    es: '{clue} equivale a esto de {item} en cada país:',
+  },
   see_all_countries: { en: 'See all countries', es: 'Ver todos los países' },
   type_instead: { en: 'type instead', es: 'escribir en su lugar' },
   choose_country: { en: 'Choose your country', es: 'Elige tu país' },
@@ -63,16 +72,16 @@ const STRINGS = {
   already_played_daily: { en: 'You already played today’s game', es: 'Ya jugaste el juego de hoy' },
   results: { en: 'Results', es: 'Resultados' },
   takeaway_cleaner: {
-    en: 'In {clean} this is {ratio}× cleaner than in {dirty}.',
-    es: 'En {clean} esto es {ratio}× más limpio que en {dirty}.',
+    en: 'In {clean}, {clue} emits {ratio}× less CO₂ than in {dirty}.',
+    es: 'En {clean}, {clue} emite {ratio}× menos CO₂ que en {dirty}.',
   },
   same_everywhere: {
-    en: 'This comparison is the same in every country — both sides run on the same energy source, so the grid cancels out.',
-    es: 'Esta comparación es igual en todos los países: ambos lados usan la misma fuente de energía, así que la red se cancela.',
+    en: '{clue} equals the same amount of {item} in every country — both run on the same energy source, so the electricity mix cancels out.',
+    es: '{clue} equivale a la misma cantidad de {item} en todos los países: ambos usan la misma fuente de energía, así que la mezcla eléctrica se cancela.',
   },
   takeaway_more: {
-    en: 'In {clean}, the same CO₂ gets you {ratio}× more than in {dirty}.',
-    es: 'En {clean}, el mismo CO₂ te da {ratio}× más que en {dirty}.',
+    en: 'In {clean}, the CO₂ of {clue} buys you {ratio}× more {item} than in {dirty}.',
+    es: 'En {clean}, el CO₂ de {clue} te da {ratio}× más de {item} que en {dirty}.',
   },
   equivalent_to: { en: 'That’s about', es: 'Eso es aproximadamente' },
 } satisfies Record<string, Localized>;

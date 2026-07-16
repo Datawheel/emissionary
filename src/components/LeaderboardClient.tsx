@@ -5,16 +5,24 @@ import type { LeaderboardPage } from '@/lib/leaderboard';
 import type { Lang } from '@/lib/types';
 import { t } from '@/lib/i18n';
 import type { CountryOption } from './CountryPicker';
+import NamePrompt, { namePromptDismissed } from './NamePrompt';
 
 type Scope = 'daily' | 'weekly' | 'alltime';
 
 export default function LeaderboardClient({
   countries,
   lang,
+  canClaimName = false,
 }: {
   countries: CountryOption[];
   lang: Lang;
+  canClaimName?: boolean;
 }) {
+  const [showNamePrompt, setShowNamePrompt] = useState(false);
+  useEffect(() => {
+    // set after mount — localStorage is client-only (avoids hydration mismatch)
+    if (canClaimName && !namePromptDismissed()) setShowNamePrompt(true);
+  }, [canClaimName]);
   const [scope, setScope] = useState<Scope>('daily');
   const [country, setCountry] = useState<string>('');
   const [page, setPage] = useState<LeaderboardPage | null>(null);
@@ -45,6 +53,15 @@ export default function LeaderboardClient({
   return (
     <main className="screen">
       <h1 style={{ fontSize: '1.3rem' }}>{t('leaderboard', lang)}</h1>
+      {showNamePrompt && (
+        <NamePrompt
+          lang={lang}
+          onDone={(claimed) => {
+            setShowNamePrompt(false);
+            if (claimed) void load(scope, country, offset);
+          }}
+        />
+      )}
       <div style={{ display: 'flex', gap: 6 }} role="tablist">
         {scopes.map((s) => (
           <button

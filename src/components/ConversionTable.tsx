@@ -10,11 +10,14 @@ import { formatQty } from '@/lib/format';
 export default function ConversionTable({
   rows,
   note,
+  clue,
   itemB,
   lang,
 }: {
   rows: ConversionRow[];
   note: Takeaway | null;
+  /** the concrete anchor, e.g. "10 km of Petrol car" */
+  clue: string;
   itemB: ClientItem;
   lang: Lang;
 }) {
@@ -23,38 +26,40 @@ export default function ConversionTable({
   const minLog = Math.min(...rows.map((r) => Math.log10(r.qtyB)));
   const span = Math.max(maxLog - minLog, 0.01);
   const shown = expanded ? rows : rows.slice(0, 9);
+  // prose-friendly name: lowercase, parenthetical qualifiers stripped
+  const itemBName = L(itemB.name, lang).toLowerCase().replace(/\s*\([^)]*\)/g, '');
 
-  // same-carrier pairs: the grid cancels — teach that instead of showing 9 identical rows
+  const noteText = note
+    ? t(note.kind === 'a_cleaner' ? 'takeaway_cleaner' : 'takeaway_more', lang, {
+        clean: note.clean,
+        dirty: note.dirty,
+        ratio: note.ratio,
+        clue,
+        item: itemBName,
+      })
+    : null;
+
+  // same-carrier pairs: the electricity mix cancels — teach that instead of 9 identical rows
   if (maxLog - minLog < 0.02) {
     return (
       <section className="card">
         <h2 style={{ fontSize: '1rem', marginBottom: 8 }}>{t('around_the_world', lang)}</h2>
-        {note && (
+        {noteText && (
           <p className="takeaway" style={{ marginBottom: 8 }}>
-            {t(note.kind === 'a_cleaner' ? 'takeaway_cleaner' : 'takeaway_more', lang, {
-              clean: note.clean,
-              dirty: note.dirty,
-              ratio: note.ratio,
-            })}
+            {noteText}
           </p>
         )}
-        <p className="muted">{t('same_everywhere', lang)}</p>
+        <p className="muted">{t('same_everywhere', lang, { clue, item: itemBName })}</p>
       </section>
     );
   }
 
   return (
     <section className="card">
-      <h2 style={{ fontSize: '1rem', marginBottom: 8 }}>{t('around_the_world', lang)}</h2>
-      {note && (
-        <p className="takeaway" style={{ marginBottom: 8 }}>
-          {t(note.kind === 'a_cleaner' ? 'takeaway_cleaner' : 'takeaway_more', lang, {
-            clean: note.clean,
-            dirty: note.dirty,
-            ratio: note.ratio,
-          })}
-        </p>
-      )}
+      <h2 style={{ fontSize: '1rem', marginBottom: 4 }}>{t('around_the_world', lang)}</h2>
+      <p className="muted" style={{ marginBottom: 8 }}>
+        {t('conversion_context', lang, { clue, item: itemBName })}
+      </p>
       <div role="table" aria-label={t('around_the_world', lang)}>
         {shown.map((row) => (
           <div key={row.iso3} className={`conversion-row${row.isPlayer ? ' own' : ''}`} role="row">
@@ -74,6 +79,7 @@ export default function ConversionTable({
           {t('see_all_countries', lang)} ↓
         </button>
       )}
+      {noteText && <p className="takeaway" style={{ marginTop: 10 }}>{noteText}</p>}
     </section>
   );
 }

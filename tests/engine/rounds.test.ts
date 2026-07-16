@@ -54,19 +54,44 @@ describe('sliderBounds', () => {
     for (const truth of [0.5, 3, 47, 1200]) {
       const { min, max } = sliderBounds(truth, rng);
       expect(max / min).toBeGreaterThanOrEqual(100);
-      expect(truth / min).toBeGreaterThanOrEqual(10 * 0.999);
-      expect(max / truth).toBeGreaterThanOrEqual(10 * 0.999);
+      expect(truth / min).toBeGreaterThanOrEqual(10 * 0.98);
+      expect(max / truth).toBeGreaterThanOrEqual(10 * 0.98);
     }
   });
 
-  it('does not always center the truth (anti-cheat)', () => {
+  it('always displaces the truth from the slider center (anti "guess the middle")', () => {
     const rng = seededRng('anticenter');
-    const positions = Array.from({ length: 20 }, () => {
+    const offsets: number[] = [];
+    for (let i = 0; i < 200; i++) {
       const { min, max } = sliderBounds(100, rng);
-      return logPosition(100, min, max);
-    });
-    const spread = Math.max(...positions) - Math.min(...positions);
-    expect(spread).toBeGreaterThan(0.1);
+      const center = Math.sqrt(min * max);
+      offsets.push(Math.abs(Math.log10(100 / center)));
+    }
+    // every round: center is ≥ ~0.25 decades from truth (≈ 1.8×), so a
+    // center-click cannot reliably score well
+    expect(Math.min(...offsets)).toBeGreaterThan(0.25);
+    expect(Math.max(...offsets)).toBeLessThan(0.9);
+    // both sides occur
+    const sides = new Set(
+      Array.from({ length: 50 }, () => {
+        const { min, max } = sliderBounds(100, rng);
+        return Math.sqrt(min * max) > 100;
+      }),
+    );
+    expect(sides.size).toBe(2);
+  });
+
+  it('caps the average score of a center-click strategy', () => {
+    const rng = seededRng('centerclick');
+    let total = 0;
+    const N = 300;
+    for (let i = 0; i < N; i++) {
+      const { min, max } = sliderBounds(100, rng);
+      const center = Math.sqrt(min * max);
+      const e = Math.abs(Math.log10(center / 100));
+      total += Math.max(0, Math.round((100 * (1 - e)) / (1 - Math.log10(1.1))));
+    }
+    expect(total / N).toBeLessThan(60);
   });
 });
 

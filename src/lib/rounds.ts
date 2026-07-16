@@ -41,29 +41,27 @@ export function seededRng(seed: string): () => number {
   };
 }
 
-/** Snap a value to the nearest "clean" 1/2/5 × 10^n at or beyond it. */
+/** Round outward to 2 significant figures (keeps labels clean without moving the center). */
 function snapDown(v: number): number {
-  const mag = 10 ** Math.floor(Math.log10(v));
-  for (const m of [5, 2, 1]) if (m * mag <= v) return m * mag;
-  return mag / 2;
+  const mag = 10 ** (Math.floor(Math.log10(v)) - 1);
+  return Math.floor(v / mag) * mag;
 }
 function snapUp(v: number): number {
-  const mag = 10 ** Math.floor(Math.log10(v));
-  for (const m of [1, 2, 5]) if (m * mag >= v) return m * mag;
-  return mag * 10;
+  const mag = 10 ** (Math.floor(Math.log10(v)) - 1);
+  return Math.ceil(v / mag) * mag;
 }
 
 /**
- * Log slider bounds: at least 10× from truth on each side, with a seeded
- * random extra stretch on each side so the truth's position on the slider
- * varies round to round (a centered truth would be guessable).
+ * Log slider bounds: at least 10× from truth on each side, AND the truth is
+ * guaranteed to sit 0.3–0.8 decades away from the slider's center (random
+ * side) — otherwise "always guess the middle" would be a winning strategy.
  */
 export function sliderBounds(truth: number, rng: () => number = Math.random): { min: number; max: number } {
-  const below = 1 + rng() * 0.7;
-  const above = 1 + rng() * 0.7;
+  const offset = (0.3 + rng() * 0.5) * (rng() < 0.5 ? -1 : 1); // decades, center relative to truth
+  const halfWidth = 1 + Math.abs(offset) + rng() * 0.3; // ≥10× beyond truth on the near side
   return {
-    min: snapDown(truth / 10 ** below),
-    max: snapUp(truth * 10 ** above),
+    min: snapDown(truth * 10 ** (offset - halfWidth)),
+    max: snapUp(truth * 10 ** (offset + halfWidth)),
   };
 }
 

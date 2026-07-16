@@ -25,7 +25,6 @@ export default async function DailyPage({
         suggested={suggestCountry(accept, factors)}
         hasPlayer={player != null}
         playerCountry={player?.country ?? null}
-        isAnonymous={player?.name == null}
         lang={lang}
       />
     </>

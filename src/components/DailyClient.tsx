@@ -4,12 +4,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ClientRound, GuessResponse } from '@/lib/api-types';
 import type { DailyProgress } from '@/lib/daily-service';
 import type { Lang } from '@/lib/types';
-import { L, t } from '@/lib/i18n';
-import { formatCO2 } from '@/lib/format';
-import LogSlider from './LogSlider';
-import RevealPanel, { qtyLabel } from './RevealPanel';
+import { t } from '@/lib/i18n';
+import RoundView from './RoundView';
 import CountryPicker, { type CountryOption } from './CountryPicker';
-import NamePrompt, { namePromptDismissed } from './NamePrompt';
 import ShareCard from './ShareCard';
 
 type Phase = 'country' | 'loading' | 'guess' | 'reveal' | 'done' | 'error';
@@ -21,14 +18,12 @@ export default function DailyClient({
   suggested,
   hasPlayer,
   playerCountry,
-  isAnonymous,
   lang,
 }: {
   countries: CountryOption[];
   suggested: string;
   hasPlayer: boolean;
   playerCountry: string | null;
-  isAnonymous: boolean;
   lang: Lang;
 }) {
   const [phase, setPhase] = useState<Phase>(hasPlayer ? 'loading' : 'country');
@@ -36,8 +31,6 @@ export default function DailyClient({
   const [reveal, setReveal] = useState<GuessResponse | null>(null);
   const [guess, setGuess] = useState<number | null>(null);
   const [country, setCountry] = useState<string | null>(playerCountry);
-  const [showNamePrompt, setShowNamePrompt] = useState(false);
-  const [named, setNamed] = useState(!isAnonymous);
   const [top, setTop] = useState<{ rank: number; name: string; flag: string; score: number; is_you: boolean }[]>([]);
   const startedAt = useRef(Date.now());
 
@@ -54,7 +47,6 @@ export default function DailyClient({
       setProgress(data);
       if (data.completed) {
         setPhase('done');
-        if (!named && !namePromptDismissed()) setShowNamePrompt(true);
         const lb = await fetch('/api/leaderboard?scope=daily');
         if (lb.ok) {
           const page = (await lb.json()) as { rows: typeof top };
@@ -68,7 +60,7 @@ export default function DailyClient({
     } catch {
       setPhase('error');
     }
-  }, [named]);
+  }, []);
 
   useEffect(() => {
     if (hasPlayer) void load();
@@ -135,19 +127,8 @@ export default function DailyClient({
             {progress.total}
             <span className="unit">/ {MAX_TOTAL}</span>
           </div>
-          {progress.percentile != null && (
-            <p className="muted">{t('percentile', lang, { pct: progress.percentile })}</p>
-          )}
+          {progress.percentile != null && <p className="muted">{t('percentile', lang, { pct: progress.percentile })}</p>}
         </div>
-        {showNamePrompt && (
-          <NamePrompt
-            lang={lang}
-            onDone={(n) => {
-              setShowNamePrompt(false);
-              if (n) setNamed(true);
-            }}
-          />
-        )}
         <ShareCard
           dayNo={progress.day_number}
           flag={flag}
@@ -158,7 +139,9 @@ export default function DailyClient({
         <Countdown seconds={progress.seconds_to_next} lang={lang} />
         {top.length > 0 && (
           <section className="card">
-            <h2 style={{ fontSize: '1rem', marginBottom: 6 }}>{t('leaderboard', lang)} · {t('today', lang)}</h2>
+            <h2 style={{ fontSize: '1rem', marginBottom: 6 }}>
+              {t('leaderboard', lang)} · {t('today', lang)}
+            </h2>
             {top.map((r) => (
               <div key={r.rank + r.name} className={`conversion-row${r.is_you ? ' own' : ''}`}>
                 <span className="muted">#{r.rank}</span>
@@ -168,6 +151,9 @@ export default function DailyClient({
                 <span className="value">{r.score}</span>
               </div>
             ))}
+            <a href={`/leaderboard?lang=${lang}`} className="muted" style={{ display: 'block', padding: 10 }}>
+              {t('leaderboard', lang)} →
+            </a>
           </section>
         )}
       </main>
@@ -177,7 +163,6 @@ export default function DailyClient({
   // ——— play ———
   const round = progress.rounds[progress.next_index ?? 0];
   const isBinary = round.round_type === 'binary';
-  const initialGuess = isBinary ? 0 : Math.sqrt(round.slider_min! * round.slider_max!);
   const roundLabel = `${(progress.next_index ?? 0) + 1} ${t('of', lang)} 5`;
 
   return (
@@ -189,89 +174,20 @@ export default function DailyClient({
         <span className="score-pill">{progress.total + (reveal?.score ?? 0)}</span>
       </div>
 
-      {isBinary ? (
-        <>
-          <p style={{ fontWeight: 700, fontSize: '1.1rem' }}>{t('which_emits_more', lang)}</p>
-          <div className="binary-choice">
-            {(['a', 'b'] as const).map((side) => {
-              const item = side === 'a' ? round.item_a : round.item_b;
-              const qty = side === 'a' ? round.qty_a : round.qty_b!;
-              return (
-                <button
-                  key={side}
-                  className="card item-card"
-                  aria-pressed={reveal?.choice === side}
-                  disabled={phase === 'reveal'}
-                  onClick={() => void submit(round, { choice: side })}
-                >
-                  <div className="emoji" aria-hidden="true">
-                    {item.emoji}
-                  </div>
-                  <div>
-                    <div className="qty">{qtyLabel(qty, item, lang)}</div>
-                    <div className="name">{L(item.name, lang)}</div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-          {phase === 'reveal' && reveal && (
-            <section className="card" aria-live="polite">
-              <span className={`score-pill ${reveal.correct ? 'good' : 'bad'}`}>
-                {reveal.correct ? '✓' : '✗'} +{reveal.score} {t('points', lang)}
-              </span>
-              <p className="muted" style={{ marginTop: 8 }}>
-                {round.item_a.emoji} {formatCO2(reveal.grams_a!, lang)} · {round.item_b.emoji}{' '}
-                {formatCO2(reveal.grams_b!, lang)}
-              </p>
-            </section>
-          )}
-        </>
-      ) : (
-        <>
-          <div className="card item-card">
-            <div className="emoji" aria-hidden="true">
-              {round.item_a.emoji}
-            </div>
-            <div>
-              <div className="qty">
-                {qtyLabel(round.qty_a, round.item_a, lang)} <span aria-hidden="true">{flag}</span>
-              </div>
-              <div className="name">{L(round.item_a.name, lang)}</div>
-            </div>
-          </div>
-          <p className="vs-divider">{t('equals_question', lang)}</p>
-          <div className="card item-card">
-            <div className="emoji" aria-hidden="true">
-              {round.item_b.emoji}
-            </div>
-            <div>
-              <div className="qty">{t('how_many', lang)}</div>
-              <div className="name">{L(round.item_b.name, lang)}</div>
-            </div>
-          </div>
-          {phase === 'guess' && (
-            <div className="card slider-block">
-              <LogSlider
-                min={round.slider_min!}
-                max={round.slider_max!}
-                value={guess ?? initialGuess}
-                onChange={setGuess}
-                unit={round.item_b.typical_unit}
-                lang={lang}
-                eventNoun={round.item_b.event_noun ? L(round.item_b.event_noun, lang) : undefined}
-              />
-            </div>
-          )}
-          {phase === 'reveal' && reveal && (
-            <RevealPanel data={reveal} itemA={round.item_a} itemB={round.item_b} lang={lang} />
-          )}
-        </>
-      )}
+      <RoundView
+        round={round}
+        phase={phase === 'reveal' ? 'reveal' : 'guess'}
+        reveal={reveal}
+        guess={guess}
+        onGuessChange={setGuess}
+        onBinaryChoice={(choice) => void submit(round, { choice })}
+        flag={flag}
+        lang={lang}
+      />
 
       <div className="bottom-bar">
         {phase === 'guess' && !isBinary ? (
-          <button className="primary" onClick={() => void submit(round, { value: guess ?? initialGuess })}>
+          <button className="primary" disabled={guess == null} onClick={() => void submit(round, { value: guess! })}>
             {t('submit_guess', lang)}
           </button>
         ) : phase === 'reveal' ? (

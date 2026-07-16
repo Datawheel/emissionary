@@ -284,6 +284,30 @@ input[type='range'].log-slider::-moz-range-thumb {
   cursor: default;
 }
 
+.co2-badge {
+  margin-left: auto;
+  font-weight: 800;
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--spark-deep);
+  white-space: nowrap;
+  text-align: right;
+}
+
+.co2-badge .verdict {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.co2-badge .verdict.win {
+  color: var(--truth-deep);
+}
+
+.co2-badge .verdict.lose {
+  color: var(--alert);
+}
+
 .score-pill {
   display: inline-flex;
   align-items: center;

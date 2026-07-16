@@ -3,7 +3,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Emissionary',
-  description: 'Spread the word about emissions. A carbon-intuition game by the OEC.',
+  description: 'How good is your carbon intuition? Test your knowledge of everyday emissions — a game by the OEC.',
   manifest: '/manifest.webmanifest',
   icons: { icon: '/icon.svg' },
 };

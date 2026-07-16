@@ -19,9 +19,8 @@ export default async function Home({
         <h1 style={{ fontSize: '1.9rem', letterSpacing: '-0.01em' }}>
           Emission<span style={{ color: 'var(--spark-deep)' }}>ary</span>
         </h1>
-        <p className="muted" style={{ fontSize: '1rem' }}>
-          {t('tagline', lang)}
-        </p>
+        <p style={{ fontSize: '1.05rem', fontWeight: 600 }}>{t('tagline', lang)}</p>
+        <p className="muted">{t('subtitle', lang)}</p>
         <Link
           href={`/daily${q}`}
           className="card"

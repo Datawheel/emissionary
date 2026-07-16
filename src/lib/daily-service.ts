@@ -47,9 +47,10 @@ function dailyBounds(spec: RoundSpec, rng: () => number): { min: number; max: nu
     lo = Math.min(lo, t);
     hi = Math.max(hi, t);
   }
-  const below = 1 + rng() * 0.5;
-  const above = 1 + rng() * 0.5;
-  return { min: lo / 10 ** below, max: hi * 10 ** above };
+  // asymmetric stretch so the truth envelope is off-center (anti "guess the middle")
+  const offset = (0.3 + rng() * 0.5) * (rng() < 0.5 ? -1 : 1);
+  const halfWidth = 1 + Math.abs(offset) + rng() * 0.3;
+  return { min: lo * 10 ** (offset - halfWidth), max: hi * 10 ** (offset + halfWidth) };
 }
 
 /** Get or deterministically create the daily set (spec §8.1). */

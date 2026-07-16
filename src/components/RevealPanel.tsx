@@ -65,9 +65,21 @@ export default function RevealPanel({
           <BreakdownBlock breakdown={data.breakdown_b} info={data.item_info_b} item={itemB} lang={lang} />
         </details>
       </section>
-      <ConversionTable rows={data.conversion_rows} note={data.takeaway} itemB={itemB} lang={lang} />
+      <ConversionTable
+        rows={data.conversion_rows}
+        note={data.takeaway}
+        clue={clueLabel(data.breakdown_a.quantity, itemA, lang)}
+        itemB={itemB}
+        lang={lang}
+      />
     </>
   );
+}
+
+/** Concrete anchor phrase, e.g. "10 km of petrol car" / "10 km de coche de gasolina". */
+export function clueLabel(qty: number, item: ClientItem, lang: Lang): string {
+  const name = L(item.name, lang).toLowerCase().replace(/\s*\([^)]*\)/g, '');
+  return `${qtyLabel(qty, item, lang)} ${lang === 'es' ? 'de' : 'of'} ${name}`;
 }
 
 function BreakdownBlock({
