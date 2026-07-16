@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import type { ConversionRow, Takeaway } from '@/lib/conversion';
-import type { Item, Lang } from '@/lib/types';
+import type { ClientItem } from '@/lib/api-types';
+import type { Lang } from '@/lib/types';
 import { L, t } from '@/lib/i18n';
 import { formatQty } from '@/lib/format';
 
@@ -14,7 +15,7 @@ export default function ConversionTable({
 }: {
   rows: ConversionRow[];
   note: Takeaway | null;
-  itemB: Item;
+  itemB: ClientItem;
   lang: Lang;
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -42,15 +43,10 @@ export default function ConversionTable({
             <div>
               <div style={{ fontWeight: row.isPlayer ? 700 : 500 }}>{row.name}</div>
               <div className="bar-track" aria-hidden="true">
-                <div
-                  className="bar"
-                  style={{ width: `${8 + (92 * (Math.log10(row.qtyB) - minLog)) / span}%` }}
-                />
+                <div className="bar" style={{ width: `${8 + (92 * (Math.log10(row.qtyB) - minLog)) / span}%` }} />
               </div>
             </div>
-            <span className="value">
-              {item2Label(row.qtyB, itemB, lang)}
-            </span>
+            <span className="value">{item2Label(row.qtyB, itemB, lang)}</span>
           </div>
         ))}
       </div>
@@ -63,7 +59,7 @@ export default function ConversionTable({
   );
 }
 
-function item2Label(qty: number, itemB: Item, lang: Lang): string {
+function item2Label(qty: number, itemB: ClientItem, lang: Lang): string {
   if (itemB.typical_unit === 'events' && itemB.event_noun) {
     return `${formatQty(qty, 'events', lang).replace('×', '')} ${L(itemB.event_noun, lang)}`;
   }
