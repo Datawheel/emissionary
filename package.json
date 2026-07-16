@@ -6,7 +6,8 @@
     "validate": "tsx scripts/validate-data.ts",
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "pretest": "npm run validate"
   },
   "description": "A carbon-intuition guessing game for the OEC",
   "dependencies": {

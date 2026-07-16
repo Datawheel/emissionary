@@ -1,0 +1,92 @@
+[
+  {
+    "source_id": "ember_yearly",
+    "publisher": "Ember",
+    "title": "Yearly electricity data — CO₂ intensity of electricity generation (retrieved via Our World in Data grapher mirror)",
+    "year": 2026,
+    "url": "https://ourworldindata.org/grapher/carbon-intensity-electricity",
+    "license": "CC BY 4.0",
+    "retrieved_at": "2026-07-16"
+  },
+  {
+    "source_id": "desnz_2025",
+    "publisher": "UK Government (DESNZ)",
+    "title": "Greenhouse gas reporting: conversion factors 2025 (flat file, CO₂-only components)",
+    "year": 2025,
+    "url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2025",
+    "license": "Open Government Licence v3.0",
+    "retrieved_at": "2026-07-16"
+  },
+  {
+    "source_id": "ipcc_2006_v2",
+    "publisher": "IPCC",
+    "title": "2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 2: Energy (stationary combustion defaults)",
+    "year": 2006,
+    "url": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/vol2.html",
+    "license": "IPCC publication terms",
+    "retrieved_at": "2026-07-16"
+  },
+  {
+    "source_id": "energystar",
+    "publisher": "US EPA ENERGY STAR",
+    "title": "ENERGY STAR certified product datasets (data.energystar.gov); medians computed from full dataset on retrieval date",
+    "year": 2026,
+    "url": "https://data.energystar.gov",
+    "license": "Public domain (US federal)",
+    "retrieved_at": "2026-07-16"
+  },
+  {
+    "source_id": "doe_tsd_cooking",
+    "publisher": "US DOE",
+    "title": "Technical Support Document for Residential Cooking Products (docket EERE-2006-STD-0070): cooking efficiency of gas (~40%) and electric coil (~74%) cooktops",
+    "year": 2009,
+    "url": "https://downloads.regulations.gov/EERE-2006-STD-0070-0053/content.pdf",
+    "license": "Public domain (US federal)",
+    "retrieved_at": "2026-07-16"
+  },
+  {
+    "source_id": "energystar_induction",
+    "publisher": "US EPA ENERGY STAR",
+    "title": "2021–2022 Residential Induction Cooking Tops program page (~84% induction cooking efficiency)",
+    "year": 2021,
+    "url": "https://www.energystar.gov/partner-resources/products_partner_resources/brand-owner/eta-consumers/res-induction-cooking-tops",
+    "license": "Public domain (US federal)",
+    "retrieved_at": "2026-07-16"
+  },
+  {
+    "source_id": "epa_fueleconomy",
+    "publisher": "US EPA / DOE",
+    "title": "fueleconomy.gov vehicle data — 2024 Tesla Model Y Long Range AWD (vehicle id 47913), EPA combined 28.7 kWh/100 mi wall-to-wheels",
+    "year": 2024,
+    "url": "https://www.fueleconomy.gov/feg/Find.do?action=sbs&id=47913",
+    "license": "Public domain (US federal)",
+    "retrieved_at": "2026-07-16"
+  },
+  {
+    "source_id": "epa_trends",
+    "publisher": "US EPA",
+    "title": "The 2024 EPA Automotive Trends Report — MY2023 new-vehicle real-world CO₂ (319 g/mi incl. BEV; +38 g/mi excluding BEV/PHEV)",
+    "year": 2024,
+    "url": "https://www.epa.gov/automotive-trends",
+    "license": "Public domain (US federal)",
+    "retrieved_at": "2026-07-16"
+  },
+  {
+    "source_id": "codata_physics",
+    "publisher": "NIST",
+    "title": "NIST Chemistry WebBook — thermophysical properties of water (specific heat 4.186 kJ/kg·K)",
+    "year": 2023,
+    "url": "https://webbook.nist.gov/chemistry/fluid/",
+    "license": "Public domain (US federal)",
+    "retrieved_at": "2026-07-16"
+  },
+  {
+    "source_id": "doe_energysaver",
+    "publisher": "US DOE",
+    "title": "Energy Saver — appliances and home electronics guidance (typical product-class rated powers; used where no certified dataset exists — flagged for EPREL verification in SOURCES.md)",
+    "year": 2026,
+    "url": "https://www.energy.gov/energysaver/appliances-and-electronics",
+    "license": "Public domain (US federal)",
+    "retrieved_at": "2026-07-16"
+  }
+]

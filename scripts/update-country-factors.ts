@@ -20,7 +20,7 @@ const OUT_PATH = join(process.cwd(), 'data', 'country_factors.json');
 export const CAR_FALLBACK_GCO2_KM = 160;
 /** Countries whose latest grid data is older than this are dropped. */
 const MIN_GRID_YEAR = 2020;
-const CAR_FALLBACK_SOURCE = 'icct';
+const CAR_FALLBACK_SOURCE = 'desnz_2025'; // 160 g/km ≈ UK on-road average petrol car
 const CAR_FALLBACK_YEAR = 2025;
 
 function parseCsvLine(line: string): string[] {
