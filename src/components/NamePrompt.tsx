@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import type { Lang } from '@/lib/types';
 import { t } from '@/lib/i18n';
-import { generateName } from '@/lib/names';
+import { generateName } from '@/lib/name-gen';
 
 const DISMISS_KEY = 'emy_name_prompt_dismissed';
 
