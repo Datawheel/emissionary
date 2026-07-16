@@ -66,6 +66,10 @@ const STRINGS = {
     en: 'In {clean} this is {ratio}× cleaner than in {dirty}.',
     es: 'En {clean} esto es {ratio}× más limpio que en {dirty}.',
   },
+  takeaway_more: {
+    en: 'In {clean}, the same CO₂ gets you {ratio}× more than in {dirty}.',
+    es: 'En {clean}, el mismo CO₂ te da {ratio}× más que en {dirty}.',
+  },
   equivalent_to: { en: 'That’s about', es: 'Eso es aproximadamente' },
 } satisfies Record<string, Localized>;
 
