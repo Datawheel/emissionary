@@ -20,6 +20,8 @@ export const itemSchema = z
     carrier: z.enum(['electricity', 'natural_gas', 'lpg', 'petrol', 'diesel']),
     kwh_per_km: z.number().positive().optional(),
     uses_country_car_default: z.boolean().optional(),
+    l_per_100km: z.number().positive().optional(),
+    gco2_per_km: z.number().positive().optional(),
     typical_unit: z.enum(['minutes', 'hours', 'events', 'km', 'liters_boiled']),
     assumption_note: localized,
     source_ids: z.array(z.string().min(1)).min(1),
@@ -41,12 +43,18 @@ export const itemSchema = z
           fail(`${item.id}: task model requires task_kwh_useful and efficiency`);
         break;
       case 'per_km': {
-        const electric = item.kwh_per_km != null;
-        const fuelDefault = item.uses_country_car_default === true;
-        if (electric === fuelDefault)
-          fail(`${item.id}: per_km model requires exactly one of kwh_per_km or uses_country_car_default`);
-        if (electric && item.carrier !== 'electricity')
+        const modes = [
+          item.kwh_per_km != null,
+          item.uses_country_car_default === true,
+          item.l_per_100km != null,
+          item.gco2_per_km != null,
+        ].filter(Boolean).length;
+        if (modes !== 1)
+          fail(`${item.id}: per_km model requires exactly one of kwh_per_km, uses_country_car_default, l_per_100km, gco2_per_km`);
+        if (item.kwh_per_km != null && item.carrier !== 'electricity')
           fail(`${item.id}: kwh_per_km requires carrier=electricity`);
+        if (item.l_per_100km != null && item.carrier !== 'petrol' && item.carrier !== 'diesel')
+          fail(`${item.id}: l_per_100km requires carrier petrol or diesel`);
         break;
       }
     }

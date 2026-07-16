@@ -28,6 +28,10 @@ export interface Item {
   kwh_per_km?: number;
   /** model=per_km fuel car: use country fleet-average gCO2/km */
   uses_country_car_default?: boolean;
+  /** model=per_km fuel vehicle with fixed consumption (e.g. scooter) */
+  l_per_100km?: number;
+  /** model=per_km with a direct emission factor (e.g. bus per passenger-km) */
+  gco2_per_km?: number;
   typical_unit: Unit;
   assumption_note: Localized;
   /** provenance for every physical value on this item */
