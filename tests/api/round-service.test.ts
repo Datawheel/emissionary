@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 
 vi.hoisted(() => {
   process.env.EMISSIONARY_DATA_DIR = new URL('../fixtures/data', import.meta.url).pathname;
-  process.env.DATABASE_URL = 'postgres://emissionary:emissionary_dev@localhost:5432/emissionary_test';
+  process.env.DATABASE_URL = 'postgres://emissionary_test:emissionary_dev@localhost:5432/emissionary_test';
 });
 
 import { randomUUID } from 'node:crypto';

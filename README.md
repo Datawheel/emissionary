@@ -38,15 +38,15 @@ The API tests expect a `emissionary_test` database owned by the same role.
 
 Truths are computed **only server-side** (`src/lib/emissions.ts` via the API routes); the client never sees a factor or truth before a guess is submitted (spec §12).
 
-## Deploy (single server)
+## Deployment (this server)
 
-```bash
-npm run build
-DATABASE_URL=... PLAYER_TOKEN_SECRET=... DAILY_SALT=... LAUNCH_DATE=2026-09-01 \
-  npx next start -p 3000
-```
+Deployed at **https://emi.cesarhidalgo.com** since 2026-07-16:
 
-Run under systemd/pm2 behind a reverse proxy. `DAILY_SALT` must never change after launch (it seeds the deterministic daily sets); `LAUNCH_DATE` drives the share-card day counter.
+- `emissionary.service` (systemd): runs `next start -p 3040` as the `emissionary` system user, env from `/var/www/emissionary/.env` (secrets generated at deploy time; `LAUNCH_DATE=2026-07-16`). Logs: `/var/log/emissionary/web.log`.
+- nginx: `/etc/nginx/sites-available/emissionary` proxies the domain to `127.0.0.1:3040`; TLS via certbot (auto-renews via `certbot.timer`).
+- Redeploy after changes: `npm run build && sudo systemctl restart emissionary`.
+
+`DAILY_SALT` must never change after launch (it seeds the deterministic daily sets); `LAUNCH_DATE` drives the share-card day counter — reset both together only if you intend to reset the game's history.
 
 ## Deferred (blocked on the OEC team — spec §18)
 
