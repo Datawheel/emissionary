@@ -89,7 +89,7 @@ export const equivalenceSchema = z.object({
   label: localized,
 });
 
-export const DATA_DIR = join(process.cwd(), 'data');
+export const DATA_DIR = process.env.EMISSIONARY_DATA_DIR ?? join(process.cwd(), 'data');
 
 function loadJson<T>(file: string, schema: z.ZodType<T>): T[] {
   const raw = JSON.parse(readFileSync(join(DATA_DIR, file), 'utf8'));

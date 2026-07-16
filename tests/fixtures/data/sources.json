@@ -1,0 +1,11 @@
+[
+  {
+    "source_id": "test_source",
+    "publisher": "Test",
+    "title": "Test fixture source",
+    "year": 2025,
+    "url": "https://example.org/test",
+    "license": "CC0",
+    "retrieved_at": "2026-07-16"
+  }
+]

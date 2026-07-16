@@ -1,0 +1,10 @@
+[
+  { "iso3": "FRA", "name": "France", "flag": "🇫🇷", "grid_gco2_kwh": 41.44, "grid_year": 2025, "grid_source_id": "test_source", "car_gco2_km": 160, "car_year": 2025, "car_source_id": "test_source", "car_is_fallback": false },
+  { "iso3": "DEU", "name": "Germany", "flag": "🇩🇪", "grid_gco2_kwh": 329.65, "grid_year": 2025, "grid_source_id": "test_source", "car_gco2_km": 165, "car_year": 2025, "car_source_id": "test_source", "car_is_fallback": false },
+  { "iso3": "POL", "name": "Poland", "flag": "🇵🇱", "grid_gco2_kwh": 588.6, "grid_year": 2025, "grid_source_id": "test_source", "car_gco2_km": 160, "car_year": 2025, "car_source_id": "test_source", "car_is_fallback": true },
+  { "iso3": "NOR", "name": "Norway", "flag": "🇳🇴", "grid_gco2_kwh": 28.11, "grid_year": 2025, "grid_source_id": "test_source", "car_gco2_km": 160, "car_year": 2025, "car_source_id": "test_source", "car_is_fallback": true },
+  { "iso3": "USA", "name": "United States", "flag": "🇺🇸", "grid_gco2_kwh": 384.4, "grid_year": 2025, "grid_source_id": "test_source", "car_gco2_km": 200, "car_year": 2025, "car_source_id": "test_source", "car_is_fallback": false },
+  { "iso3": "CHN", "name": "China", "flag": "🇨🇳", "grid_gco2_kwh": 525.34, "grid_year": 2025, "grid_source_id": "test_source", "car_gco2_km": 160, "car_year": 2025, "car_source_id": "test_source", "car_is_fallback": true },
+  { "iso3": "IND", "name": "India", "flag": "🇮🇳", "grid_gco2_kwh": 670.13, "grid_year": 2025, "grid_source_id": "test_source", "car_gco2_km": 160, "car_year": 2025, "car_source_id": "test_source", "car_is_fallback": true },
+  { "iso3": "BRA", "name": "Brazil", "flag": "🇧🇷", "grid_gco2_kwh": 109.95, "grid_year": 2025, "grid_source_id": "test_source", "car_gco2_km": 160, "car_year": 2025, "car_source_id": "test_source", "car_is_fallback": true }
+]
