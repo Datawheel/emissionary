@@ -90,7 +90,7 @@ export function UnitFacts({ facts, lang }: { facts: UnitFact[]; lang: Lang }) {
           <span aria-hidden="true">{f.emoji}</span> {unitFactLabel(f, lang)} ={' '}
           {f.kwh != null && (
             <>
-              <strong>{f.kwh} kWh</strong> ·{' '}
+              <strong>{f.kwh} kWh</strong> {lang === 'es' ? 'o' : 'or'}{' '}
             </>
           )}
           <strong>{formatCO2(f.grams, lang)}</strong>

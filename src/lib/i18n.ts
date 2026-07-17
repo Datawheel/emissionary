@@ -73,6 +73,11 @@ const STRINGS = {
   this_week: { en: 'This Week', es: 'Esta semana' },
   all_time: { en: 'All Time', es: 'Histórico' },
   days_played: { en: 'Days played', es: 'Días jugados' },
+  all_players: { en: 'All players', es: 'Todos los jugadores' },
+  you_rank: {
+    en: 'You: #{rank} of {total} (top {pct}%)',
+    es: 'Tú: #{rank} de {total} (top {pct}%)',
+  },
   days_short: { en: 'days', es: 'días' },
   practice_note: {
     en: 'Only Daily Games score points here — Free Play is for practice.',

@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { marked } from 'marked';
 import AppHeader from '@/components/AppHeader';
-import { getCountry, loadItems, loadSources } from '@/lib/data';
+import { getCountry, loadCountryFactors, loadItems, loadSources } from '@/lib/data';
 import { computeCO2 } from '@/lib/emissions';
 import { formatCO2 } from '@/lib/format';
 import { pickLang, t } from '@/lib/i18n';
@@ -78,6 +78,12 @@ export default async function AboutPage({
 
   const en = lang === 'en';
   const h2 = { fontSize: '1.05rem', marginBottom: 8 } as const;
+  const gridRows = [...loadCountryFactors()].sort((a, b) => a.grid_gco2_kwh - b.grid_gco2_kwh);
+  // ribbon semantics: tint by intensity on a log scale from ~25 to ~750 gCO₂/kWh
+  const gridColor = (g: number) => {
+    const f = Math.min(1, Math.max(0, (Math.log10(g) - Math.log10(25)) / (Math.log10(750) - Math.log10(25))));
+    return `hsl(${150 - 135 * f}, 55%, 38%)`;
+  };
 
   return (
     <>
@@ -89,8 +95,8 @@ export default async function AboutPage({
           <h2 style={h2}>{en ? 'What is Emissionary?' : '¿Qué es Emissionary?'}</h2>
           <p style={{ marginBottom: 8 }}>
             {en
-              ? 'Emissionary is a game that trains your intuition about everyday CO₂ emissions. Each round compares two things you know — a hairdryer, a car trip, a load of laundry — and asks: how much of one equals the other? Most people are off by 10× or more. Playing fixes that.'
-              : 'Emissionary es un juego que entrena tu intuición sobre las emisiones cotidianas de CO₂. Cada ronda compara dos cosas que conoces — un secador, un viaje en coche, una lavadora — y pregunta: ¿cuánto de una equivale a la otra? La mayoría se equivoca por 10× o más. Jugar lo corrige.'}
+              ? 'Emissionary is a game that trains your intuition about everyday CO₂ emissions. Each round compares two things you know — a hairdryer, a car trip, a load of laundry — and asks: how much of one equals the other? These quantities span several orders of magnitude, which makes them genuinely hard to feel. Playing builds that feel — and our public stats page measures how close players actually get.'
+              : 'Emissionary es un juego que entrena tu intuición sobre las emisiones cotidianas de CO₂. Cada ronda compara dos cosas que conoces — un secador, un viaje en coche, una lavadora — y pregunta: ¿cuánto de una equivale a la otra? Estas cantidades abarcan varios órdenes de magnitud, lo que las hace difíciles de intuir. Jugar desarrolla esa intuición — y nuestra página pública de estadísticas mide cuánto se acercan realmente los jugadores.'}
           </p>
           <p>
             {en
@@ -163,6 +169,61 @@ export default async function AboutPage({
               ? 'A perfect guess (within ±10%) earns 100 points. Points fall off evenly on the multiplicative scale until 10× off in either direction, which earns 0. Guessing 3× too high costs exactly as much as 3× too low. “Which emits more?” rounds are worth 50 points. Only Daily Games count for the leaderboard — Free Play is unlimited practice.'
               : 'Una respuesta perfecta (±10%) vale 100 puntos. Los puntos bajan uniformemente en la escala multiplicativa hasta 10× de error en cualquier dirección, que vale 0. Pasarse 3× cuesta exactamente lo mismo que quedarse corto 3×. Las rondas de “¿cuál emite más?” valen 50 puntos. Solo los juegos diarios cuentan para la clasificación — el juego libre es práctica ilimitada.'}
           </p>
+        </section>
+
+        <section className="card">
+          <h2 style={h2}>{en ? 'Every country’s electricity, at a glance' : 'La electricidad de cada país, de un vistazo'}</h2>
+          <p className="muted" style={{ marginBottom: 8 }}>
+            {en ? (
+              <>
+                Grams of CO₂ per kWh of electricity generated, latest year per country. Source:{' '}
+                <a href="https://ourworldindata.org/grapher/carbon-intensity-electricity" target="_blank" rel="noreferrer">
+                  Ember yearly electricity data
+                </a>
+                . Sorted cleanest to dirtiest.
+              </>
+            ) : (
+              <>
+                Gramos de CO₂ por kWh de electricidad generada, último año por país. Fuente:{' '}
+                <a href="https://ourworldindata.org/grapher/carbon-intensity-electricity" target="_blank" rel="noreferrer">
+                  datos eléctricos anuales de Ember
+                </a>
+                . Ordenado de más limpio a más sucio.
+              </>
+            )}
+          </p>
+          <div style={{ maxHeight: 380, overflowY: 'auto', border: '1px solid var(--line)', borderRadius: 10 }}>
+            <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.88rem' }}>
+              <thead>
+                <tr style={{ position: 'sticky', top: 0, background: 'var(--card)' }}>
+                  <th style={{ textAlign: 'left', padding: '6px 10px' }}>{en ? 'Country' : 'País'}</th>
+                  <th style={{ textAlign: 'right', padding: '6px 10px' }}>gCO₂/kWh</th>
+                  <th style={{ textAlign: 'right', padding: '6px 10px' }}>{en ? 'Year' : 'Año'}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {gridRows.map((c) => (
+                  <tr key={c.iso3} style={{ borderTop: '1px solid var(--line)' }}>
+                    <td style={{ padding: '5px 10px' }}>
+                      {c.flag} {c.name}
+                    </td>
+                    <td
+                      style={{
+                        padding: '5px 10px',
+                        textAlign: 'right',
+                        fontWeight: 700,
+                        fontVariantNumeric: 'tabular-nums',
+                        color: gridColor(c.grid_gco2_kwh),
+                      }}
+                    >
+                      {Math.round(c.grid_gco2_kwh)}
+                    </td>
+                    <td style={{ padding: '5px 10px', textAlign: 'right', color: 'var(--ink-soft)' }}>{c.grid_year}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
 
         <section className="card">

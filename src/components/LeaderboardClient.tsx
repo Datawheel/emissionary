@@ -26,12 +26,11 @@ export default function LeaderboardClient({
   const [scope, setScope] = useState<Scope>('daily');
   const [country, setCountry] = useState<string>('');
   const [page, setPage] = useState<LeaderboardPage | null>(null);
-  const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const load = useCallback(async (s: Scope, c: string, o: number) => {
+  const load = useCallback(async (s: Scope, c: string) => {
     setLoading(true);
-    const params = new URLSearchParams({ scope: s, offset: String(o) });
+    const params = new URLSearchParams({ scope: s });
     if (c) params.set('country', c);
     const res = await fetch(`/api/leaderboard?${params}`);
     if (res.ok) setPage((await res.json()) as LeaderboardPage);
@@ -39,8 +38,8 @@ export default function LeaderboardClient({
   }, []);
 
   useEffect(() => {
-    void load(scope, country, offset);
-  }, [scope, country, offset, load]);
+    void load(scope, country);
+  }, [scope, country, load]);
 
   const scopes: { key: Scope; label: string }[] = [
     { key: 'daily', label: t('today', lang) },
@@ -59,7 +58,7 @@ export default function LeaderboardClient({
           lang={lang}
           onDone={(claimed) => {
             setShowNamePrompt(false);
-            if (claimed) void load(scope, country, offset);
+            if (claimed) void load(scope, country);
           }}
         />
       )}
@@ -76,10 +75,7 @@ export default function LeaderboardClient({
               border: '1px solid var(--line)',
               minHeight: 40,
             }}
-            onClick={() => {
-              setScope(s.key);
-              setOffset(0);
-            }}
+            onClick={() => setScope(s.key)}
           >
             {s.label}
           </button>
@@ -90,10 +86,7 @@ export default function LeaderboardClient({
         style={{ padding: '10px 12px', fontSize: '0.95rem' }}
         value={country}
         aria-label={t('all_countries', lang)}
-        onChange={(e) => {
-          setCountry(e.target.value);
-          setOffset(0);
-        }}
+        onChange={(e) => setCountry(e.target.value)}
       >
         <option value="">{t('all_countries', lang)}</option>
         {countries.map((c) => (
@@ -138,27 +131,59 @@ export default function LeaderboardClient({
               </span>
             </div>
           )}
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
-            <button
-              className="muted"
-              style={{ minHeight: 44, visibility: offset > 0 ? 'visible' : 'hidden' }}
-              onClick={() => setOffset(Math.max(0, offset - 50))}
-            >
-              ←
-            </button>
-            <span className="muted" style={{ alignSelf: 'center' }}>
-              {page.total_players}
-            </span>
-            <button
-              className="muted"
-              style={{ minHeight: 44, visibility: offset + 50 < page.total_players ? 'visible' : 'hidden' }}
-              onClick={() => setOffset(offset + 50)}
-            >
-              →
-            </button>
-          </div>
         </section>
       )}
+      {page?.distribution && page.total_players > 0 && (
+        <Distribution page={page} lang={lang} />
+      )}
     </main>
+  );
+}
+
+/** Histogram of all players' results with the viewer's bucket highlighted. */
+function Distribution({ page, lang }: { page: LeaderboardPage; lang: Lang }) {
+  const d = page.distribution!;
+  const maxCount = Math.max(...d.buckets, 1);
+  const youValue = page.you ? (d.metric === 'days' ? page.you.days : page.you.score) : null;
+  const youBucket =
+    youValue != null && d.max > d.min
+      ? Math.min(d.buckets.length - 1, Math.floor(((youValue - d.min) / (d.max + 1e-9 - d.min)) * d.buckets.length))
+      : youValue != null
+        ? 0
+        : null;
+  const pct = page.you ? Math.max(1, Math.round((100 * page.you.rank) / Math.max(1, page.total_players))) : null;
+
+  return (
+    <section className="card">
+      <h2 style={{ fontSize: '1rem', marginBottom: 4 }}>{t('all_players', lang)}</h2>
+      <div
+        style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 72, marginTop: 8 }}
+        role="img"
+        aria-label={t('all_players', lang)}
+      >
+        {d.buckets.map((n, i) => (
+          <div
+            key={i}
+            style={{
+              flex: 1,
+              height: `${Math.max(3, (100 * n) / maxCount)}%`,
+              borderRadius: 4,
+              background: i === youBucket ? 'var(--spark)' : '#ded8ca',
+            }}
+            title={String(n)}
+          />
+        ))}
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }} className="muted">
+        <span>{Math.round(d.min)}</span>
+        <span>{d.metric === 'days' ? t('days_short', lang) : t('points', lang)}</span>
+        <span>{Math.round(d.max)}</span>
+      </div>
+      {page.you && pct != null && (
+        <p style={{ marginTop: 6, fontWeight: 600 }}>
+          {t('you_rank', lang, { rank: page.you.rank, total: page.total_players, pct })}
+        </p>
+      )}
+    </section>
   );
 }

@@ -19,9 +19,17 @@ export interface LeaderboardPage {
   you: LeaderboardRow | null;
   total_players: number;
   offset: number;
+  /** histogram of the ranked metric across ALL players, for context */
+  distribution: {
+    metric: 'score' | 'days';
+    min: number;
+    max: number;
+    buckets: number[]; // counts, low → high
+  } | null;
 }
 
-const PAGE = 50;
+const PAGE = 20;
+const BUCKETS = 12;
 
 function displayName(name: string, disc: number | null): string {
   return disc ? `${name}#${String(disc).padStart(4, '0')}` : name;
@@ -127,12 +135,46 @@ export async function leaderboard(
     }
   }
 
+  // distribution of the ranked metric across ALL players (anonymous included —
+  // it is context, not identity)
+  const metric = scope === 'days' ? 'days' : 'score';
+  let distribution: LeaderboardPage['distribution'] = null;
+  const range = await q<{ mn: number | null; mx: number | null }>(
+    `WITH totals AS (${totalsSql}) SELECT min(${metric})::float AS mn, max(${metric})::float AS mx FROM totals`,
+    params.slice(0, scope === 'daily' ? 1 : 0),
+  );
+  const mn = range[0]?.mn;
+  const mx = range[0]?.mx;
+  if (mn != null && mx != null) {
+    const buckets = new Array<number>(BUCKETS).fill(0);
+    if (mx > mn) {
+      const hist = await q<{ bucket: number; n: string }>(
+        `WITH totals AS (${totalsSql})
+         SELECT width_bucket(${metric}, $${(scope === 'daily' ? 1 : 0) + 1}::float, $${(scope === 'daily' ? 1 : 0) + 2}::float, ${BUCKETS})::int AS bucket, count(*)::text AS n
+           FROM totals GROUP BY 1`,
+        [...params.slice(0, scope === 'daily' ? 1 : 0), mn, mx + 1e-9],
+      );
+      for (const h of hist) {
+        const idx = Math.min(BUCKETS - 1, Math.max(0, h.bucket - 1));
+        buckets[idx] += Number(h.n);
+      }
+    } else {
+      const total = await q<{ n: string }>(
+        `WITH totals AS (${totalsSql}) SELECT count(*)::text AS n FROM totals`,
+        params.slice(0, scope === 'daily' ? 1 : 0),
+      );
+      buckets[0] = Number(total[0].n);
+    }
+    distribution = { metric, min: mn, max: mx, buckets };
+  }
+
   return {
     scope,
     rows: rows.map((r) => toRow(r, r.player_id === player?.id)),
     you,
     total_players: Number(count[0]?.n ?? 0),
     offset,
+    distribution,
   };
 }
 
