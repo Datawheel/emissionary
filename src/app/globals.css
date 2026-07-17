@@ -164,12 +164,14 @@ main.screen {
   background: linear-gradient(180deg, rgba(255, 176, 58, 0.08), transparent);
 }
 
+/* sentence connectors: the round should read as one continuous sentence —
+   "2 h of gaming PC / emits as much CO₂ as… / Heat pump / …running for: 14 h" */
 .vs-divider {
   text-align: center;
   color: var(--ink-soft);
-  font-size: 0.85rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 1rem;
+  font-weight: 600;
+  font-style: italic;
 }
 
 /* ——— the signature: log axis ——— */

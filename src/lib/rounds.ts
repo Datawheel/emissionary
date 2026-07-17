@@ -118,9 +118,12 @@ export function selectQuantRound(
   const excluded = new Set(opts.excludeItemIds ?? []);
   const pool = items.filter((i) => !excluded.has(i.id));
   for (let attempt = 0; attempt < 200; attempt++) {
-    const a = pool[Math.floor(rng() * pool.length)];
-    const b = pool[Math.floor(rng() * pool.length)];
+    let a = pool[Math.floor(rng() * pool.length)];
+    let b = pool[Math.floor(rng() * pool.length)];
     if (a.id === b.id) continue;
+    // vehicles read better as the anchor ("10 km of car = ? h of AC", never
+    // the reverse) — swap so any per-km item is always the clue side
+    if (b.energy_model === 'per_km' && a.energy_model !== 'per_km') [a, b] = [b, a];
     if (opts.excludePairs?.has(pairKey(a.id, b.id))) continue;
     if (opts.requireCrossCarrier && !isCrossCarrier(a, b)) continue;
     const pairDifficulty = Math.max(a.difficulty, b.difficulty);

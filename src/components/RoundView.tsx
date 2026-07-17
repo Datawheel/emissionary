@@ -6,11 +6,24 @@
  * (not in a separate section), keeping the UI clean.
  */
 import type { ClientRound, GuessResponse } from '@/lib/api-types';
-import type { Lang } from '@/lib/types';
-import { L, t } from '@/lib/i18n';
+import type { Lang, Unit } from '@/lib/types';
+import { L, t, type StringKey } from '@/lib/i18n';
 import { formatCO2 } from '@/lib/format';
 import LogSlider from './LogSlider';
 import RevealPanel, { clueLabel, qtyLabel } from './RevealPanel';
+
+function connectorKey(unit: Unit): StringKey {
+  switch (unit) {
+    case 'km':
+      return 'connector_km';
+    case 'liters_boiled':
+      return 'connector_liters';
+    case 'events':
+      return 'connector_events';
+    default:
+      return 'connector_time';
+  }
+}
 
 export default function RoundView({
   round,
@@ -103,8 +116,8 @@ export default function RoundView({
       </div>
       {!revealed && (
         <div className="card slider-block">
-          <p className="muted" style={{ textAlign: 'center', marginBottom: 4 }}>
-            {t('how_many', lang)}
+          <p className="vs-divider" style={{ marginBottom: 4 }}>
+            {t(connectorKey(round.item_b.typical_unit), lang)}
           </p>
           <LogSlider
             min={round.slider_min!}

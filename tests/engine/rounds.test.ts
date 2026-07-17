@@ -107,6 +107,17 @@ describe('LogSlider mapping', () => {
 });
 
 describe('selectQuantRound', () => {
+  it('always anchors vehicles as the clue, never the guessed side', () => {
+    const rng = seededRng('vehicle-anchor');
+    const fra = getCountry('FRA');
+    for (let i = 0; i < 50; i++) {
+      const r = selectQuantRound(pool, fra, rng, { difficulty: 3 });
+      const a = pool.find((x) => x.id === r.item_a)!;
+      const b = pool.find((x) => x.id === r.item_b)!;
+      if (b.energy_model === 'per_km') expect(a.energy_model).toBe('per_km');
+    }
+  });
+
   it('never pairs an item with itself and respects cross-carrier requirement', () => {
     const rng = seededRng('select');
     const fra = getCountry('FRA');
