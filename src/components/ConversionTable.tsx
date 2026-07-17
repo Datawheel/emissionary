@@ -5,7 +5,7 @@ import type { ConversionRow, Takeaway } from '@/lib/conversion';
 import type { ClientItem } from '@/lib/api-types';
 import type { Lang } from '@/lib/types';
 import { L, t } from '@/lib/i18n';
-import { formatQty } from '@/lib/format';
+import { formatCO2, formatQty } from '@/lib/format';
 
 export default function ConversionTable({
   rows,
@@ -39,17 +39,47 @@ export default function ConversionTable({
       })
     : null;
 
-  // same-carrier pairs: the electricity mix cancels — teach that instead of 9 identical rows
+  // same-carrier pairs: the equivalence is flat, so show what the CLUE itself
+  // emits per country instead — that is where the story is
   if (maxLog - minLog < 0.02) {
+    const byGrams = [...rows].sort((a, b) => a.gramsA - b.gramsA);
+    const gMax = Math.log10(byGrams[byGrams.length - 1].gramsA);
+    const gMin = Math.log10(byGrams[0].gramsA);
+    const gSpan = Math.max(gMax - gMin, 0.01);
+    const gramsVary = byGrams[byGrams.length - 1].gramsA / byGrams[0].gramsA >= 1.5;
+
     return (
       <section className="card">
-        <h2 style={{ fontSize: '1rem', marginBottom: 8 }}>{t('around_the_world', lang)}</h2>
-        {noteText && (
-          <p className="takeaway" style={{ marginBottom: 8 }}>
-            {noteText}
-          </p>
+        <h2 style={{ fontSize: '1rem', marginBottom: 4 }}>{t('around_the_world', lang)}</h2>
+        {gramsVary ? (
+          <>
+            <p className="muted" style={{ marginBottom: 8 }}>
+              {t('emissions_context', lang, { clue })}
+            </p>
+            <div role="table" aria-label={t('around_the_world', lang)}>
+              {(expanded ? byGrams : byGrams.slice(0, 9)).map((row) => (
+                <div key={row.iso3} className={`conversion-row${row.isPlayer ? ' own' : ''}`} role="row">
+                  <span aria-hidden="true">{row.flag}</span>
+                  <div>
+                    <div style={{ fontWeight: row.isPlayer ? 700 : 500 }}>{row.name}</div>
+                    <div className="bar-track" aria-hidden="true">
+                      <div
+                        className="bar"
+                        style={{ width: `${8 + (92 * (Math.log10(row.gramsA) - gMin)) / gSpan}%` }}
+                      />
+                    </div>
+                  </div>
+                  <span className="value">{formatCO2(row.gramsA, lang)}</span>
+                </div>
+              ))}
+            </div>
+            <p className="muted" style={{ marginTop: 8 }}>
+              {t('answer_same_everywhere', lang)}
+            </p>
+          </>
+        ) : (
+          <p className="muted">{t('same_everywhere', lang, { clue, item: itemBName })}</p>
         )}
-        <p className="muted">{t('same_everywhere', lang, { clue, item: itemBName })}</p>
       </section>
     );
   }

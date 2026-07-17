@@ -92,6 +92,25 @@ a {
   text-decoration: none;
 }
 
+@media (max-width: 420px) {
+  .hide-narrow {
+    display: none;
+  }
+}
+
+.country-menu {
+  position: relative;
+  cursor: pointer;
+}
+
+.country-menu select {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  cursor: pointer;
+}
+
 main.screen {
   max-width: 480px;
   margin: 0 auto;
@@ -128,6 +147,21 @@ main.screen {
 .item-card .name {
   color: var(--ink-soft);
   font-size: 0.95rem;
+}
+
+/* integrated title: quantity + product as one prominent line */
+.item-card .title {
+  font-weight: 800;
+  font-size: 1.25rem;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* the product being guessed */
+.target-card {
+  border: 2px solid var(--spark);
+  background: linear-gradient(180deg, rgba(255, 176, 58, 0.08), transparent);
 }
 
 .vs-divider {

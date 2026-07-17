@@ -38,6 +38,14 @@ const STRINGS = {
     en: '{clue} is worth this much {item} in each country:',
     es: '{clue} equivale a esto de {item} en cada país:',
   },
+  emissions_context: {
+    en: 'What {clue} emits in each country:',
+    es: 'Lo que emite {clue} en cada país:',
+  },
+  answer_same_everywhere: {
+    en: 'The answer itself is the same everywhere — both products use the same energy source.',
+    es: 'La respuesta en sí es igual en todas partes: ambos productos usan la misma fuente de energía.',
+  },
   see_all_countries: { en: 'See all countries', es: 'Ver todos los países' },
   type_instead: { en: 'type instead', es: 'escribir en su lugar' },
   choose_country: { en: 'Choose your country', es: 'Elige tu país' },

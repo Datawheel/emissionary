@@ -33,6 +33,8 @@ export interface Item {
   /** model=per_km with a direct emission factor (e.g. bus per passenger-km) */
   gco2_per_km?: number;
   typical_unit: Unit;
+  /** override of the natural clue quantities offered for this item (in typical_unit) */
+  clue_quantities?: number[];
   assumption_note: Localized;
   /** provenance for every physical value on this item */
   source_ids: string[];

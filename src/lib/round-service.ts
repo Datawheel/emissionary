@@ -76,7 +76,7 @@ export async function createFreeplayRound(player: PlayerRow): Promise<ClientRoun
   const rng = seededRng(`freeplay:${player.id}:${count}:${randomUUID()}`);
 
   const difficulty = avg == null ? 2 : avg < 60 ? 2 : avg > 85 ? 3 : 3;
-  const isBinary = (count + 1) % 4 === 0; // ~1 in 4 (spec §6.1)
+  const isBinary = (count + 1) % 2 === 0; // every other round — players favor pairs
 
   let spec: RoundSpec;
   try {

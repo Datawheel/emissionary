@@ -23,6 +23,7 @@ export const itemSchema = z
     l_per_100km: z.number().positive().optional(),
     gco2_per_km: z.number().positive().optional(),
     typical_unit: z.enum(['minutes', 'hours', 'events', 'km', 'liters_boiled']),
+    clue_quantities: z.array(z.number().positive()).min(2).optional(),
     assumption_note: localized,
     source_ids: z.array(z.string().min(1)).min(1),
     value_year: z.number().int().gte(2000),

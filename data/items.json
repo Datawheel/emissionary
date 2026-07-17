@@ -169,15 +169,21 @@
   {
     "id": "microwave",
     "name": {
-      "en": "Microwave",
-      "es": "Microondas"
+      "en": "Microwave oven",
+      "es": "Horno microondas"
     },
-    "emoji": "📡",
+    "emoji": "🍿",
     "category": "kitchen",
     "energy_model": "power",
     "power_watts": 1100,
     "carrier": "electricity",
     "typical_unit": "minutes",
+    "clue_quantities": [
+      2,
+      5,
+      10,
+      15
+    ],
     "source_ids": [
       "doe_energysaver"
     ],
@@ -194,12 +200,18 @@
       "en": "Electric oven",
       "es": "Horno eléctrico"
     },
-    "emoji": "♨️",
+    "emoji": "🥧",
     "category": "kitchen",
     "energy_model": "power",
     "power_watts": 2000,
     "carrier": "electricity",
     "typical_unit": "minutes",
+    "clue_quantities": [
+      30,
+      45,
+      60,
+      90
+    ],
     "source_ids": [
       "doe_energysaver"
     ],
@@ -216,12 +228,18 @@
       "en": "Gas oven",
       "es": "Horno de gas"
     },
-    "emoji": "🔶",
+    "emoji": "🍗",
     "category": "kitchen",
     "energy_model": "power",
     "power_watts": 3000,
     "carrier": "natural_gas",
     "typical_unit": "minutes",
+    "clue_quantities": [
+      30,
+      45,
+      60,
+      90
+    ],
     "source_ids": [
       "doe_energysaver",
       "desnz_2025"
@@ -271,6 +289,11 @@
     "power_watts": 1000,
     "carrier": "electricity",
     "typical_unit": "minutes",
+    "clue_quantities": [
+      2,
+      3,
+      5
+    ],
     "source_ids": [
       "doe_energysaver"
     ],
@@ -293,6 +316,12 @@
     "power_watts": 1500,
     "carrier": "electricity",
     "typical_unit": "minutes",
+    "clue_quantities": [
+      10,
+      15,
+      20,
+      30
+    ],
     "source_ids": [
       "doe_energysaver"
     ],
@@ -331,7 +360,7 @@
       "en": "Electric space heater",
       "es": "Calefactor eléctrico"
     },
-    "emoji": "🔆",
+    "emoji": "♨️",
     "category": "climate",
     "energy_model": "power",
     "power_watts": 1500,
@@ -470,6 +499,11 @@
     "power_watts": 1800,
     "carrier": "electricity",
     "typical_unit": "minutes",
+    "clue_quantities": [
+      5,
+      10,
+      15
+    ],
     "source_ids": [
       "doe_energysaver"
     ],
@@ -483,8 +517,8 @@
   {
     "id": "electric_shower",
     "name": {
-      "en": "Electric shower",
-      "es": "Ducha eléctrica"
+      "en": "Shower (electric water heater)",
+      "es": "Ducha (calentador eléctrico)"
     },
     "emoji": "🚿",
     "category": "personal",
@@ -492,14 +526,20 @@
     "power_watts": 9500,
     "carrier": "electricity",
     "typical_unit": "minutes",
+    "clue_quantities": [
+      5,
+      8,
+      10,
+      15
+    ],
     "source_ids": [
       "doe_energysaver"
     ],
     "value_year": 2026,
     "difficulty": 2,
     "assumption_note": {
-      "en": "Instantaneous electric showers (common in UK/Latin America) are rated ~9.5 kW (class range 7.5–10.5 kW) — heating water on demand.",
-      "es": "Las duchas eléctricas instantáneas (comunes en Reino Unido y América Latina) son de ~9,5 kW (rango 7,5–10,5 kW): calientan el agua al momento."
+      "en": "A shower running on an instantaneous electric water heater draws ~9.5 kW while the water flows (class range 7.5–10.5 kW).",
+      "es": "Una ducha con calentador eléctrico instantáneo consume ~9,5 kW mientras corre el agua (rango 7,5–10,5 kW)."
     }
   },
   {
@@ -514,6 +554,11 @@
     "power_watts": 120,
     "carrier": "electricity",
     "typical_unit": "minutes",
+    "clue_quantities": [
+      5,
+      10,
+      15
+    ],
     "source_ids": [
       "doe_energysaver"
     ],
@@ -608,12 +653,18 @@
       "en": "Clothes iron",
       "es": "Plancha de ropa"
     },
-    "emoji": "🧷",
+    "emoji": "👕",
     "category": "personal",
     "energy_model": "power",
     "power_watts": 1400,
     "carrier": "electricity",
     "typical_unit": "minutes",
+    "clue_quantities": [
+      10,
+      15,
+      20,
+      30
+    ],
     "source_ids": [
       "doe_energysaver"
     ],
@@ -636,6 +687,11 @@
     "power_watts": 1200,
     "carrier": "electricity",
     "typical_unit": "minutes",
+    "clue_quantities": [
+      10,
+      15,
+      30
+    ],
     "source_ids": [
       "doe_energysaver"
     ],

@@ -84,7 +84,7 @@ const HUMAN_SCALE: Record<string, [number, number]> = {
 };
 
 export function pickClueQty(item: Item, rng: () => number): number {
-  const options = CLUE_QUANTITIES[item.typical_unit];
+  const options = item.clue_quantities ?? CLUE_QUANTITIES[item.typical_unit];
   return options[Math.floor(rng() * options.length)];
 }
 

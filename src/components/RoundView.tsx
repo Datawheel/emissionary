@@ -10,7 +10,7 @@ import type { Lang } from '@/lib/types';
 import { L, t } from '@/lib/i18n';
 import { formatCO2 } from '@/lib/format';
 import LogSlider from './LogSlider';
-import RevealPanel, { qtyLabel } from './RevealPanel';
+import RevealPanel, { clueLabel, qtyLabel } from './RevealPanel';
 
 export default function RoundView({
   round,
@@ -56,10 +56,7 @@ export default function RoundView({
                 <div className="emoji" aria-hidden="true">
                   {item.emoji}
                 </div>
-                <div>
-                  <div className="qty">{qtyLabel(qty, item, lang)}</div>
-                  <div className="name">{L(item.name, lang)}</div>
-                </div>
+                <div className="title">{clueLabel(qty, item, lang)}</div>
                 {revealed && grams != null && (
                   <div className="co2-badge">
                     {formatCO2(grams, lang)}
@@ -89,27 +86,26 @@ export default function RoundView({
         <div className="emoji" aria-hidden="true">
           {round.item_a.emoji}
         </div>
-        <div>
-          <div className="qty">
-            {qtyLabel(round.qty_a, round.item_a, lang)} <span aria-hidden="true">{flag}</span>
-          </div>
-          <div className="name">{L(round.item_a.name, lang)}</div>
+        <div className="title">
+          {clueLabel(round.qty_a, round.item_a, lang)} <span aria-hidden="true">{flag}</span>
         </div>
         {revealed && <div className="co2-badge">{formatCO2(reveal!.breakdown_a.grams, lang)}</div>}
       </div>
       <p className="vs-divider">{t('equals_question', lang)}</p>
-      <div className="card item-card">
+      <div className="card item-card target-card">
         <div className="emoji" aria-hidden="true">
           {round.item_b.emoji}
         </div>
-        <div>
-          <div className="qty">{revealed ? qtyLabel(reveal!.truth, round.item_b, lang) : t('how_many', lang)}</div>
-          <div className="name">{L(round.item_b.name, lang)}</div>
+        <div className="title">
+          {revealed ? clueLabel(reveal!.truth, round.item_b, lang) : L(round.item_b.name, lang)}
         </div>
         {revealed && <div className="co2-badge">{formatCO2(reveal!.breakdown_b.grams, lang)}</div>}
       </div>
       {!revealed && (
         <div className="card slider-block">
+          <p className="muted" style={{ textAlign: 'center', marginBottom: 4 }}>
+            {t('how_many', lang)}
+          </p>
           <LogSlider
             min={round.slider_min!}
             max={round.slider_max!}
@@ -119,7 +115,11 @@ export default function RoundView({
             lang={lang}
             eventNoun={round.item_b.event_noun ? L(round.item_b.event_noun, lang) : undefined}
           />
-          {guess == null && <p className="muted" style={{ textAlign: 'center' }}>{t('move_slider_hint', lang)}</p>}
+          {guess == null && (
+            <p className="muted" style={{ textAlign: 'center' }}>
+              {t('move_slider_hint', lang)}
+            </p>
+          )}
         </div>
       )}
       {revealed && <RevealPanel data={reveal!} itemA={round.item_a} itemB={round.item_b} lang={lang} />}
