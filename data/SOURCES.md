@@ -84,8 +84,8 @@ IPCC — *2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 2
 | 🛏️ Electric blanket (`electric_blanket`) | 150 W (electricity) | 2026 | doe_energysaver |
 | 🍳 Electric coil hob (boiling) (`electric_hob`) | 0.093 kWh useful/L ÷ 74% (electricity) | 2009 | codata_physics, doe_tsd_cooking |
 | 🫖 Electric kettle (`electric_kettle`) | 0.093 kWh useful/L ÷ 85% (electricity) | 2009 | codata_physics, doe_tsd_cooking |
-| ♨️ Electric oven (`electric_oven`) | 2000 W (electricity) | 2026 | doe_energysaver |
-| 🚿 Electric shower (`electric_shower`) | 9500 W (electricity) | 2026 | doe_energysaver |
+| 🥧 Electric oven (`electric_oven`) | 2000 W (electricity) | 2026 | doe_energysaver |
+| 🚿 Shower (electric water heater) (`electric_shower`) | 9500 W (electricity) | 2026 | doe_energysaver |
 | 🪥 Electric toothbrush (`electric_toothbrush`) | 0.002 kWh/charges | 2026 | codata_physics |
 | 📚 E-reader charge (`ereader_charge`) | 0.006 kWh/charges | 2026 | codata_physics |
 | ☕ Espresso machine (`espresso_machine`) | 0.02 kWh/espressos | 2026 | codata_physics |
@@ -95,23 +95,25 @@ IPCC — *2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 2
 | 🎮 Gaming PC (`gaming_pc`) | 350 W (electricity) | 2026 | doe_energysaver |
 | 🏠 Gas boiler (heating) (`gas_boiler`) | 12000 W (natural_gas) | 2026 | doe_energysaver, desnz_2025 |
 | 🔥 Gas hob (boiling) (`gas_hob`) | 0.093 kWh useful/L ÷ 40% (natural_gas) | 2025 | codata_physics, doe_tsd_cooking, desnz_2025 |
-| 🔶 Gas oven (`gas_oven`) | 3000 W (natural_gas) | 2026 | doe_energysaver, desnz_2025 |
+| 🍗 Gas oven (`gas_oven`) | 3000 W (natural_gas) | 2026 | doe_energysaver, desnz_2025 |
 | 💇 Hair straightener (`hair_straightener`) | 120 W (electricity) | 2026 | doe_energysaver |
 | 💨 Hairdryer (`hairdryer`) | 1800 W (electricity) | 2026 | doe_energysaver |
 | ♻️ Heat pump (heating) (`heat_pump`) | 800 W (electricity) | 2026 | doe_energysaver |
-| 🔦 Incandescent bulb (`incandescent_bulb`) | 60 W (electricity) | 2026 | doe_energysaver |
+| 🔦 800-lumen incandescent bulb (`incandescent_bulb`) | 60 W (electricity) | 2026 | doe_energysaver |
+| 🌟 1600-lumen incandescent bulb (`incandescent_bulb_1600`) | 100 W (electricity) | 2026 | doe_energysaver |
 | 🧲 Induction hob (boiling) (`induction_hob`) | 0.093 kWh useful/L ÷ 84% (electricity) | 2021 | codata_physics, energystar_induction |
-| 🧷 Clothes iron (`iron`) | 1400 W (electricity) | 2026 | doe_energysaver |
+| 👕 Clothes iron (`iron`) | 1400 W (electricity) | 2026 | doe_energysaver |
 | 💻 Laptop (`laptop`) | 50 W (electricity) | 2026 | doe_energysaver |
-| 💡 LED bulb (`led_bulb`) | 9 W (electricity) | 2026 | doe_energysaver |
-| 📡 Microwave (`microwave`) | 1100 W (electricity) | 2026 | doe_energysaver |
+| 💡 800-lumen LED bulb (`led_bulb`) | 9 W (electricity) | 2026 | doe_energysaver |
+| 🔆 1600-lumen LED bulb (`led_bulb_1600`) | 16 W (electricity) | 2026 | doe_energysaver |
+| 🍿 Microwave oven (`microwave`) | 1100 W (electricity) | 2026 | doe_energysaver |
 | 🛵 Motor scooter (`motor_scooter`) | 80.94 gCO₂/km | 2025 | desnz_2025 |
 | 🚗 Petrol car (`petrol_car`) | country average gCO₂/km | 2025 | desnz_2025, epa_trends |
 | 🧊 Refrigerator (`refrigerator`) | 39.4 W (electricity) | 2026 | energystar |
 | 🌬️ Air conditioner (room) (`room_ac`) | 800 W (electricity) | 2026 | energystar |
 | 🔊 Smart speaker (`smart_speaker`) | 3 W (electricity) | 2026 | doe_energysaver |
 | 📱 Smartphone charge (`smartphone_charge`) | 0.015 kWh/charges | 2026 | codata_physics |
-| 🔆 Electric space heater (`space_heater`) | 1500 W (electricity) | 2026 | doe_energysaver |
+| ♨️ Electric space heater (`space_heater`) | 1500 W (electricity) | 2026 | doe_energysaver |
 | 📲 Tablet charge (`tablet_charge`) | 0.033 kWh/charges | 2026 | codata_physics |
 | 🍞 Toaster (`toaster`) | 1000 W (electricity) | 2026 | doe_energysaver |
 | 🚆 Train (per passenger) (`train_national`) | 35.1 gCO₂/km | 2025 | desnz_2025 |
@@ -123,7 +125,7 @@ IPCC — *2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 2
 
 ## Verification status
 
-31 of 49 item values come from certified datasets, government conversion factors, regulated test data, or first-principles physics. The following 18 use documented product-class conventions and are flagged for verification against EPREL / measured datasets:
+33 of 51 item values come from certified datasets, government conversion factors, regulated test data, or first-principles physics. The following 18 use documented product-class conventions and are flagged for verification against EPREL / measured datasets:
 
 - `microwave` — Typical countertop microwave draws ~1,100 W while heating (product-class rated input, range 900–1,500 W). Pending certified-dataset verification.
 - `electric_oven` — Electric oven at ~200 °C averages ~2.0 kWh per hour of use, element cycling included (product-class convention). Pending certified-dataset verification.

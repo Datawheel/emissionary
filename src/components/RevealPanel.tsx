@@ -4,7 +4,7 @@ import type { Breakdown } from '@/lib/emissions';
 import type { ClientItem, GuessResponse, RevealItemInfo, UnitFact } from '@/lib/api-types';
 import type { Lang } from '@/lib/types';
 import { L, t } from '@/lib/i18n';
-import { formatCO2, formatQty } from '@/lib/format';
+import { formatCO2, formatQty, proseName } from '@/lib/format';
 import { logPosition } from '@/lib/rounds';
 import ConversionTable from './ConversionTable';
 
@@ -74,8 +74,7 @@ export default function RevealPanel({
 
 /** Concrete anchor phrase, e.g. "10 km of petrol car" / "10 km de coche de gasolina". */
 export function clueLabel(qty: number, item: ClientItem, lang: Lang): string {
-  const name = L(item.name, lang).toLowerCase().replace(/\s*\([^)]*\)/g, '');
-  return `${qtyLabel(qty, item, lang)} ${lang === 'es' ? 'de' : 'of'} ${name}`;
+  return `${qtyLabel(qty, item, lang)} ${lang === 'es' ? 'de' : 'of'} ${proseName(L(item.name, lang))}`;
 }
 
 /** The memorable per-unit numbers, shown after every answer. */
@@ -102,7 +101,7 @@ export function UnitFacts({ facts, lang }: { facts: UnitFact[]; lang: Lang }) {
 
 /** "1 min of hairdryer", "1 km of petrol car", "1 load of washing machine". */
 function unitFactLabel(f: UnitFact, lang: Lang): string {
-  const name = L(f.name, lang).toLowerCase().replace(/\s*\([^)]*\)/g, '');
+  const name = proseName(L(f.name, lang));
   const of = lang === 'es' ? 'de' : 'of';
   switch (f.unit) {
     case 'minutes':

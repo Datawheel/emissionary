@@ -43,6 +43,18 @@ export function formatQty(value: number, unit: Unit, lang: Lang): string {
   return `${formatNumber(value, lang)}×`;
 }
 
+/**
+ * Prose-friendly product name: parenthetical qualifiers stripped, lowercased —
+ * but acronyms (LED, PC, TV) and measurements keep their case.
+ */
+export function proseName(name: string): string {
+  return name
+    .replace(/\s*\([^)]*\)/g, '')
+    .split(' ')
+    .map((w) => (w.length >= 2 && w === w.toUpperCase() ? w : w.toLowerCase()))
+    .join(' ');
+}
+
 /** Grams below 1000 g, kilograms above; 2 sig figs (spec §3.5). */
 export function formatCO2(grams: number, lang: Lang): string {
   const co2 = 'CO₂';
