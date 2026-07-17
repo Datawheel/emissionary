@@ -66,9 +66,3 @@ export interface Source {
   /** ISO date the value was retrieved/verified */
   retrieved_at: string;
 }
-
-export interface Equivalence {
-  id: string;
-  gco2: number;
-  label: Localized;
-}

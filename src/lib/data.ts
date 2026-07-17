@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { z } from 'zod';
-import type { CountryFactors, Equivalence, Item, Source } from './types';
+import type { CountryFactors, Item, Source } from './types';
 
 const localized = z.object({ en: z.string().min(1), es: z.string().min(1) });
 
@@ -84,12 +84,6 @@ export const sourceSchema = z.object({
   retrieved_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 
-export const equivalenceSchema = z.object({
-  id: z.string().min(1),
-  gco2: z.number().positive(),
-  label: localized,
-});
-
 export const DATA_DIR = process.env.EMISSIONARY_DATA_DIR ?? join(process.cwd(), 'data');
 
 function loadJson<T>(file: string, schema: z.ZodType<T>): T[] {
@@ -100,8 +94,6 @@ function loadJson<T>(file: string, schema: z.ZodType<T>): T[] {
 let itemsCache: Item[] | null = null;
 let factorsCache: CountryFactors[] | null = null;
 let sourcesCache: Source[] | null = null;
-let equivalencesCache: Equivalence[] | null = null;
-
 export function loadItems(): Item[] {
   return (itemsCache ??= loadJson('items.json', itemSchema) as Item[]);
 }
@@ -112,10 +104,6 @@ export function loadCountryFactors(): CountryFactors[] {
 
 export function loadSources(): Source[] {
   return (sourcesCache ??= loadJson('sources.json', sourceSchema));
-}
-
-export function loadEquivalences(): Equivalence[] {
-  return (equivalencesCache ??= loadJson('equivalences.json', equivalenceSchema));
 }
 
 export function getCountry(iso3: string): CountryFactors {

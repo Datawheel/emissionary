@@ -27,7 +27,6 @@ const STRINGS = {
   next_round: { en: 'Next round', es: 'Siguiente ronda' },
   which_emits_more: { en: 'Which emits more CO₂?', es: '¿Cuál emite más CO₂?' },
   equals_question: { en: 'emits as much CO₂ as…', es: 'emite tanto CO₂ como…' },
-  how_many: { en: 'How much?', es: '¿Cuánto?' },
   connector_time: { en: '…running for:', es: '…funcionando durante:' },
   connector_km: { en: '…driving:', es: '…recorriendo:' },
   connector_liters: { en: '…boiling:', es: '…hirviendo:' },
@@ -70,7 +69,6 @@ const STRINGS = {
   next_daily_in: { en: 'Next Daily Game in', es: 'Próximo juego diario en' },
   percentile: { en: 'You beat {pct}% of today’s players', es: 'Superaste al {pct}% de los jugadores de hoy' },
   today: { en: 'Today', es: 'Hoy' },
-  this_week: { en: 'This Week', es: 'Esta semana' },
   all_time: { en: 'All Time', es: 'Histórico' },
   days_played: { en: 'Days played', es: 'Días jugados' },
   all_players: { en: 'All players', es: 'Todos los jugadores' },
@@ -86,7 +84,7 @@ const STRINGS = {
   all_countries: { en: 'All countries', es: 'Todos los países' },
   you: { en: 'You', es: 'Tú' },
   anonymous: { en: 'Anonymous 🦊', es: 'Anónimo 🦊' },
-  about: { en: 'About & methodology', es: 'Acerca de y metodología' },
+  about: { en: 'About', es: 'Acerca de' },
   stats: { en: 'Stats', es: 'Estadísticas' },
   loading: { en: 'Loading…', es: 'Cargando…' },
   error_retry: { en: 'Something went wrong. Tap to retry.', es: 'Algo salió mal. Toca para reintentar.' },
@@ -106,7 +104,6 @@ const STRINGS = {
     en: 'In {clean}, the CO₂ of {clue} buys you {ratio}× more {item} than in {dirty}.',
     es: 'En {clean}, el CO₂ de {clue} te da {ratio}× más de {item} que en {dirty}.',
   },
-  equivalent_to: { en: 'That’s about', es: 'Eso es aproximadamente' },
   unit_facts_title: { en: 'Worth remembering:', es: 'Vale la pena recordar:' },
 } satisfies Record<string, Localized>;
 

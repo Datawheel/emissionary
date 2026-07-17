@@ -2,7 +2,10 @@
  * Data validation suite (spec §4.4) — run via `npm run validate` (and as
  * pretest). Exits non-zero with a per-violation report.
  */
-import { getCountry, loadCountryFactors, loadEquivalences, loadItems, loadSources, PINNED_COUNTRIES } from '../src/lib/data';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { getCountry, loadCountryFactors, loadItems, loadSources, PINNED_COUNTRIES } from '../src/lib/data';
+import { generateSourcesMd } from './generate-sources-md';
 import { computeCO2 } from '../src/lib/emissions';
 import type { CountryFactors, Item } from '../src/lib/types';
 
@@ -100,11 +103,18 @@ export function validateData(): string[] {
   for (const item of items) {
     if (!item.name.es || !item.assumption_note.es) errors.push(`${item.id}: missing Spanish strings`);
   }
-  for (const e of loadEquivalences()) {
-    if (!e.label.es) errors.push(`equivalence ${e.id}: missing Spanish label`);
+
+  // 6) SOURCES.md must be regenerated whenever data changes
+  try {
+    const committed = readFileSync(join(process.cwd(), 'data', 'SOURCES.md'), 'utf8');
+    if (committed !== generateSourcesMd()) {
+      errors.push('data/SOURCES.md is stale — run: npx tsx scripts/generate-sources-md.ts');
+    }
+  } catch {
+    errors.push('data/SOURCES.md missing — run: npx tsx scripts/generate-sources-md.ts');
   }
 
-  // 6) enough items for round selection (spec M1: ≥40)
+  // 7) enough items for round selection (spec M1: ≥40)
   if (items.length < 40) errors.push(`only ${items.length} items; need ≥40`);
   const crossCarrier = items.filter((i) => i.carrier !== 'electricity');
   if (crossCarrier.length < 5) errors.push('need ≥5 non-electric items for cross-carrier rounds');

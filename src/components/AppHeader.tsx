@@ -32,6 +32,9 @@ export default async function AppHeader({
         <Link className="header-btn" href={`/leaderboard?lang=${lang}`}>
           🏆 <span className="hide-narrow">{t('leaderboard', lang)}</span>
         </Link>
+        <Link className="header-btn" href={`/about?lang=${lang}`}>
+          {t('about', lang)}
+        </Link>
       </div>
     </header>
   );
