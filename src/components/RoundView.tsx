@@ -62,6 +62,7 @@ export default function RoundView({
               <button
                 key={side}
                 className="card item-card"
+                data-category={item.category}
                 aria-pressed={picked}
                 disabled={revealed}
                 onClick={() => onBinaryChoice(side)}
@@ -95,7 +96,7 @@ export default function RoundView({
 
   return (
     <>
-      <div className="card item-card">
+      <div className="card item-card" data-category={round.item_a.category}>
         <div className="emoji" aria-hidden="true">
           {round.item_a.emoji}
         </div>
@@ -105,7 +106,7 @@ export default function RoundView({
         {revealed && <div className="co2-badge">{formatCO2(reveal!.breakdown_a.grams, lang)}</div>}
       </div>
       <p className="vs-divider">{t('equals_question', lang)}</p>
-      <div className="card item-card target-card">
+      <div className="card item-card target-card" data-category={round.item_b.category}>
         <div className="emoji" aria-hidden="true">
           {round.item_b.emoji}
         </div>

@@ -7,6 +7,13 @@ import type { Lang } from '@/lib/types';
 import { L, t } from '@/lib/i18n';
 import { formatCO2, formatQty } from '@/lib/format';
 
+
+/** Ribbon semantics: bar color encodes how clean the electricity is for this row. */
+function barColor(dirtiness: number): string {
+  const f = Math.min(1, Math.max(0, dirtiness));
+  return `hsl(${150 - 135 * f}, 60%, 44%)`;
+}
+
 export default function ConversionTable({
   rows,
   note,
@@ -26,6 +33,13 @@ export default function ConversionTable({
   const minLog = Math.min(...rows.map((r) => Math.log10(r.qtyB)));
   const span = Math.max(maxLog - minLog, 0.01);
   const shown = expanded ? rows : rows.slice(0, 9);
+  const gAll = rows.map((r) => Math.log10(r.gramsA));
+  const gLo = Math.min(...gAll);
+  const gHi = Math.max(...gAll);
+  const dirtiness = (row: ConversionRow): number =>
+    gHi - gLo > 0.05
+      ? (Math.log10(row.gramsA) - gLo) / (gHi - gLo)
+      : 1 - (Math.log10(row.qtyB) - minLog) / span;
   // prose-friendly name: lowercase, parenthetical qualifiers stripped
   const itemBName = L(itemB.name, lang).toLowerCase().replace(/\s*\([^)]*\)/g, '');
 
@@ -65,7 +79,10 @@ export default function ConversionTable({
                     <div className="bar-track" aria-hidden="true">
                       <div
                         className="bar"
-                        style={{ width: `${8 + (92 * (Math.log10(row.gramsA) - gMin)) / gSpan}%` }}
+                        style={{
+                          width: `${8 + (92 * (Math.log10(row.gramsA) - gMin)) / gSpan}%`,
+                          background: barColor((Math.log10(row.gramsA) - gMin) / gSpan),
+                        }}
                       />
                     </div>
                   </div>
@@ -97,7 +114,13 @@ export default function ConversionTable({
             <div>
               <div style={{ fontWeight: row.isPlayer ? 700 : 500 }}>{row.name}</div>
               <div className="bar-track" aria-hidden="true">
-                <div className="bar" style={{ width: `${8 + (92 * (Math.log10(row.qtyB) - minLog)) / span}%` }} />
+                <div
+                  className="bar"
+                  style={{
+                    width: `${8 + (92 * (Math.log10(row.qtyB) - minLog)) / span}%`,
+                    background: barColor(dirtiness(row)),
+                  }}
+                />
               </div>
             </div>
             <span className="value">{item2Label(row.qtyB, itemB, lang)}</span>

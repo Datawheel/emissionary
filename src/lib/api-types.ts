@@ -19,6 +19,7 @@ export interface ClientItem {
   id: string;
   name: Localized;
   emoji: string;
+  category: string;
   typical_unit: Unit;
   event_noun?: Localized;
 }

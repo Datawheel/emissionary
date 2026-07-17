@@ -31,6 +31,7 @@ function toClientItem(item: Item): ClientItem {
     id: item.id,
     name: item.name,
     emoji: item.emoji,
+    category: item.category,
     typical_unit: item.typical_unit,
     event_noun: item.event_noun,
   };

@@ -1,18 +1,35 @@
+/* ————————————————————————————————————————————————————————————————
+   Emissionary design system
+   Identity: the game lives on engineer's LOG-RULED PAPER (its actual
+   subject), under a CLEAN→DIRTY ENERGY RIBBON that gives every bar and
+   marker in the app its meaning. Display face: Bricolage Grotesque.
+   ———————————————————————————————————————————————————————————————— */
+
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  src: url('/fonts/bricolage-latin.woff2') format('woff2');
+  font-weight: 200 800;
+  font-display: swap;
+}
+
 :root {
-  --ink: #1a1626;
-  --ink-soft: #4a4458;
-  --paper: #f7f5f0;
+  --ink: #221c33;
+  --ink-soft: #5c5470;
+  --paper: #f6f4ee;
   --card: #ffffff;
-  --line: #e4e0d8;
-  --spark: #ffb03a; /* player guess / energy amber */
-  --spark-deep: #d98a10;
-  --truth: #3ec28f; /* correct answer green */
-  --truth-deep: #2a9970;
-  --alert: #e4593c;
-  --header: #1a1626;
-  --header-text: #f7f5f0;
-  --radius: 14px;
+  --line: #e3ded2;
+  --rule: rgba(34, 28, 51, 0.055); /* log-paper lines */
+  --spark: #ffb03a; /* player / energy amber */
+  --spark-deep: #cf820b;
+  --truth: #3ec28f; /* clean / correct green */
+  --truth-deep: #23916a;
+  --alert: #e4593c; /* dirty / miss red */
+  --header: #221c33;
+  --header-text: #f6f4ee;
+  --ribbon: linear-gradient(90deg, #3ec28f 0%, #b8d24b 30%, #ffb03a 60%, #ff8a3d 80%, #e4593c 100%);
+  --radius: 16px;
   --tap: 48px;
+  --display: 'Bricolage Grotesque', ui-rounded, ui-sans-serif, system-ui, sans-serif;
 }
 
 * {
@@ -25,12 +42,34 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* log-ruled paper: vertical rules at log10 positions of 1,2,3,5,7 per decade */
 body {
   font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-  background: var(--paper);
+  background-color: var(--paper);
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--rule) 0px, var(--rule) 1.5px, transparent 1.5px,
+    transparent 39.1px, var(--rule) 39.1px, var(--rule) 40.1px, transparent 40.1px,
+    transparent 62px, var(--rule) 62px, var(--rule) 63px, transparent 63px,
+    transparent 90.9px, var(--rule) 90.9px, var(--rule) 91.9px, transparent 91.9px,
+    transparent 109.8px, var(--rule) 109.8px, var(--rule) 110.8px, transparent 110.8px,
+    transparent 130px
+  );
   color: var(--ink);
   line-height: 1.45;
   min-height: 100dvh;
+}
+
+h1,
+h2,
+h3,
+.brand,
+.readout,
+.item-card .title,
+.score-pill,
+.co2-badge,
+.primary {
+  font-family: var(--display);
 }
 
 button {
@@ -51,6 +90,7 @@ a {
   border-radius: 4px;
 }
 
+/* ——— header + the energy ribbon (brand stripe) ——— */
 .app-header {
   background: var(--header);
   color: var(--header-text);
@@ -63,10 +103,20 @@ a {
   z-index: 20;
 }
 
+.app-header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 4px;
+  background: var(--ribbon);
+}
+
 .app-header .brand {
   font-weight: 800;
-  letter-spacing: 0.02em;
-  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  font-size: 1.15rem;
   text-decoration: none;
 }
 
@@ -87,8 +137,9 @@ a {
   min-height: 36px;
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
   font-size: 0.85rem;
+  font-weight: 600;
   text-decoration: none;
 }
 
@@ -114,28 +165,54 @@ a {
 main.screen {
   max-width: 480px;
   margin: 0 auto;
-  padding: 12px 16px calc(96px + env(safe-area-inset-bottom));
+  padding: 16px 16px calc(96px + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
+/* ——— cards ——— */
 .card {
   background: var(--card);
-  border: 1px solid var(--line);
+  border: 1.5px solid var(--line);
   border-radius: var(--radius);
   padding: 14px 16px;
+  box-shadow: 0 2px 0 rgba(34, 28, 51, 0.06);
 }
 
 .item-card {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
+/* emoji sit in category-tinted tokens — consistent, recognizable item chips */
 .item-card .emoji {
-  font-size: 2.4rem;
+  font-size: 1.7rem;
   line-height: 1;
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: #f1eee6;
+}
+
+[data-category='kitchen'] .emoji {
+  background: #ffedd2;
+}
+[data-category='climate'] .emoji {
+  background: #d9f0ff;
+}
+[data-category='personal'] .emoji {
+  background: #ffe3ea;
+}
+[data-category='electronics'] .emoji {
+  background: #e9e4ff;
+}
+[data-category='transport'] .emoji {
+  background: #dcf5e7;
 }
 
 .item-card .qty {
@@ -149,23 +226,20 @@ main.screen {
   font-size: 0.95rem;
 }
 
-/* integrated title: quantity + product as one prominent line */
 .item-card .title {
-  font-weight: 800;
-  font-size: 1.25rem;
-  line-height: 1.25;
+  font-weight: 700;
+  font-size: 1.3rem;
+  line-height: 1.2;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
 }
 
-/* the product being guessed */
 .target-card {
   border: 2px solid var(--spark);
-  background: linear-gradient(180deg, rgba(255, 176, 58, 0.08), transparent);
+  background: linear-gradient(180deg, rgba(255, 176, 58, 0.09), rgba(255, 176, 58, 0.02));
 }
 
-/* sentence connectors: the round should read as one continuous sentence —
-   "2 h of gaming PC / emits as much CO₂ as… / Heat pump / …running for: 14 h" */
+/* sentence connectors */
 .vs-divider {
   text-align: center;
   color: var(--ink-soft);
@@ -179,12 +253,13 @@ main.screen {
   position: relative;
   height: 10px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #eee9df, #d9d2c4);
+  background: #ece8dd;
+  border: 1px solid var(--line);
 }
 
 .log-axis .tick {
   position: absolute;
-  top: -3px;
+  top: -4px;
   width: 2px;
   height: 16px;
   background: var(--line);
@@ -195,11 +270,11 @@ main.screen {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   border: 3px solid var(--card);
-  box-shadow: 0 1px 4px rgba(26, 22, 38, 0.35);
+  box-shadow: 0 2px 6px rgba(34, 28, 51, 0.35);
 }
 
 .log-axis .marker.guess {
@@ -212,11 +287,11 @@ main.screen {
 
 @media (prefers-reduced-motion: no-preference) {
   .log-axis .marker.truth {
-    animation: drop-in 0.5s cubic-bezier(0.2, 1.4, 0.4, 1);
+    animation: drop-in 0.55s cubic-bezier(0.2, 1.4, 0.4, 1);
   }
   @keyframes drop-in {
     from {
-      transform: translate(-50%, -220%);
+      transform: translate(-50%, -240%);
       opacity: 0;
     }
     to {
@@ -228,15 +303,15 @@ main.screen {
 
 .readout {
   text-align: center;
-  font-size: 3rem;
+  font-size: 3.2rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
 }
 
 .readout .unit {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 600;
   color: var(--ink-soft);
   margin-left: 6px;
@@ -256,35 +331,37 @@ input[type='range'].log-slider {
 }
 
 input[type='range'].log-slider::-webkit-slider-runnable-track {
-  height: 10px;
+  height: 12px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #eee9df, #d9d2c4);
+  background: #ece8dd;
+  border: 1px solid var(--line);
 }
 
 input[type='range'].log-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 34px;
-  height: 34px;
-  margin-top: -12px;
+  width: 36px;
+  height: 36px;
+  margin-top: -13px;
   border-radius: 50%;
   background: var(--spark);
   border: 4px solid var(--card);
-  box-shadow: 0 2px 8px rgba(26, 22, 38, 0.3);
+  box-shadow: 0 3px 0 rgba(34, 28, 51, 0.25);
 }
 
 input[type='range'].log-slider::-moz-range-track {
-  height: 10px;
+  height: 12px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #eee9df, #d9d2c4);
+  background: #ece8dd;
+  border: 1px solid var(--line);
 }
 
 input[type='range'].log-slider::-moz-range-thumb {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: var(--spark);
   border: 4px solid var(--card);
-  box-shadow: 0 2px 8px rgba(26, 22, 38, 0.3);
+  box-shadow: 0 3px 0 rgba(34, 28, 51, 0.25);
 }
 
 .slider-labels {
@@ -296,6 +373,7 @@ input[type='range'].log-slider::-moz-range-thumb {
   padding: 0 4px;
 }
 
+/* ——— actions: chunky, pressable ——— */
 .bottom-bar {
   position: fixed;
   left: 0;
@@ -308,7 +386,8 @@ input[type='range'].log-slider::-moz-range-thumb {
   z-index: 10;
 }
 
-.bottom-bar .primary {
+.bottom-bar .primary,
+.primary {
   width: 100%;
   max-width: 448px;
   min-height: 54px;
@@ -316,18 +395,47 @@ input[type='range'].log-slider::-moz-range-thumb {
   background: var(--ink);
   color: var(--paper);
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 0 rgba(34, 28, 51, 0.35);
+  transition: transform 0.06s ease, box-shadow 0.06s ease;
+}
+
+.primary:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(34, 28, 51, 0.35);
 }
 
 .bottom-bar .primary:disabled {
-  opacity: 0.4;
+  opacity: 0.35;
   cursor: default;
+  box-shadow: none;
+}
+
+.score-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-weight: 800;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.score-pill.good {
+  background: var(--truth-deep);
+}
+
+.score-pill.bad {
+  background: var(--alert);
 }
 
 .co2-badge {
   margin-left: auto;
   font-weight: 800;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   font-variant-numeric: tabular-nums;
   color: var(--spark-deep);
   white-space: nowrap;
@@ -346,26 +454,6 @@ input[type='range'].log-slider::-moz-range-thumb {
 
 .co2-badge .verdict.lose {
   color: var(--alert);
-}
-
-.score-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 999px;
-  padding: 4px 12px;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.score-pill.good {
-  background: var(--truth-deep);
-}
-
-.score-pill.bad {
-  background: var(--alert);
 }
 
 details.breakdown {
@@ -410,6 +498,7 @@ details.breakdown summary {
   margin-top: 6px;
 }
 
+/* ——— conversion rows: bar color = grid intensity (the ribbon's meaning) ——— */
 .conversion-row {
   display: grid;
   grid-template-columns: 2rem 1fr auto;
@@ -425,7 +514,7 @@ details.breakdown summary {
 }
 
 .conversion-row.own {
-  background: linear-gradient(90deg, rgba(255, 176, 58, 0.14), transparent);
+  background: linear-gradient(90deg, rgba(255, 176, 58, 0.16), transparent);
   border-radius: 8px;
   padding-left: 6px;
   margin-left: -6px;
@@ -435,7 +524,7 @@ details.breakdown summary {
   position: relative;
   height: 8px;
   border-radius: 999px;
-  background: #eee9df;
+  background: #ece8dd;
   margin-top: 4px;
 }
 
@@ -476,11 +565,67 @@ details.breakdown summary {
   min-height: 84px;
   text-align: left;
   width: 100%;
+  transition: transform 0.06s ease;
+}
+
+.binary-choice .card:active:not(:disabled) {
+  transform: scale(0.985);
 }
 
 .binary-choice .card[aria-pressed='true'] {
   border-color: var(--spark-deep);
   box-shadow: 0 0 0 2px var(--spark);
+}
+
+/* ——— landing hero: the brand moment ——— */
+.hero-axis {
+  position: relative;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--ribbon);
+  opacity: 0.95;
+  margin: 8px 12px;
+}
+
+.hero-axis .tick {
+  position: absolute;
+  top: -5px;
+  width: 2px;
+  height: 24px;
+  background: rgba(34, 28, 51, 0.35);
+}
+
+.hero-axis .marker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 4px solid var(--ink);
+  box-shadow: 0 3px 8px rgba(34, 28, 51, 0.3);
+  left: 20%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-axis .marker {
+    animation: wander 7s ease-in-out infinite;
+  }
+  @keyframes wander {
+    0%, 12% {
+      left: 18%;
+    }
+    30%, 45% {
+      left: 78%;
+    }
+    62%, 74% {
+      left: 42%;
+    }
+    92%, 100% {
+      left: 18%;
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

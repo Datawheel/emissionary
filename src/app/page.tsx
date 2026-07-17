@@ -12,38 +12,50 @@ export default async function Home({
   return (
     <>
       <AppHeader lang={lang} />
-      <main className="screen" style={{ paddingTop: 32, gap: 16, textAlign: 'center' }}>
-        <div style={{ fontSize: '3.2rem' }} aria-hidden="true">
-          💨🌍
-        </div>
-        <h1 style={{ fontSize: '1.9rem', letterSpacing: '-0.01em' }}>
+      <main className="screen" style={{ paddingTop: 36, gap: 16, textAlign: 'center' }}>
+        <h1 style={{ fontSize: '2.4rem', letterSpacing: '-0.02em', lineHeight: 1.05 }}>
           Emission<span style={{ color: 'var(--spark-deep)' }}>ary</span>
         </h1>
-        <p style={{ fontSize: '1.05rem', fontWeight: 600 }}>{t('tagline', lang)}</p>
+        <div className="hero-axis" aria-hidden="true">
+          {[14, 33.2, 47.7, 62.3, 81.5].map((p) => (
+            <span key={p} className="tick" style={{ left: `${p}%` }} />
+          ))}
+          <span className="marker" />
+        </div>
+        <p style={{ fontSize: '1.1rem', fontWeight: 700 }}>{t('tagline', lang)}</p>
         <p className="muted">{t('subtitle', lang)}</p>
         <Link
           href={`/daily${q}`}
           className="card"
-          style={{ fontWeight: 800, fontSize: '1.15rem', textDecoration: 'none', padding: 18, background: 'var(--ink)', color: 'var(--paper)' }}
+          style={{
+            fontWeight: 800,
+            fontSize: '1.15rem',
+            textDecoration: 'none',
+            padding: 18,
+            background: 'var(--ink)',
+            color: 'var(--paper)',
+            fontFamily: 'var(--display)',
+            boxShadow: '0 4px 0 rgba(34,28,51,0.35)',
+          }}
         >
           📅 {t('daily_game', lang)}
         </Link>
         <Link
           href={`/play${q}`}
           className="card"
-          style={{ fontWeight: 800, fontSize: '1.15rem', textDecoration: 'none', padding: 18 }}
+          style={{ fontWeight: 800, fontSize: '1.15rem', textDecoration: 'none', padding: 18, fontFamily: 'var(--display)' }}
         >
           ♾️ {t('free_play', lang)}
         </Link>
-        <Link href={`/leaderboard${q}`} className="muted" style={{ padding: 8 }}>
-          🏆 {t('leaderboard', lang)}
-        </Link>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 16 }}>
-          <Link href={`/about${q}`} className="muted">
-            {t('about', lang)}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 16, flexWrap: 'wrap' }}>
+          <Link href={`/leaderboard${q}`} className="muted">
+            🏆 {t('leaderboard', lang)}
           </Link>
           <Link href={`/stats${q}`} className="muted">
             {t('stats', lang)}
+          </Link>
+          <Link href={`/about${q}`} className="muted">
+            {t('about', lang)}
           </Link>
           <Link href={lang === 'en' ? '/?lang=es' : '/?lang=en'} className="muted">
             {lang === 'en' ? 'Español' : 'English'}
