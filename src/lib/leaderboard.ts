@@ -8,11 +8,13 @@ export interface LeaderboardRow {
   flag: string;
   country: string;
   score: number;
+  /** distinct Daily Game dates played (null on the today board) */
+  days: number | null;
   is_you: boolean;
 }
 
 export interface LeaderboardPage {
-  scope: 'daily' | 'weekly' | 'alltime';
+  scope: 'daily' | 'alltime' | 'days';
   rows: LeaderboardRow[];
   you: LeaderboardRow | null;
   total_players: number;
@@ -27,45 +29,41 @@ function displayName(name: string, disc: number | null): string {
 
 /**
  * Leaderboards are queries over guesses — no mutable score tables (spec §15.2).
- * Anonymous players (name IS NULL) are excluded from public rows but always
- * see their own rank (spec §10).
+ * ONLY Daily Game rounds count: Free Play is practice and never earns board
+ * points (volume must not be a strategy). Anonymous players (name IS NULL)
+ * are excluded from public rows but always see their own rank (spec §10).
+ *
+ * Scopes: 'daily' = today's completed sets; 'alltime' = cumulative daily
+ * points; 'days' = loyalty, ranked by distinct days played.
  */
 export async function leaderboard(
-  scope: 'daily' | 'weekly' | 'alltime',
+  scope: 'daily' | 'alltime' | 'days',
   player: PlayerRow | null,
   opts: { country?: string; offset?: number; date?: string } = {},
 ): Promise<LeaderboardPage> {
   const offset = Math.max(0, opts.offset ?? 0);
-  let totalsSql: string;
   const params: unknown[] = [];
+  let totalsSql: string;
+  let order: string;
 
   if (scope === 'daily') {
     params.push(opts.date);
     totalsSql = `
-      SELECT g.player_id, sum(g.score)::int AS score, sum(g.ms_elapsed)::bigint AS tiebreak
+      SELECT g.player_id, sum(g.score)::int AS score, NULL::int AS days,
+             sum(g.ms_elapsed)::bigint AS tiebreak
         FROM guesses g JOIN rounds r ON r.id = g.round_id
        WHERE r.set_date = $1
        GROUP BY g.player_id
       HAVING count(*) = 5`;
-  } else if (scope === 'weekly') {
-    totalsSql = `
-      SELECT player_id, round(avg(score))::int AS score, count(*)::bigint AS tiebreak
-        FROM (
-          SELECT g.player_id, g.score,
-                 row_number() OVER (PARTITION BY g.player_id ORDER BY g.score DESC) AS rn
-            FROM guesses g JOIN rounds r ON r.id = g.round_id
-           WHERE r.set_date IS NULL
-             AND date_trunc('week', g.created_at) = date_trunc('week', now())
-        ) best
-       WHERE rn <= 20
-       GROUP BY player_id
-      HAVING count(*) >= 10`;
+    order = 'score DESC, tiebreak ASC';
   } else {
     totalsSql = `
-      SELECT g.player_id, sum(g.score)::int AS score, 0::bigint AS tiebreak
+      SELECT g.player_id, sum(g.score)::int AS score,
+             count(DISTINCT r.set_date)::int AS days, 0::bigint AS tiebreak
         FROM guesses g JOIN rounds r ON r.id = g.round_id
        WHERE r.set_date IS NOT NULL
        GROUP BY g.player_id`;
+    order = scope === 'days' ? 'days DESC, score DESC' : 'score DESC, days DESC';
   }
 
   const countryFilter = opts.country ? `AND p.country = $${params.length + 1}` : '';
@@ -74,15 +72,15 @@ export async function leaderboard(
   const ranked = `
     WITH totals AS (${totalsSql}),
     named AS (
-      SELECT t.player_id, t.score, t.tiebreak, p.name, p.name_discriminator, p.country,
-             rank() OVER (ORDER BY t.score DESC, t.tiebreak ${scope === 'weekly' ? 'DESC' : 'ASC'}) AS rank
+      SELECT t.player_id, t.score, t.days, t.tiebreak, p.name, p.name_discriminator, p.country,
+             rank() OVER (ORDER BY ${order}) AS rank
         FROM totals t JOIN players p ON p.id = t.player_id
        WHERE p.name IS NOT NULL ${countryFilter}
     )`;
 
   const rows = await q<{
-    player_id: string; score: number; name: string; name_discriminator: number | null;
-    country: string; rank: string;
+    player_id: string; score: number; days: number | null; name: string;
+    name_discriminator: number | null; country: string; rank: string;
   }>(
     `${ranked} SELECT * FROM named ORDER BY rank OFFSET $${params.length + 1} LIMIT ${PAGE}`,
     [...params, offset],
@@ -95,6 +93,7 @@ export async function leaderboard(
     flag: safeFlag(r.country),
     country: r.country,
     score: r.score,
+    days: r.days,
     is_you: isYou,
   });
 
@@ -104,15 +103,14 @@ export async function leaderboard(
     if (inPage) {
       you = toRow(inPage, true);
     } else {
-      // anonymous players (or off-page) still see their own standing
-      const own = await q<{ score: number; rank: string }>(
+      const own = await q<{ score: number; days: number | null; rank: string }>(
         `WITH totals AS (${totalsSql}),
          all_ranked AS (
-           SELECT t.player_id, t.score,
-                  rank() OVER (ORDER BY t.score DESC, t.tiebreak ${scope === 'weekly' ? 'DESC' : 'ASC'}) AS rank
+           SELECT t.player_id, t.score, t.days,
+                  rank() OVER (ORDER BY ${order}) AS rank
              FROM totals t
          )
-         SELECT score, rank::text FROM all_ranked WHERE player_id = $${params.length + 1}`,
+         SELECT score, days, rank::text FROM all_ranked WHERE player_id = $${params.length + 1}`,
         [...params, player.id],
       );
       if (own[0]) {
@@ -122,6 +120,7 @@ export async function leaderboard(
           flag: safeFlag(player.country),
           country: player.country,
           score: own[0].score,
+          days: own[0].days,
           is_you: true,
         };
       }

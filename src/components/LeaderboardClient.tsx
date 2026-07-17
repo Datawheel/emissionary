@@ -7,7 +7,7 @@ import { t } from '@/lib/i18n';
 import type { CountryOption } from './CountryPicker';
 import NamePrompt, { namePromptDismissed } from './NamePrompt';
 
-type Scope = 'daily' | 'weekly' | 'alltime';
+type Scope = 'daily' | 'alltime' | 'days';
 
 export default function LeaderboardClient({
   countries,
@@ -44,8 +44,8 @@ export default function LeaderboardClient({
 
   const scopes: { key: Scope; label: string }[] = [
     { key: 'daily', label: t('today', lang) },
-    { key: 'weekly', label: t('this_week', lang) },
     { key: 'alltime', label: t('all_time', lang) },
+    { key: 'days', label: t('days_played', lang) },
   ];
 
   const youOffPage = page?.you && !page.rows.some((r) => r.is_you);
@@ -53,6 +53,7 @@ export default function LeaderboardClient({
   return (
     <main className="screen">
       <h1 style={{ fontSize: '1.3rem' }}>{t('leaderboard', lang)}</h1>
+      <p className="muted">{t('practice_note', lang)}</p>
       {showNamePrompt && (
         <NamePrompt
           lang={lang}
@@ -113,7 +114,13 @@ export default function LeaderboardClient({
               <span>
                 {r.flag} {r.name} {r.is_you && <strong>· {t('you', lang)}</strong>}
               </span>
-              <span className="value">{r.score}</span>
+              <span className="value">
+                {scope === 'days' && r.days != null
+                  ? `${r.days} ${t('days_short', lang)} · ${r.score}`
+                  : r.days != null
+                    ? `${r.score} · ${r.days}${t('days_short', lang)[0]}`
+                    : r.score}
+              </span>
             </div>
           ))}
           {youOffPage && page.you && (
@@ -122,7 +129,13 @@ export default function LeaderboardClient({
               <span>
                 {page.you.flag} {page.you.name} <strong>· {t('you', lang)}</strong>
               </span>
-              <span className="value">{page.you.score}</span>
+              <span className="value">
+                {scope === 'days' && page.you.days != null
+                  ? `${page.you.days} ${t('days_short', lang)} · ${page.you.score}`
+                  : page.you.days != null
+                    ? `${page.you.score} · ${page.you.days}${t('days_short', lang)[0]}`
+                    : page.you.score}
+              </span>
             </div>
           )}
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>

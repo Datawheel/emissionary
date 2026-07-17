@@ -72,6 +72,12 @@ const STRINGS = {
   today: { en: 'Today', es: 'Hoy' },
   this_week: { en: 'This Week', es: 'Esta semana' },
   all_time: { en: 'All Time', es: 'Histórico' },
+  days_played: { en: 'Days played', es: 'Días jugados' },
+  days_short: { en: 'days', es: 'días' },
+  practice_note: {
+    en: 'Only Daily Games score points here — Free Play is for practice.',
+    es: 'Solo los juegos diarios puntúan aquí — el juego libre es para practicar.',
+  },
   all_countries: { en: 'All countries', es: 'Todos los países' },
   you: { en: 'You', es: 'Tú' },
   anonymous: { en: 'Anonymous 🦊', es: 'Anónimo 🦊' },
@@ -96,6 +102,7 @@ const STRINGS = {
     es: 'En {clean}, el CO₂ de {clue} te da {ratio}× más de {item} que en {dirty}.',
   },
   equivalent_to: { en: 'That’s about', es: 'Eso es aproximadamente' },
+  unit_facts_title: { en: 'Worth remembering:', es: 'Vale la pena recordar:' },
 } satisfies Record<string, Localized>;
 
 export type StringKey = keyof typeof STRINGS;

@@ -1,14 +1,15 @@
 import { randomUUID } from 'node:crypto';
 import { q } from './db';
-import { getCountry, loadEquivalences, loadItems } from './data';
+import { getCountry, loadItems } from './data';
 import { computeCO2, solveEquivalent } from './emissions';
 import { buildConversionRows, takeaway } from './conversion';
 import { loadCountryFactors } from './data';
 import { pairKey, seededRng, selectBinaryRound, selectQuantRound, sliderBounds, type RoundSpec } from './rounds';
 import { score as scoreFn, scoreBinary, signedLogError } from './scoring';
 import { loadSources } from './data';
-import type { ClientItem, ClientRound, FreeplayTotals, GuessResponse, RevealItemInfo } from './api-types';
-import type { Item, Localized } from './types';
+import { toSigFigs } from './format';
+import type { ClientItem, ClientRound, FreeplayTotals, GuessResponse, RevealItemInfo, UnitFact } from './api-types';
+import type { CountryFactors, Item } from './types';
 import type { PlayerRow } from './player';
 
 export interface RoundRow {
@@ -153,26 +154,16 @@ function revealItemInfo(item: Item): RevealItemInfo {
   };
 }
 
-function pickEquivalence(grams: number): Localized | null {
-  let equivalences;
-  try {
-    equivalences = loadEquivalences();
-  } catch {
-    return null;
-  }
-  let bestLabel: Localized | null = null;
-  let bestFit = Infinity;
-  for (const e of equivalences) {
-    const n = grams / e.gco2;
-    if (n < 1 || n > 500) continue;
-    const fit = Math.abs(Math.log10(n / 20)); // prefer counts near ~20
-    if (fit < bestFit) {
-      bestFit = fit;
-      const count = n < 10 ? Math.round(n * 10) / 10 : Math.round(n);
-      bestLabel = { en: `${count} ${e.label.en}`, es: `${count} ${e.label.es}` };
-    }
-  }
-  return bestLabel;
+function unitFact(item: Item, cf: CountryFactors): UnitFact {
+  const one = computeCO2(item, 1, cf);
+  return {
+    emoji: item.emoji,
+    name: item.name,
+    unit: item.typical_unit,
+    event_noun: item.event_noun,
+    kwh: one.energy_kwh != null ? toSigFigs(one.energy_kwh) : null,
+    grams: one.grams,
+  };
 }
 
 export class GuessError extends Error {
@@ -270,7 +261,7 @@ export async function submitGuess(
     breakdown_b: round.round_type === 'quant' ? solved.breakdownB : computeCO2(itemB, Number(round.qty_b), cf),
     conversion_rows: rows,
     takeaway: takeaway(rows),
-    equivalence: pickEquivalence(solved.gramsTarget),
+    unit_facts: [unitFact(itemA, cf), unitFact(itemB, cf)],
     totals,
     already_answered: alreadyAnswered,
   };

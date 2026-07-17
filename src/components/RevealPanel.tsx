@@ -1,7 +1,7 @@
 'use client';
 
 import type { Breakdown } from '@/lib/emissions';
-import type { ClientItem, GuessResponse, RevealItemInfo } from '@/lib/api-types';
+import type { ClientItem, GuessResponse, RevealItemInfo, UnitFact } from '@/lib/api-types';
 import type { Lang } from '@/lib/types';
 import { L, t } from '@/lib/i18n';
 import { formatCO2, formatQty } from '@/lib/format';
@@ -54,11 +54,7 @@ export default function RevealPanel({
             <div style={{ fontWeight: 800, fontVariantNumeric: 'tabular-nums' }}>{qtyLabel(truth, itemB, lang)}</div>
           </div>
         </div>
-        {data.equivalence && (
-          <p className="muted" style={{ marginTop: 10 }}>
-            {t('equivalent_to', lang)} {L(data.equivalence, lang)} — {formatCO2(data.grams_target, lang)}
-          </p>
-        )}
+        <UnitFacts facts={data.unit_facts} lang={lang} />
         <details className="breakdown">
           <summary>{t('how_computed', lang)}</summary>
           <BreakdownBlock breakdown={data.breakdown_a} info={data.item_info_a} item={itemA} lang={lang} />
@@ -80,6 +76,49 @@ export default function RevealPanel({
 export function clueLabel(qty: number, item: ClientItem, lang: Lang): string {
   const name = L(item.name, lang).toLowerCase().replace(/\s*\([^)]*\)/g, '');
   return `${qtyLabel(qty, item, lang)} ${lang === 'es' ? 'de' : 'of'} ${name}`;
+}
+
+/** The memorable per-unit numbers, shown after every answer. */
+export function UnitFacts({ facts, lang }: { facts: UnitFact[]; lang: Lang }) {
+  return (
+    <div className="unit-facts">
+      <p className="muted" style={{ marginBottom: 4 }}>
+        {t('unit_facts_title', lang)}
+      </p>
+      {facts.map((f, i) => (
+        <p key={i} className="unit-fact">
+          <span aria-hidden="true">{f.emoji}</span> {unitFactLabel(f, lang)} ={' '}
+          {f.kwh != null && (
+            <>
+              <strong>{f.kwh} kWh</strong> ·{' '}
+            </>
+          )}
+          <strong>{formatCO2(f.grams, lang)}</strong>
+        </p>
+      ))}
+    </div>
+  );
+}
+
+/** "1 min of hairdryer", "1 km of petrol car", "1 load of washing machine". */
+function unitFactLabel(f: UnitFact, lang: Lang): string {
+  const name = L(f.name, lang).toLowerCase().replace(/\s*\([^)]*\)/g, '');
+  const of = lang === 'es' ? 'de' : 'of';
+  switch (f.unit) {
+    case 'minutes':
+      return `1 min ${of} ${name}`;
+    case 'hours':
+      return `1 h ${of} ${name}`;
+    case 'km':
+      return `1 km ${of} ${name}`;
+    case 'liters_boiled':
+      return `1 L ${of} ${name}`;
+    case 'events': {
+      // nouns are stored plural; trailing-s singularization works in EN and ES here
+      const noun = f.event_noun ? L(f.event_noun, lang).replace(/s$/, '') : lang === 'es' ? 'vez' : 'use';
+      return `1 ${noun} ${of} ${name}`;
+    }
+  }
 }
 
 function BreakdownBlock({

@@ -31,6 +31,17 @@ export interface FreeplayTotals {
   best_streak: number;
 }
 
+/** Per-single-unit basics ("1 min of hairdryer = 0.03 kWh · 1.2 g CO₂") — the
+ *  memorable numbers that build intuition, computed in the guess country. */
+export interface UnitFact {
+  emoji: string;
+  name: Localized;
+  unit: Unit;
+  event_noun?: Localized;
+  kwh: number | null;
+  grams: number;
+}
+
 /** Assumption note + citations — reveal-only (notes contain physical values). */
 export interface RevealItemInfo {
   assumption_note: Localized;
@@ -54,7 +65,7 @@ export interface GuessResponse {
   breakdown_b: Breakdown;
   conversion_rows: ConversionRow[];
   takeaway: Takeaway | null;
-  equivalence: Localized | null;
+  unit_facts: UnitFact[];
   slider_min?: number;
   slider_max?: number;
   totals: FreeplayTotals;

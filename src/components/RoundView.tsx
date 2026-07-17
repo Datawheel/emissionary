@@ -10,7 +10,7 @@ import type { Lang, Unit } from '@/lib/types';
 import { L, t, type StringKey } from '@/lib/i18n';
 import { formatCO2 } from '@/lib/format';
 import LogSlider from './LogSlider';
-import RevealPanel, { clueLabel, qtyLabel } from './RevealPanel';
+import RevealPanel, { clueLabel, qtyLabel, UnitFacts } from './RevealPanel';
 
 function connectorKey(unit: Unit): StringKey {
   switch (unit) {
@@ -84,11 +84,14 @@ export default function RoundView({
           })}
         </div>
         {revealed && (
-          <div style={{ textAlign: 'center' }} aria-live="polite">
-            <span className={`score-pill ${reveal!.correct ? 'good' : 'bad'}`}>
-              {reveal!.correct ? '✓' : '✗'} +{reveal!.score} {t('points', lang)}
-            </span>
-          </div>
+          <>
+            <div style={{ textAlign: 'center' }} aria-live="polite">
+              <span className={`score-pill ${reveal!.correct ? 'good' : 'bad'}`}>
+                {reveal!.correct ? '✓' : '✗'} +{reveal!.score} {t('points', lang)}
+              </span>
+            </div>
+            <UnitFacts facts={reveal!.unit_facts} lang={lang} />
+          </>
         )}
       </>
     );
