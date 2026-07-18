@@ -48,8 +48,10 @@ export function formatQty(value: number, unit: Unit, lang: Lang): string {
  * but acronyms (LED, PC, TV) and measurements keep their case.
  */
 export function proseName(name: string): string {
+  // parentheticals are dropped in prose, except the per-passenger basis of
+  // shared vehicles — losing it would misstate what the number measures
   return name
-    .replace(/\s*\([^)]*\)/g, '')
+    .replace(/\s*\((?!per passenger|por pasajero)[^)]*\)/g, '')
     .split(' ')
     .map((w) => (w.length >= 2 && w === w.toUpperCase() ? w : w.toLowerCase()))
     .join(' ');

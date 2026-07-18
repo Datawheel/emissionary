@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { getCountry, loadItems } from '@/lib/data';
 import { BOIL_KWH_PER_LITER, PETROL_KGCO2_PER_L } from '@/lib/constants';
 import { computeCO2 } from '@/lib/emissions';
+import { proseName } from '@/lib/format';
 import type { Item } from '@/lib/types';
 
 /**
@@ -72,6 +73,31 @@ describe('lumen-class bulbs are mutually consistent', () => {
       expect(get(id).name.en).toMatch(/\d+-lumen/);
       expect(get(id).name.es).toMatch(/lúmenes/);
     }
+  });
+});
+
+describe('shared vehicles state their per-passenger basis and occupancy', () => {
+  const shared = ['city_bus', 'coach', 'train_national', 'flight_short_haul'];
+
+  it('every shared vehicle is named per passenger in both languages', () => {
+    for (const id of shared) {
+      expect(get(id).name.en).toContain('(per passenger)');
+      expect(get(id).name.es).toContain('(por pasajero)');
+    }
+  });
+
+  it('every shared-vehicle note states its occupancy assumption', () => {
+    // DESNZ 2025 methodology, Table 25 (bus/coach) and CAA 2023 load factors
+    expect(get('city_bus').assumption_note.en).toContain('12.7 passengers');
+    expect(get('coach').assumption_note.en).toContain('17.6 passengers');
+    expect(get('flight_short_haul').assumption_note.en).toContain('83% of seats');
+    expect(get('train_national').assumption_note.en).toMatch(/network.s energy/);
+  });
+
+  it('proseName keeps the per-passenger basis in sentences', () => {
+    expect(proseName('City bus (per passenger)')).toBe('city bus (per passenger)');
+    expect(proseName('Autobús urbano (por pasajero)')).toBe('autobús urbano (por pasajero)');
+    expect(proseName('Gas hob (boiling)')).toBe('gas hob');
   });
 });
 
