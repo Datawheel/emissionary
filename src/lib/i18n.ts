@@ -52,7 +52,16 @@ const STRINGS = {
   see_all_countries: { en: 'See all countries', es: 'Ver todos los países' },
   type_instead: { en: 'type instead', es: 'escribir en su lugar' },
   choose_country: { en: 'Choose your country', es: 'Elige tu país' },
-  confirm_country: { en: 'Confirm', es: 'Confirmar' },
+  intro_how: {
+    en: 'Compare the CO₂ of everyday things — guess with the slider; the closer you get, the more points you score.',
+    es: 'Compara el CO₂ de cosas cotidianas: responde con el deslizador; cuanto más te acerques, más puntos ganas.',
+  },
+  intro_boundary: {
+    en: 'We count only the emissions of using things — running a washing machine, driving 10 km — not of manufacturing them.',
+    es: 'Solo contamos las emisiones de usar las cosas — una lavadora funcionando, 10 km en coche — no las de fabricarlas.',
+  },
+  tap_to_change: { en: 'Tap to change', es: 'Toca para cambiar' },
+  next: { en: 'Next', es: 'Siguiente' },
   search_country: { en: 'Search countries…', es: 'Buscar países…' },
   score: { en: 'Score', es: 'Puntuación' },
   streak: { en: 'Streak', es: 'Racha' },
