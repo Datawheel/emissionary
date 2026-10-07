@@ -29,7 +29,10 @@
   --ribbon: linear-gradient(90deg, #3ec28f 0%, #b8d24b 30%, #ffb03a 60%, #ff8a3d 80%, #e4593c 100%);
   --radius: 16px;
   --tap: 48px;
-  --display: 'Bricolage Grotesque', ui-rounded, ui-sans-serif, system-ui, sans-serif;
+  /* Bricolage covers Latin (incl. French/German/Spanish accents); Cyrillic and
+     Chinese fall back per glyph to the system sans faces listed after it */
+  --cjk: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', 'Noto Sans SC';
+  --display: 'Bricolage Grotesque', ui-rounded, ui-sans-serif, system-ui, var(--cjk), sans-serif;
 }
 
 * {
@@ -44,7 +47,7 @@ html {
 
 /* log-ruled paper: vertical rules at log10 positions of 1,2,3,5,7 per decade */
 body {
-  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', var(--cjk), sans-serif;
   background-color: var(--paper);
   background-image: repeating-linear-gradient(
     90deg,

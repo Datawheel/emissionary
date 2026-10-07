@@ -159,7 +159,7 @@ function unitFact(item: Item, cf: CountryFactors): UnitFact {
   return {
     emoji: item.emoji,
     name: item.name,
-    unit: item.typical_unit,
+    typical_unit: item.typical_unit,
     event_noun: item.event_noun,
     kwh: one.energy_kwh != null ? toSigFigs(one.energy_kwh) : null,
     grams: one.grams,

@@ -3,34 +3,35 @@ import { computeCO2, solveEquivalent } from '@/lib/emissions';
 import { BOIL_KWH_PER_LITER, FUEL_GCO2_PER_KWH_THERMAL } from '@/lib/constants';
 import { getCountry } from '@/lib/data';
 import type { Item } from '@/lib/types';
+import { loc } from '../helpers/loc';
 
-const note = { en: 'test', es: 'test' };
+const note = loc('test', 'test');
 const base = { category: 'test', assumption_note: note, source_ids: ['test'], value_year: 2025, difficulty: 1 as const };
 
 const hairdryer: Item = {
-  ...base, id: 'hairdryer', name: { en: 'Hairdryer', es: 'Secador' }, emoji: '💨',
+  ...base, id: 'hairdryer', name: loc('Hairdryer', 'Secador'), emoji: '💨',
   energy_model: 'power', power_watts: 1800, carrier: 'electricity', typical_unit: 'minutes',
 };
 const fridge: Item = {
-  ...base, id: 'fridge', name: { en: 'Refrigerator', es: 'Nevera' }, emoji: '🧊',
+  ...base, id: 'fridge', name: loc('Refrigerator', 'Nevera'), emoji: '🧊',
   energy_model: 'power', power_watts: 28.5, carrier: 'electricity', typical_unit: 'hours',
 };
 const kettle: Item = {
-  ...base, id: 'kettle', name: { en: 'Kettle', es: 'Hervidor' }, emoji: '🫖',
+  ...base, id: 'kettle', name: loc('Kettle', 'Hervidor'), emoji: '🫖',
   energy_model: 'task', task_kwh_useful: BOIL_KWH_PER_LITER, efficiency: 0.85,
   carrier: 'electricity', typical_unit: 'liters_boiled',
 };
 const gasHob: Item = {
-  ...base, id: 'gas_hob', name: { en: 'Gas hob', es: 'Fogón de gas' }, emoji: '🔥',
+  ...base, id: 'gas_hob', name: loc('Gas hob', 'Fogón de gas'), emoji: '🔥',
   energy_model: 'task', task_kwh_useful: BOIL_KWH_PER_LITER, efficiency: 0.4,
   carrier: 'natural_gas', typical_unit: 'liters_boiled',
 };
 const petrolCar: Item = {
-  ...base, id: 'petrol_car', name: { en: 'Petrol car', es: 'Coche de gasolina' }, emoji: '🚗',
+  ...base, id: 'petrol_car', name: loc('Petrol car', 'Coche de gasolina'), emoji: '🚗',
   energy_model: 'per_km', uses_country_car_default: true, carrier: 'petrol', typical_unit: 'km',
 };
 const ev: Item = {
-  ...base, id: 'ev', name: { en: 'Electric car', es: 'Coche eléctrico' }, emoji: '🔌',
+  ...base, id: 'ev', name: loc('Electric car', 'Coche eléctrico'), emoji: '🔌',
   energy_model: 'per_km', kwh_per_km: 0.17, carrier: 'electricity', typical_unit: 'km',
 };
 

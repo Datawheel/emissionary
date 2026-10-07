@@ -10,12 +10,15 @@ import {
   FUEL_GCO2_PER_KWH_THERMAL,
   PETROL_KGCO2_PER_L,
 } from './constants';
-import type { Carrier, CountryFactors, Item, Unit } from './types';
+import { LANGS, type Carrier, type CountryFactors, type Item, type Lang, type Localized, type Unit } from './types';
+import { t, type StringKey, type Vars } from './i18n';
+import { formatExact, UNIT_SYMBOLS } from './format';
+import { countryName } from './country-names';
 
+/** One line of the "How we computed this" breakdown, in every language. */
 export interface BreakdownStep {
-  label_en: string;
-  label_es: string;
-  math: string;
+  label: Localized;
+  math: Localized;
 }
 
 export interface Breakdown {
@@ -35,6 +38,20 @@ export interface Breakdown {
 }
 
 const r3 = (v: number) => Math.round(v * 1000) / 1000;
+
+/** A number as it appears in a breakdown formula: 3 decimals max, localized. */
+const n = (v: number, lang: Lang) => formatExact(r3(v), lang);
+
+function perLang(f: (lang: Lang) => string): Localized {
+  return Object.fromEntries(LANGS.map((lang) => [lang, f(lang)])) as Localized;
+}
+
+function step(key: StringKey, math: (lang: Lang, u: (typeof UNIT_SYMBOLS)[Lang]) => string, vars?: (lang: Lang) => Vars): BreakdownStep {
+  return {
+    label: perLang((lang) => t(key, lang, vars?.(lang))),
+    math: perLang((lang) => math(lang, UNIT_SYMBOLS[lang])),
+  };
+}
 
 function quantityToHours(quantity: number, unit: Unit): number {
   if (unit === 'minutes') return quantity / 60;
@@ -61,46 +78,41 @@ export function computeCO2(item: Item, quantity: number, cf: CountryFactors): Br
     case 'power': {
       const hours = quantityToHours(quantity, item.typical_unit);
       energyKwh = (item.power_watts! * hours) / 1000;
-      steps.push({
-        label_en: 'Energy consumed',
-        label_es: 'Energía consumida',
-        math: `${item.power_watts} W × ${r3(hours)} h ÷ 1000 = ${r3(energyKwh)} kWh`,
-      });
+      const e = energyKwh;
+      steps.push(
+        step('step_energy', (l, u) => `${n(item.power_watts!, l)} ${u.W} × ${n(hours, l)} ${l === 'ru' ? 'ч' : 'h'} ÷ 1000 = ${n(e, l)} ${u.kWh}`),
+      );
       break;
     }
     case 'per_event': {
       energyKwh = item.kwh_per_event! * quantity;
-      steps.push({
-        label_en: 'Energy consumed',
-        label_es: 'Energía consumida',
-        math: `${item.kwh_per_event} kWh × ${r3(quantity)} = ${r3(energyKwh)} kWh`,
-      });
+      const e = energyKwh;
+      steps.push(step('step_energy', (l, u) => `${n(item.kwh_per_event!, l)} ${u.kWh} × ${n(quantity, l)} = ${n(e, l)} ${u.kWh}`));
       break;
     }
     case 'task': {
       efficiency = item.efficiency!;
       const useful = item.task_kwh_useful! * quantity;
       energyKwh = useful / efficiency;
-      steps.push({
-        label_en: 'Useful energy (physics)',
-        label_es: 'Energía útil (física)',
-        math: `${r3(item.task_kwh_useful!)} kWh × ${r3(quantity)} = ${r3(useful)} kWh`,
-      });
-      steps.push({
-        label_en: `Device efficiency ${Math.round(efficiency * 100)}%`,
-        label_es: `Eficiencia del aparato ${Math.round(efficiency * 100)}%`,
-        math: `${r3(useful)} kWh ÷ ${efficiency} = ${r3(energyKwh)} kWh`,
-      });
+      const e = energyKwh;
+      const eff = efficiency;
+      steps.push(step('step_useful', (l, u) => `${n(item.task_kwh_useful!, l)} ${u.kWh} × ${n(quantity, l)} = ${n(useful, l)} ${u.kWh}`));
+      steps.push(
+        step(
+          'step_efficiency',
+          (l, u) => `${n(useful, l)} ${u.kWh} ÷ ${n(eff, l)} = ${n(e, l)} ${u.kWh}`,
+          () => ({ pct: Math.round(eff * 100) }),
+        ),
+      );
       break;
     }
     case 'per_km': {
       if (item.kwh_per_km != null) {
         energyKwh = item.kwh_per_km * quantity;
-        steps.push({
-          label_en: 'Energy consumed',
-          label_es: 'Energía consumida',
-          math: `${item.kwh_per_km} kWh/km × ${r3(quantity)} km = ${r3(energyKwh)} kWh`,
-        });
+        const e = energyKwh;
+        steps.push(
+          step('step_energy', (l, u) => `${n(item.kwh_per_km!, l)} ${u.kWh}/${u.km} × ${n(quantity, l)} ${u.km} = ${n(e, l)} ${u.kWh}`),
+        );
       }
       // uses_country_car_default / l_per_100km / gco2_per_km handled below
       break;
@@ -110,11 +122,13 @@ export function computeCO2(item: Item, quantity: number, cf: CountryFactors): Br
   // 2) apply the carrier's emission factor
   if (item.energy_model === 'per_km' && item.uses_country_car_default) {
     const grams = cf.car_gco2_km * quantity;
-    steps.push({
-      label_en: `Average car (${cf.name}, ${cf.car_year})`,
-      label_es: `Coche promedio (${cf.name}, ${cf.car_year})`,
-      math: `${cf.car_gco2_km} gCO₂/km × ${r3(quantity)} km = ${r3(grams)} g`,
-    });
+    steps.push(
+      step(
+        'step_avg_car',
+        (l, u) => `${n(cf.car_gco2_km, l)} ${u.g}CO₂/${u.km} × ${n(quantity, l)} ${u.km} = ${n(grams, l)} ${u.g}`,
+        (l) => ({ country: countryName(cf.iso3, l), year: cf.car_year }),
+      ),
+    );
     return {
       item_id: item.id, quantity, unit: item.typical_unit, energy_kwh: null,
       carrier: item.carrier, factor_value: cf.car_gco2_km, factor_unit: 'g_per_km',
@@ -127,11 +141,14 @@ export function computeCO2(item: Item, quantity: number, cf: CountryFactors): Br
     const kgPerL = item.carrier === 'diesel' ? DIESEL_KGCO2_PER_L : PETROL_KGCO2_PER_L;
     const gPerKm = (item.l_per_100km / 100) * kgPerL * 1000;
     const grams = gPerKm * quantity;
-    steps.push({
-      label_en: `Fuel burned (${item.carrier})`,
-      label_es: `Combustible quemado (${item.carrier === 'diesel' ? 'diésel' : 'gasolina'})`,
-      math: `${item.l_per_100km} L/100km × ${kgPerL} kgCO₂/L → ${r3(gPerKm)} g/km × ${r3(quantity)} km = ${r3(grams)} g`,
-    });
+    const per100 = item.l_per_100km;
+    steps.push(
+      step(
+        item.carrier === 'diesel' ? 'step_fuel_diesel' : 'step_fuel_petrol',
+        (l, u) =>
+          `${n(per100, l)} ${u.L}/100 ${u.km} × ${n(kgPerL, l)} ${u.kg}CO₂/${u.L} → ${n(gPerKm, l)} ${u.g}/${u.km} × ${n(quantity, l)} ${u.km} = ${n(grams, l)} ${u.g}`,
+      ),
+    );
     return {
       item_id: item.id, quantity, unit: item.typical_unit, energy_kwh: null,
       carrier: item.carrier, factor_value: gPerKm, factor_unit: 'g_per_km',
@@ -142,11 +159,13 @@ export function computeCO2(item: Item, quantity: number, cf: CountryFactors): Br
 
   if (item.energy_model === 'per_km' && item.gco2_per_km != null) {
     const grams = item.gco2_per_km * quantity;
-    steps.push({
-      label_en: 'Emission factor per passenger-km',
-      label_es: 'Factor de emisión por pasajero-km',
-      math: `${item.gco2_per_km} gCO₂/km × ${r3(quantity)} km = ${r3(grams)} g`,
-    });
+    const factor = item.gco2_per_km;
+    steps.push(
+      step(
+        item.per_passenger ? 'step_factor_pkm' : 'step_factor_km',
+        (l, u) => `${n(factor, l)} ${u.g}CO₂/${u.km} × ${n(quantity, l)} ${u.km} = ${n(grams, l)} ${u.g}`,
+      ),
+    );
     return {
       item_id: item.id, quantity, unit: item.typical_unit, energy_kwh: null,
       carrier: item.carrier, factor_value: item.gco2_per_km, factor_unit: 'g_per_km',
@@ -163,29 +182,30 @@ export function computeCO2(item: Item, quantity: number, cf: CountryFactors): Br
     const f = gridFactor(cf);
     factorValue = f.value;
     factorDesc = f.desc;
-    steps.push({
-      label_en: `Grid intensity (${cf.name}, ${cf.grid_year}, Ember)`,
-      label_es: `Intensidad de la red (${cf.name}, ${cf.grid_year}, Ember)`,
-      math: `${factorValue} gCO₂/kWh`,
-    });
+    const fv = factorValue;
+    steps.push(
+      step('step_grid', (l, u) => `${n(fv, l)} ${u.g}CO₂/${u.kWh}`, (l) => ({
+        country: countryName(cf.iso3, l),
+        year: cf.grid_year,
+      })),
+    );
   } else if (item.carrier === 'natural_gas' || item.carrier === 'lpg') {
     factorValue = FUEL_GCO2_PER_KWH_THERMAL[item.carrier];
     factorDesc = { year: FUEL_FACTOR_YEAR, source_id: 'desnz_2025' };
-    steps.push({
-      label_en: `${item.carrier === 'lpg' ? 'LPG' : 'Natural gas'} combustion factor (country-invariant)`,
-      label_es: `Factor de combustión de ${item.carrier === 'lpg' ? 'GLP' : 'gas natural'} (no varía por país)`,
-      math: `${factorValue} gCO₂/kWh térmico`,
-    });
+    const fv = factorValue;
+    steps.push(
+      step(item.carrier === 'lpg' ? 'step_combustion_lpg' : 'step_combustion_gas', (l, u) => `${n(fv, l)} ${u.g}CO₂/${u.kWh}`),
+    );
   } else {
     throw new Error(`item ${item.id}: kWh path unsupported for carrier ${item.carrier}`);
   }
 
   const grams = energyKwh * factorValue;
-  steps.push({
-    label_en: 'Total emissions',
-    label_es: 'Emisiones totales',
-    math: `${r3(energyKwh)} kWh × ${factorValue} g/kWh = ${r3(grams)} g CO₂`,
-  });
+  const e = energyKwh;
+  const fv = factorValue;
+  steps.push(
+    step('step_total', (l, u) => `${n(e, l)} ${u.kWh} × ${n(fv, l)} ${u.g}/${u.kWh} = ${n(grams, l)} ${u.g} CO₂`),
+  );
 
   return {
     item_id: item.id, quantity, unit: item.typical_unit, energy_kwh: energyKwh,

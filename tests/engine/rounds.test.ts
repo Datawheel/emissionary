@@ -4,13 +4,14 @@ import { positionToValue, valueToPosition } from '@/lib/slider-math';
 import { getCountry } from '@/lib/data';
 import { BOIL_KWH_PER_LITER } from '@/lib/constants';
 import type { Item } from '@/lib/types';
+import { loc } from '../helpers/loc';
 
-const note = { en: 'test', es: 'test' };
+const note = loc('test', 'test');
 const base = { category: 'test', assumption_note: note, source_ids: ['test'], value_year: 2025 };
 
 function powerItem(id: string, watts: number, difficulty: 1 | 2 | 3, unit: 'minutes' | 'hours' = 'minutes'): Item {
   return {
-    ...base, id, name: { en: id, es: id }, emoji: '⚡', energy_model: 'power',
+    ...base, id, name: loc(id, id), emoji: '⚡', energy_model: 'power',
     power_watts: watts, carrier: 'electricity', typical_unit: unit, difficulty,
   };
 }
@@ -22,17 +23,17 @@ const pool: Item[] = [
   powerItem('gaming_pc', 350, 1, 'hours'),
   powerItem('tv', 90, 1, 'hours'),
   {
-    ...base, id: 'kettle', name: { en: 'Kettle', es: 'Hervidor' }, emoji: '🫖', energy_model: 'task',
+    ...base, id: 'kettle', name: loc('Kettle', 'Hervidor'), emoji: '🫖', energy_model: 'task',
     task_kwh_useful: BOIL_KWH_PER_LITER, efficiency: 0.85, carrier: 'electricity',
     typical_unit: 'liters_boiled', difficulty: 2,
   },
   {
-    ...base, id: 'gas_hob', name: { en: 'Gas hob', es: 'Fogón' }, emoji: '🔥', energy_model: 'task',
+    ...base, id: 'gas_hob', name: loc('Gas hob', 'Fogón'), emoji: '🔥', energy_model: 'task',
     task_kwh_useful: BOIL_KWH_PER_LITER, efficiency: 0.4, carrier: 'natural_gas',
     typical_unit: 'liters_boiled', difficulty: 3,
   },
   {
-    ...base, id: 'petrol_car', name: { en: 'Car', es: 'Coche' }, emoji: '🚗', energy_model: 'per_km',
+    ...base, id: 'petrol_car', name: loc('Car', 'Coche'), emoji: '🚗', energy_model: 'per_km',
     uses_country_car_default: true, carrier: 'petrol', typical_unit: 'km', difficulty: 2,
   },
 ];

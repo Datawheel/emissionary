@@ -1,15 +1,11 @@
 import AppHeader from '@/components/AppHeader';
 import StatsClient from '@/components/StatsClient';
-import { pickLang } from '@/lib/i18n';
+import { requestLang } from '@/lib/request-lang';
 
 export const dynamic = 'force-dynamic';
 
-export default async function StatsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ lang?: string }>;
-}) {
-  const lang = pickLang((await searchParams).lang);
+export default async function StatsPage() {
+  const lang = await requestLang();
   return (
     <>
       <AppHeader lang={lang} />

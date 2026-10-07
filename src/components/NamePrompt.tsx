@@ -2,10 +2,19 @@
 
 import { useState } from 'react';
 import type { Lang } from '@/lib/types';
-import { t } from '@/lib/i18n';
+import { t, type StringKey } from '@/lib/i18n';
 import { generateName } from '@/lib/name-gen';
 
 const DISMISS_KEY = 'emy_name_prompt_dismissed';
+
+/** API error codes (lib/names.ts) → translated messages. */
+const NAME_ERRORS: Record<string, StringKey> = {
+  length: 'name_err_length',
+  chars: 'name_err_chars',
+  blocked: 'name_err_blocked',
+  cooldown: 'name_err_cooldown',
+  taken: 'name_err_taken',
+};
 
 export function namePromptDismissed(): boolean {
   try {
@@ -43,8 +52,8 @@ export default function NamePrompt({
       const data = (await res.json()) as { name: string; discriminator: number | null };
       onDone(data.discriminator ? `${data.name}#${data.discriminator}` : data.name);
     } else {
-      const data = (await res.json().catch(() => null)) as { error?: string } | null;
-      setError(data?.error ?? 'error');
+      const data = (await res.json().catch(() => null)) as { code?: string } | null;
+      setError(t(NAME_ERRORS[data?.code ?? ''] ?? 'name_err_generic', lang));
     }
   }
 

@@ -1,37 +1,38 @@
 import type { Metadata, Viewport } from 'next';
+import { clueTitle } from '@/lib/format';
+import { loadItems } from '@/lib/data';
+import { t } from '@/lib/i18n';
+import { requestLang } from '@/lib/request-lang';
 import './globals.css';
 
-const DESCRIPTION =
-  'How good is your carbon intuition? Test your knowledge of everyday emissions — a game by the OEC.';
+/** Public base URL, used for absolute social-preview links. Set SITE_URL in .env. */
+const SITE_URL = process.env.SITE_URL ?? 'http://localhost:3000';
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://emi.cesarhidalgo.com'),
-  title: 'Emissionary',
-  description: DESCRIPTION,
-  manifest: '/manifest.webmanifest',
-  icons: { icon: '/icon.svg' },
-  openGraph: {
-    type: 'website',
-    url: '/',
-    siteName: 'Emissionary',
-    title: 'Emissionary — how good is your carbon intuition?',
-    description: DESCRIPTION,
-    images: [
-      {
-        url: '/og.png',
-        width: 1200,
-        height: 630,
-        alt: 'Emissionary: 10 min of hairdryer = how many hours of refrigerator?',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Emissionary — how good is your carbon intuition?',
-    description: DESCRIPTION,
-    images: ['/og.png'],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await requestLang();
+  const title = `Emissionary — ${t('tagline', lang)}`;
+  const description = t('meta_description', lang);
+  const hairdryer = loadItems().find((i) => i.id === 'hairdryer')!;
+  const alt = `Emissionary: ${clueTitle(10, hairdryer, lang)} = ${t('og_question', lang).replaceAll('**', '')}`;
+  const image = `/og-${lang}.png`;
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: 'Emissionary',
+    description,
+    manifest: '/manifest.webmanifest',
+    icons: { icon: '/icon.svg' },
+    openGraph: {
+      type: 'website',
+      url: `/?lang=${lang}`,
+      siteName: 'Emissionary',
+      title,
+      description,
+      locale: lang,
+      images: [{ url: image, width: 1200, height: 630, alt }],
+    },
+    twitter: { card: 'summary_large_image', title, description, images: [image] },
+  };
+}
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -39,9 +40,10 @@ export const viewport: Viewport = {
   themeColor: '#1a1626',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const lang = await requestLang();
   return (
-    <html lang="en">
+    <html lang={lang === 'zh' ? 'zh-Hans' : lang}>
       <head>
         <link
           rel="preload"

@@ -1,10 +1,6 @@
 [
   {
     "id": "electric_kettle",
-    "name": {
-      "en": "Electric kettle",
-      "es": "Hervidor eléctrico"
-    },
     "emoji": "🫖",
     "category": "kitchen",
     "energy_model": "task",
@@ -18,17 +14,25 @@
     ],
     "value_year": 2009,
     "difficulty": 2,
+    "name": {
+      "en": "Electric kettle",
+      "es": "Hervidor eléctrico",
+      "fr": "Bouilloire électrique",
+      "de": "Wasserkocher",
+      "ru": "Электрочайник",
+      "zh": "电热水壶"
+    },
     "assumption_note": {
       "en": "Boiling 1 L of 20 °C water needs 0.093 kWh of heat; an immersed-element kettle delivers ~85% of its electricity to the water (range 80–90%).",
-      "es": "Hervir 1 L de agua a 20 °C requiere 0,093 kWh de calor; un hervidor de resistencia sumergida transfiere ~85% de su electricidad al agua (rango 80–90%)."
+      "es": "Hervir 1 L de agua a 20 °C requiere 0,093 kWh de calor; un hervidor de resistencia sumergida transfiere ~85% de su electricidad al agua (rango 80–90%).",
+      "fr": "Porter 1 L d’eau à 20 °C à ébullition demande 0,093 kWh de chaleur ; une bouilloire à résistance immergée transmet ~85 % de son électricité à l’eau (fourchette 80–90 %).",
+      "de": "Um 1 L Wasser von 20 °C zum Kochen zu bringen, braucht es 0,093 kWh Wärme; ein Wasserkocher mit eingetauchtem Heizelement gibt ~85 % seines Stroms an das Wasser ab (Spanne 80–90 %).",
+      "ru": "Чтобы довести до кипения 1 л воды с температурой 20 °C, нужно 0,093 кВт·ч тепла; чайник с погружным нагревателем передаёт воде ~85% электроэнергии (диапазон 80–90%).",
+      "zh": "将 1 L 20 °C 的水烧开需要 0.093 kWh 热量；浸入式加热元件的电热水壶能把约 85% 的电能传给水（范围 80–90%）。"
     }
   },
   {
     "id": "induction_hob",
-    "name": {
-      "en": "Induction hob (boiling)",
-      "es": "Placa de inducción (hervir)"
-    },
     "emoji": "🧲",
     "category": "kitchen",
     "energy_model": "task",
@@ -42,17 +46,25 @@
     ],
     "value_year": 2021,
     "difficulty": 2,
+    "name": {
+      "en": "Induction hob (boiling)",
+      "es": "Placa de inducción (hervir)",
+      "fr": "Plaque à induction (ébullition)",
+      "de": "Induktionskochfeld (Wasser kochen)",
+      "ru": "Индукционная плита (кипячение)",
+      "zh": "电磁炉（烧水）"
+    },
     "assumption_note": {
       "en": "Induction cooking efficiency ~84% (ENERGY STAR residential induction cooking tops program).",
-      "es": "Eficiencia de cocción por inducción ~84% (programa ENERGY STAR de placas de inducción residenciales)."
+      "es": "Eficiencia de cocción por inducción ~84% (programa ENERGY STAR de placas de inducción residenciales).",
+      "fr": "Rendement de cuisson par induction ~84 % (programme ENERGY STAR des tables de cuisson à induction résidentielles).",
+      "de": "Wirkungsgrad beim Kochen mit Induktion ~84 % (ENERGY-STAR-Programm für Induktionskochfelder im Haushalt).",
+      "ru": "КПД индукционной варочной панели ~84% (программа ENERGY STAR для бытовых индукционных варочных панелей).",
+      "zh": "电磁炉烹饪效率约 84%（ENERGY STAR 家用电磁炉项目）。"
     }
   },
   {
     "id": "electric_hob",
-    "name": {
-      "en": "Electric coil hob (boiling)",
-      "es": "Placa eléctrica de resistencia (hervir)"
-    },
     "emoji": "🍳",
     "category": "kitchen",
     "energy_model": "task",
@@ -66,17 +78,25 @@
     ],
     "value_year": 2009,
     "difficulty": 2,
+    "name": {
+      "en": "Electric coil hob (boiling)",
+      "es": "Placa eléctrica de resistencia (hervir)",
+      "fr": "Plaque électrique à résistance (ébullition)",
+      "de": "Elektrokochfeld mit Heizspirale (Wasser kochen)",
+      "ru": "Электроплита с ТЭНом (кипячение)",
+      "zh": "电热丝电炉（烧水）"
+    },
     "assumption_note": {
       "en": "Electric coil cooktop cooking efficiency ~74% (US DOE Technical Support Document for residential cooking products).",
-      "es": "Eficiencia de cocción de placa eléctrica de resistencia ~74% (documento técnico del DOE de EE. UU. sobre productos de cocción residenciales)."
+      "es": "Eficiencia de cocción de placa eléctrica de resistencia ~74% (documento técnico del DOE de EE. UU. sobre productos de cocción residenciales).",
+      "fr": "Rendement de cuisson d’une plaque électrique à résistance ~74 % (document technique du DOE américain sur les appareils de cuisson résidentiels).",
+      "de": "Wirkungsgrad eines Elektrokochfelds mit Heizspirale ~74 % (Technical Support Document des US-Energieministeriums zu Haushaltskochgeräten).",
+      "ru": "КПД электроплиты с ТЭНом ~74% (технический документ Министерства энергетики США по бытовым кухонным плитам).",
+      "zh": "电热丝电炉的烹饪效率约 74%（美国能源部关于家用烹饪产品的技术支持文件）。"
     }
   },
   {
     "id": "gas_hob",
-    "name": {
-      "en": "Gas hob (boiling)",
-      "es": "Fogón de gas (hervir)"
-    },
     "emoji": "🔥",
     "category": "kitchen",
     "energy_model": "task",
@@ -91,17 +111,25 @@
     ],
     "value_year": 2025,
     "difficulty": 3,
+    "name": {
+      "en": "Gas hob (boiling)",
+      "es": "Fogón de gas (hervir)",
+      "fr": "Plaque de cuisson au gaz (ébullition)",
+      "de": "Gaskochfeld (Wasser kochen)",
+      "ru": "Газовая плита (кипячение)",
+      "zh": "燃气灶（烧水）"
+    },
     "assumption_note": {
       "en": "Gas cooktop cooking efficiency ~40% (US DOE TSD, HHV basis) × natural-gas combustion factor 182.6 gCO₂/kWh gross (DESNZ 2025, CO₂ only). Country-invariant.",
-      "es": "Eficiencia de cocción a gas ~40% (DOE de EE. UU., base PCS) × factor de combustión del gas natural 182,6 gCO₂/kWh bruto (DESNZ 2025, solo CO₂). No varía por país."
+      "es": "Eficiencia de cocción a gas ~40% (DOE de EE. UU., base PCS) × factor de combustión del gas natural 182,6 gCO₂/kWh bruto (DESNZ 2025, solo CO₂). No varía por país.",
+      "fr": "Rendement de cuisson d’une plaque au gaz ~40 % (DOE américain, base PCS) × facteur de combustion du gaz naturel 182,6 gCO₂/kWh PCS (DESNZ 2025, CO₂ seul). Identique dans tous les pays.",
+      "de": "Wirkungsgrad eines Gaskochfelds ~40 % (US-Energieministerium, Brennwertbasis) × Verbrennungsfaktor von Erdgas 182,6 gCO₂/kWh (Brennwert; DESNZ 2025, nur CO₂). In jedem Land gleich.",
+      "ru": "КПД газовой плиты ~40% (Министерство энергетики США, по высшей теплоте сгорания) × коэффициент сгорания природного газа 182,6 гCO₂/кВт·ч (по высшей теплоте сгорания; DESNZ 2025, только CO₂). Одинаково во всех странах.",
+      "zh": "燃气灶烹饪效率约 40%（美国能源部技术支持文件，高位热值口径）× 天然气燃烧排放因子 182.6 gCO₂/kWh（高位热值；DESNZ 2025，仅 CO₂）。各国相同。"
     }
   },
   {
     "id": "refrigerator",
-    "name": {
-      "en": "Refrigerator",
-      "es": "Nevera"
-    },
     "emoji": "🧊",
     "category": "kitchen",
     "energy_model": "power",
@@ -113,17 +141,25 @@
     ],
     "value_year": 2026,
     "difficulty": 2,
+    "name": {
+      "en": "Refrigerator",
+      "es": "Nevera",
+      "fr": "Réfrigérateur",
+      "de": "Kühlschrank",
+      "ru": "Холодильник",
+      "zh": "冰箱"
+    },
     "assumption_note": {
       "en": "Median certified refrigerator uses 345 kWh/yr (n=4,659, ENERGY STAR dataset) ≈ 39.4 W averaged over the year, compressor cycling included.",
-      "es": "La nevera certificada mediana consume 345 kWh/año (n=4.659, base de datos ENERGY STAR) ≈ 39,4 W promediados en el año, incluidos los ciclos del compresor."
+      "es": "La nevera certificada mediana consume 345 kWh/año (n=4.659, base de datos ENERGY STAR) ≈ 39,4 W promediados en el año, incluidos los ciclos del compresor.",
+      "fr": "Le réfrigérateur certifié médian consomme 345 kWh/an (n = 4 659, base ENERGY STAR), soit ≈ 39,4 W en moyenne sur l’année, cycles du compresseur compris.",
+      "de": "Der zertifizierte Median-Kühlschrank verbraucht 345 kWh/Jahr (n = 4.659, ENERGY-STAR-Datensatz) ≈ 39,4 W im Jahresmittel, einschließlich der Taktung des Kompressors.",
+      "ru": "Медианный сертифицированный холодильник потребляет 345 кВт·ч/год (n = 4659, база ENERGY STAR) ≈ 39,4 Вт в среднем за год с учётом циклов компрессора.",
+      "zh": "认证冰箱的中位数耗电量为每年 345 kWh（n=4,659，ENERGY STAR 数据集），全年平均约 39.4 W，已计入压缩机启停。"
     }
   },
   {
     "id": "chest_freezer",
-    "name": {
-      "en": "Freezer",
-      "es": "Congelador"
-    },
     "emoji": "❄️",
     "category": "kitchen",
     "energy_model": "power",
@@ -135,25 +171,29 @@
     ],
     "value_year": 2026,
     "difficulty": 2,
+    "name": {
+      "en": "Freezer",
+      "es": "Congelador",
+      "fr": "Congélateur",
+      "de": "Gefriergerät",
+      "ru": "Морозильник",
+      "zh": "冰柜"
+    },
     "assumption_note": {
       "en": "Median certified freezer uses 405 kWh/yr (n=659, ENERGY STAR dataset) ≈ 46.2 W year-round average.",
-      "es": "El congelador certificado mediano consume 405 kWh/año (n=659, base ENERGY STAR) ≈ 46,2 W de promedio anual."
+      "es": "El congelador certificado mediano consume 405 kWh/año (n=659, base ENERGY STAR) ≈ 46,2 W de promedio anual.",
+      "fr": "Le congélateur certifié médian consomme 405 kWh/an (n = 659, base ENERGY STAR), soit ≈ 46,2 W en moyenne sur l’année.",
+      "de": "Das zertifizierte Median-Gefriergerät verbraucht 405 kWh/Jahr (n = 659, ENERGY-STAR-Datensatz) ≈ 46,2 W im Jahresmittel.",
+      "ru": "Медианный сертифицированный морозильник потребляет 405 кВт·ч/год (n = 659, база ENERGY STAR) ≈ 46,2 Вт в среднем за год.",
+      "zh": "认证冰柜的中位数耗电量为每年 405 kWh（n=659，ENERGY STAR 数据集），全年平均约 46.2 W。"
     }
   },
   {
     "id": "dishwasher",
-    "name": {
-      "en": "Dishwasher",
-      "es": "Lavavajillas"
-    },
     "emoji": "🍽️",
     "category": "kitchen",
     "energy_model": "per_event",
     "kwh_per_event": 1.11,
-    "event_noun": {
-      "en": "cycles",
-      "es": "ciclos"
-    },
     "carrier": "electricity",
     "typical_unit": "events",
     "source_ids": [
@@ -161,17 +201,52 @@
     ],
     "value_year": 2026,
     "difficulty": 2,
+    "name": {
+      "en": "Dishwasher",
+      "es": "Lavavajillas",
+      "fr": "Lave-vaisselle",
+      "de": "Geschirrspüler",
+      "ru": "Посудомоечная машина",
+      "zh": "洗碗机"
+    },
+    "event_noun": {
+      "en": {
+        "one": "cycle",
+        "other": "cycles"
+      },
+      "es": {
+        "one": "ciclo",
+        "other": "ciclos"
+      },
+      "fr": {
+        "one": "cycle",
+        "other": "cycles"
+      },
+      "de": {
+        "one": "Spülgang",
+        "other": "Spülgänge"
+      },
+      "ru": {
+        "one": "цикл",
+        "few": "цикла",
+        "many": "циклов",
+        "other": "цикла"
+      },
+      "zh": {
+        "other": "次"
+      }
+    },
     "assumption_note": {
       "en": "Median certified dishwasher: 239 kWh/yr over the 215-cycle federal test basis ≈ 1.11 kWh per cycle (n=736, ENERGY STAR dataset), water heating included.",
-      "es": "Lavavajillas certificado mediano: 239 kWh/año sobre la base federal de 215 ciclos ≈ 1,11 kWh por ciclo (n=736, base ENERGY STAR), incluido el calentamiento de agua."
+      "es": "Lavavajillas certificado mediano: 239 kWh/año sobre la base federal de 215 ciclos ≈ 1,11 kWh por ciclo (n=736, base ENERGY STAR), incluido el calentamiento de agua.",
+      "fr": "Lave-vaisselle certifié médian : 239 kWh/an sur la base fédérale de 215 cycles ≈ 1,11 kWh par cycle (n = 736, base ENERGY STAR), chauffage de l’eau compris.",
+      "de": "Zertifizierter Median-Geschirrspüler: 239 kWh/Jahr bei der US-Prüfbasis von 215 Spülgängen ≈ 1,11 kWh pro Spülgang (n = 736, ENERGY-STAR-Datensatz), Wassererwärmung inbegriffen.",
+      "ru": "Медианная сертифицированная посудомоечная машина: 239 кВт·ч/год при федеральной базе испытаний в 215 циклов ≈ 1,11 кВт·ч за цикл (n = 736, база ENERGY STAR), включая нагрев воды.",
+      "zh": "认证洗碗机中位数：按美国联邦标准每年 215 次的测试基准计，每年 239 kWh，约合每次 1.11 kWh（n=736，ENERGY STAR 数据集），含加热用水。"
     }
   },
   {
     "id": "microwave",
-    "name": {
-      "en": "Microwave oven",
-      "es": "Horno microondas"
-    },
     "emoji": "🍿",
     "category": "kitchen",
     "energy_model": "power",
@@ -189,17 +264,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "Microwave oven",
+      "es": "Horno microondas",
+      "fr": "Four à micro-ondes",
+      "de": "Mikrowelle",
+      "ru": "Микроволновая печь",
+      "zh": "微波炉"
+    },
     "assumption_note": {
       "en": "Typical countertop microwave draws ~1,100 W while heating (product-class rated input, range 900–1,500 W). Pending certified-dataset verification.",
-      "es": "Un microondas de encimera típico consume ~1.100 W en funcionamiento (potencia nominal de la clase de producto, rango 900–1.500 W). Pendiente de verificación con datos certificados."
+      "es": "Un microondas de encimera típico consume ~1.100 W en funcionamiento (potencia nominal de la clase de producto, rango 900–1.500 W). Pendiente de verificación con datos certificados.",
+      "fr": "Un micro-ondes de comptoir typique consomme ~1 100 W en chauffe (puissance nominale de la catégorie, fourchette 900–1 500 W). En attente de vérification sur données certifiées.",
+      "de": "Eine typische Tisch-Mikrowelle zieht beim Erhitzen ~1.100 W (Nennaufnahme der Produktklasse, Spanne 900–1.500 W). Überprüfung anhand zertifizierter Daten ausstehend.",
+      "ru": "Типичная настольная микроволновка потребляет ~1100 Вт при нагреве (номинальная мощность класса устройств, диапазон 900–1500 Вт). Ожидает проверки по сертифицированным данным.",
+      "zh": "典型台式微波炉加热时功率约 1,100 W（产品类别额定输入功率，范围 900–1,500 W）。有待用认证数据核实。"
     }
   },
   {
     "id": "electric_oven",
-    "name": {
-      "en": "Electric oven",
-      "es": "Horno eléctrico"
-    },
     "emoji": "🥧",
     "category": "kitchen",
     "energy_model": "power",
@@ -217,17 +300,25 @@
     ],
     "value_year": 2026,
     "difficulty": 2,
+    "name": {
+      "en": "Electric oven",
+      "es": "Horno eléctrico",
+      "fr": "Four électrique",
+      "de": "Elektrobackofen",
+      "ru": "Электродуховка",
+      "zh": "电烤箱"
+    },
     "assumption_note": {
       "en": "Electric oven at ~200 °C averages ~2.0 kWh per hour of use, element cycling included (product-class convention). Pending certified-dataset verification.",
-      "es": "Un horno eléctrico a ~200 °C consume de media ~2,0 kWh por hora de uso, incluidos los ciclos de la resistencia (convención de la clase de producto). Pendiente de verificación."
+      "es": "Un horno eléctrico a ~200 °C consume de media ~2,0 kWh por hora de uso, incluidos los ciclos de la resistencia (convención de la clase de producto). Pendiente de verificación.",
+      "fr": "Un four électrique à ~200 °C consomme en moyenne ~2,0 kWh par heure d’utilisation, cycles de la résistance compris (convention de la catégorie). En attente de vérification sur données certifiées.",
+      "de": "Ein Elektrobackofen bei ~200 °C verbraucht im Schnitt ~2,0 kWh pro Betriebsstunde, Takten des Heizelements inbegriffen (Konvention der Produktklasse). Überprüfung anhand zertifizierter Daten ausstehend.",
+      "ru": "Электродуховка при ~200 °C потребляет в среднем ~2,0 кВт·ч за час работы с учётом циклов нагревателя (условное значение для класса устройств). Ожидает проверки по сертифицированным данным.",
+      "zh": "电烤箱在约 200 °C 时，每使用一小时平均耗电约 2.0 kWh，已计入加热元件启停（产品类别惯例值）。有待用认证数据核实。"
     }
   },
   {
     "id": "gas_oven",
-    "name": {
-      "en": "Gas oven",
-      "es": "Horno de gas"
-    },
     "emoji": "🍗",
     "category": "kitchen",
     "energy_model": "power",
@@ -246,25 +337,29 @@
     ],
     "value_year": 2026,
     "difficulty": 3,
+    "name": {
+      "en": "Gas oven",
+      "es": "Horno de gas",
+      "fr": "Four à gaz",
+      "de": "Gasbackofen",
+      "ru": "Газовая духовка",
+      "zh": "燃气烤箱"
+    },
     "assumption_note": {
       "en": "Gas oven at ~200 °C burns ~3.0 kWh of gas per hour of use (thermal, burner cycling included; product-class convention). Country-invariant.",
-      "es": "Un horno de gas a ~200 °C quema ~3,0 kWh de gas por hora de uso (térmico, incluidos ciclos del quemador; convención de la clase de producto). No varía por país."
+      "es": "Un horno de gas a ~200 °C quema ~3,0 kWh de gas por hora de uso (térmico, incluidos ciclos del quemador; convención de la clase de producto). No varía por país.",
+      "fr": "Un four à gaz à ~200 °C brûle ~3,0 kWh de gaz par heure d’utilisation (énergie thermique, cycles du brûleur compris ; convention de la catégorie). Identique dans tous les pays.",
+      "de": "Ein Gasbackofen bei ~200 °C verbrennt ~3,0 kWh Gas pro Betriebsstunde (thermisch, Takten des Brenners inbegriffen; Konvention der Produktklasse). In jedem Land gleich.",
+      "ru": "Газовая духовка при ~200 °C сжигает ~3,0 кВт·ч газа за час работы (тепловая энергия с учётом циклов горелки; условное значение для класса устройств). Одинаково во всех странах.",
+      "zh": "燃气烤箱在约 200 °C 时，每使用一小时燃烧约 3.0 kWh 燃气（热量，已计入燃烧器启停；产品类别惯例值）。各国相同。"
     }
   },
   {
     "id": "espresso_machine",
-    "name": {
-      "en": "Espresso machine",
-      "es": "Cafetera espresso"
-    },
     "emoji": "☕",
     "category": "kitchen",
     "energy_model": "per_event",
     "kwh_per_event": 0.02,
-    "event_noun": {
-      "en": "espressos",
-      "es": "espressos"
-    },
     "carrier": "electricity",
     "typical_unit": "events",
     "source_ids": [
@@ -272,17 +367,49 @@
     ],
     "value_year": 2026,
     "difficulty": 2,
+    "name": {
+      "en": "Espresso machine",
+      "es": "Cafetera espresso",
+      "fr": "Machine à expresso",
+      "de": "Espressomaschine",
+      "ru": "Эспрессо-машина",
+      "zh": "意式咖啡机"
+    },
+    "event_noun": {
+      "en": {
+        "one": "espresso",
+        "other": "espressos"
+      },
+      "es": {
+        "one": "espresso",
+        "other": "espressos"
+      },
+      "fr": {
+        "one": "expresso",
+        "other": "expressos"
+      },
+      "de": {
+        "one": "Espresso",
+        "other": "Espressi"
+      },
+      "ru": {
+        "other": "эспрессо"
+      },
+      "zh": {
+        "other": "杯"
+      }
+    },
     "assumption_note": {
       "en": "One espresso ≈ 0.02 kWh: heating ~40 mL of brew water plus boiler losses (physics estimate; range 0.01–0.05 kWh). Pending measured verification.",
-      "es": "Un espresso ≈ 0,02 kWh: calentar ~40 mL de agua más las pérdidas de la caldera (estimación física; rango 0,01–0,05 kWh). Pendiente de verificación medida."
+      "es": "Un espresso ≈ 0,02 kWh: calentar ~40 mL de agua más las pérdidas de la caldera (estimación física; rango 0,01–0,05 kWh). Pendiente de verificación medida.",
+      "fr": "Un expresso ≈ 0,02 kWh : chauffer ~40 mL d’eau, plus les pertes de la chaudière (estimation physique ; fourchette 0,01–0,05 kWh). En attente de vérification par mesure.",
+      "de": "Ein Espresso ≈ 0,02 kWh: ~40 mL Brühwasser erhitzen plus Verluste des Boilers (physikalische Schätzung; Spanne 0,01–0,05 kWh). Überprüfung durch Messung ausstehend.",
+      "ru": "Одна порция эспрессо ≈ 0,02 кВт·ч: нагрев ~40 мл воды плюс потери бойлера (физическая оценка; диапазон 0,01–0,05 кВт·ч). Ожидает проверки измерениями.",
+      "zh": "一杯意式浓缩咖啡约 0.02 kWh：加热约 40 mL 冲泡用水，加上锅炉损耗（物理估算；范围 0.01–0.05 kWh）。有待实测核实。"
     }
   },
   {
     "id": "toaster",
-    "name": {
-      "en": "Toaster",
-      "es": "Tostadora"
-    },
     "emoji": "🍞",
     "category": "kitchen",
     "energy_model": "power",
@@ -299,17 +426,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "Toaster",
+      "es": "Tostadora",
+      "fr": "Grille-pain",
+      "de": "Toaster",
+      "ru": "Тостер",
+      "zh": "烤面包机"
+    },
     "assumption_note": {
       "en": "Typical 2-slice toaster rated ~1,000 W (product-class range 800–1,500 W). Pending certified-dataset verification.",
-      "es": "Tostadora típica de 2 rebanadas de ~1.000 W (rango de la clase 800–1.500 W). Pendiente de verificación."
+      "es": "Tostadora típica de 2 rebanadas de ~1.000 W (rango de la clase 800–1.500 W). Pendiente de verificación.",
+      "fr": "Grille-pain 2 tranches typique : ~1 000 W (fourchette de la catégorie 800–1 500 W). En attente de vérification sur données certifiées.",
+      "de": "Typischer Toaster für 2 Scheiben mit ~1.000 W (Spanne der Produktklasse 800–1.500 W). Überprüfung anhand zertifizierter Daten ausstehend.",
+      "ru": "Типичный тостер на 2 ломтика мощностью ~1000 Вт (диапазон класса 800–1500 Вт). Ожидает проверки по сертифицированным данным.",
+      "zh": "典型 2 片式烤面包机功率约 1,000 W（产品类别范围 800–1,500 W）。有待用认证数据核实。"
     }
   },
   {
     "id": "air_fryer",
-    "name": {
-      "en": "Air fryer",
-      "es": "Freidora de aire"
-    },
     "emoji": "🍟",
     "category": "kitchen",
     "energy_model": "power",
@@ -327,17 +462,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "Air fryer",
+      "es": "Freidora de aire",
+      "fr": "Friteuse sans huile",
+      "de": "Heißluftfritteuse",
+      "ru": "Аэрогриль",
+      "zh": "空气炸锅"
+    },
     "assumption_note": {
       "en": "Typical air fryer rated ~1,500 W, element cycling brings averages slightly lower (product-class range 1,200–1,800 W). Pending verification.",
-      "es": "Freidora de aire típica de ~1.500 W; los ciclos de la resistencia reducen algo el promedio (rango 1.200–1.800 W). Pendiente de verificación."
+      "es": "Freidora de aire típica de ~1.500 W; los ciclos de la resistencia reducen algo el promedio (rango 1.200–1.800 W). Pendiente de verificación.",
+      "fr": "Friteuse sans huile typique : ~1 500 W ; les cycles de la résistance abaissent un peu la moyenne (fourchette de la catégorie 1 200–1 800 W). En attente de vérification.",
+      "de": "Typische Heißluftfritteuse mit ~1.500 W; das Takten des Heizelements senkt den Durchschnitt leicht (Spanne der Produktklasse 1.200–1.800 W). Überprüfung ausstehend.",
+      "ru": "Типичный аэрогриль мощностью ~1500 Вт; циклы нагревателя немного снижают среднее потребление (диапазон класса 1200–1800 Вт). Ожидает проверки.",
+      "zh": "典型空气炸锅功率约 1,500 W，加热元件启停使平均功率略低（产品类别范围 1,200–1,800 W）。待核实。"
     }
   },
   {
     "id": "room_ac",
-    "name": {
-      "en": "Air conditioner (room)",
-      "es": "Aire acondicionado (habitación)"
-    },
     "emoji": "🌬️",
     "category": "climate",
     "energy_model": "power",
@@ -349,17 +492,25 @@
     ],
     "value_year": 2026,
     "difficulty": 2,
+    "name": {
+      "en": "Air conditioner (room)",
+      "es": "Aire acondicionado (habitación)",
+      "fr": "Climatiseur (pièce)",
+      "de": "Klimagerät (Raum)",
+      "ru": "Кондиционер (комнатный)",
+      "zh": "空调（房间）"
+    },
     "assumption_note": {
       "en": "Median certified 10–14k BTU room AC draws ~800 W while cooling (n=226, capacity ÷ CEER, ENERGY STAR dataset).",
-      "es": "El aire acondicionado de habitación certificado mediano de 10–14k BTU consume ~800 W mientras enfría (n=226, capacidad ÷ CEER, base ENERGY STAR)."
+      "es": "El aire acondicionado de habitación certificado mediano de 10–14k BTU consume ~800 W mientras enfría (n=226, capacidad ÷ CEER, base ENERGY STAR).",
+      "fr": "Le climatiseur de pièce certifié médian de 10–14k BTU consomme ~800 W en refroidissement (n = 226, capacité ÷ CEER, base ENERGY STAR).",
+      "de": "Das zertifizierte Median-Raumklimagerät mit 10–14k BTU zieht beim Kühlen ~800 W (n = 226, Kühlleistung ÷ CEER, ENERGY-STAR-Datensatz).",
+      "ru": "Медианный сертифицированный комнатный кондиционер на 10–14k BTU потребляет ~800 Вт при охлаждении (n = 226, холодопроизводительность ÷ CEER, база ENERGY STAR).",
+      "zh": "10–14k BTU 认证房间空调的中位数制冷功率约 800 W（n=226，制冷量 ÷ CEER，ENERGY STAR 数据集）。"
     }
   },
   {
     "id": "space_heater",
-    "name": {
-      "en": "Electric space heater",
-      "es": "Calefactor eléctrico"
-    },
     "emoji": "♨️",
     "category": "climate",
     "energy_model": "power",
@@ -371,17 +522,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "Electric space heater",
+      "es": "Calefactor eléctrico",
+      "fr": "Radiateur électrique d’appoint",
+      "de": "Elektroheizgerät",
+      "ru": "Электрообогреватель",
+      "zh": "电暖器"
+    },
     "assumption_note": {
       "en": "Portable resistance heaters are rated 1,500 W in North America (2,000 W typical in Europe); resistance heating is 100% efficient at the outlet.",
-      "es": "Los calefactores portátiles de resistencia son de 1.500 W en Norteamérica (2.000 W típico en Europa); la calefacción por resistencia es 100% eficiente en el enchufe."
+      "es": "Los calefactores portátiles de resistencia son de 1.500 W en Norteamérica (2.000 W típico en Europa); la calefacción por resistencia es 100% eficiente en el enchufe.",
+      "fr": "Les radiateurs portables à résistance font 1 500 W en Amérique du Nord (2 000 W typiques en Europe) ; le chauffage par résistance est efficace à 100 % à la prise.",
+      "de": "Tragbare Elektroheizgeräte haben in Nordamerika 1.500 W (in Europa typischerweise 2.000 W); Widerstandsheizung wandelt den Strom aus der Steckdose zu 100 % in Wärme um.",
+      "ru": "Переносные резистивные обогреватели в Северной Америке имеют мощность 1500 Вт (в Европе обычно 2000 Вт); резистивный нагрев превращает в тепло 100% электроэнергии из розетки.",
+      "zh": "在北美，便携式电阻电暖器的额定功率为 1,500 W（欧洲通常为 2,000 W）；电阻加热在插座端的效率为 100%。"
     }
   },
   {
     "id": "heat_pump",
-    "name": {
-      "en": "Heat pump (heating)",
-      "es": "Bomba de calor (calefacción)"
-    },
     "emoji": "♻️",
     "category": "climate",
     "energy_model": "power",
@@ -393,17 +552,25 @@
     ],
     "value_year": 2026,
     "difficulty": 3,
+    "name": {
+      "en": "Heat pump (heating)",
+      "es": "Bomba de calor (calefacción)",
+      "fr": "Pompe à chaleur (chauffage)",
+      "de": "Wärmepumpe (Heizen)",
+      "ru": "Тепловой насос (отопление)",
+      "zh": "热泵（供暖）"
+    },
     "assumption_note": {
       "en": "A heat pump delivering ~2.8 kW of heat at seasonal COP ~3.5 draws ~800 W of electricity — about 0.29 kWh electric per kWh of heat. Pending dataset verification.",
-      "es": "Una bomba de calor que entrega ~2,8 kW de calor con COP estacional ~3,5 consume ~800 W eléctricos — unos 0,29 kWh eléctricos por kWh de calor. Pendiente de verificación."
+      "es": "Una bomba de calor que entrega ~2,8 kW de calor con COP estacional ~3,5 consume ~800 W eléctricos — unos 0,29 kWh eléctricos por kWh de calor. Pendiente de verificación.",
+      "fr": "Une pompe à chaleur qui fournit ~2,8 kW de chaleur avec un COP saisonnier de ~3,5 consomme ~800 W d’électricité — environ 0,29 kWh d’électricité par kWh de chaleur. En attente de vérification.",
+      "de": "Eine Wärmepumpe, die ~2,8 kW Wärme bei einer Jahresarbeitszahl (COP) von ~3,5 liefert, zieht ~800 W Strom – etwa 0,29 kWh Strom pro kWh Wärme. Überprüfung ausstehend.",
+      "ru": "Тепловой насос, выдающий ~2,8 кВт тепла при сезонном COP ~3,5, потребляет ~800 Вт электроэнергии — около 0,29 кВт·ч электроэнергии на кВт·ч тепла. Ожидает проверки.",
+      "zh": "一台热泵在季节性能效比（COP）约 3.5 时提供约 2.8 kW 热量，耗电约 800 W——每千瓦时热量约耗电 0.29 kWh。待核实。"
     }
   },
   {
     "id": "gas_boiler",
-    "name": {
-      "en": "Gas boiler (heating)",
-      "es": "Caldera de gas (calefacción)"
-    },
     "emoji": "🏠",
     "category": "climate",
     "energy_model": "power",
@@ -416,17 +583,25 @@
     ],
     "value_year": 2026,
     "difficulty": 3,
+    "name": {
+      "en": "Gas boiler (heating)",
+      "es": "Caldera de gas (calefacción)",
+      "fr": "Chaudière à gaz (chauffage)",
+      "de": "Gastherme (Heizen)",
+      "ru": "Газовый котёл (отопление)",
+      "zh": "燃气锅炉（供暖）"
+    },
     "assumption_note": {
       "en": "A home gas boiler actively heating burns ~12 kW of gas (thermal; modulating range 8–24 kW). Country-invariant. Pending dataset verification.",
-      "es": "Una caldera de gas doméstica en funcionamiento quema ~12 kW de gas (térmico; rango de modulación 8–24 kW). No varía por país. Pendiente de verificación."
+      "es": "Una caldera de gas doméstica en funcionamiento quema ~12 kW de gas (térmico; rango de modulación 8–24 kW). No varía por país. Pendiente de verificación.",
+      "fr": "Une chaudière à gaz domestique en chauffe brûle ~12 kW de gaz (énergie thermique ; plage de modulation 8–24 kW). Identique dans tous les pays. En attente de vérification.",
+      "de": "Eine Gastherme im Haushalt verbrennt beim Heizen ~12 kW Gas (thermisch; Modulationsbereich 8–24 kW). In jedem Land gleich. Überprüfung ausstehend.",
+      "ru": "Бытовой газовый котёл в режиме отопления сжигает ~12 кВт газа (тепловая мощность; диапазон модуляции 8–24 кВт). Одинаково во всех странах. Ожидает проверки.",
+      "zh": "家用燃气锅炉在供暖时燃烧约 12 kW 燃气（热功率；调节范围 8–24 kW）。各国相同。待核实。"
     }
   },
   {
     "id": "ceiling_fan",
-    "name": {
-      "en": "Ceiling fan",
-      "es": "Ventilador de techo"
-    },
     "emoji": "🪭",
     "category": "climate",
     "energy_model": "power",
@@ -438,17 +613,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "Ceiling fan",
+      "es": "Ventilador de techo",
+      "fr": "Ventilateur de plafond",
+      "de": "Deckenventilator",
+      "ru": "Потолочный вентилятор",
+      "zh": "吊扇"
+    },
     "assumption_note": {
       "en": "Median certified ceiling fan draws 29.8 W at high speed (n=1,384, ENERGY STAR dataset).",
-      "es": "El ventilador de techo certificado mediano consume 29,8 W a velocidad alta (n=1.384, base ENERGY STAR)."
+      "es": "El ventilador de techo certificado mediano consume 29,8 W a velocidad alta (n=1.384, base ENERGY STAR).",
+      "fr": "Le ventilateur de plafond certifié médian consomme 29,8 W à grande vitesse (n = 1 384, base ENERGY STAR).",
+      "de": "Der zertifizierte Median-Deckenventilator zieht 29,8 W auf höchster Stufe (n = 1.384, ENERGY-STAR-Datensatz).",
+      "ru": "Медианный сертифицированный потолочный вентилятор потребляет 29,8 Вт на высокой скорости (n = 1384, база ENERGY STAR).",
+      "zh": "认证吊扇的中位数在高速档时功率为 29.8 W（n=1,384，ENERGY STAR 数据集）。"
     }
   },
   {
     "id": "dehumidifier",
-    "name": {
-      "en": "Dehumidifier",
-      "es": "Deshumidificador"
-    },
     "emoji": "💧",
     "category": "climate",
     "energy_model": "power",
@@ -460,17 +643,25 @@
     ],
     "value_year": 2026,
     "difficulty": 2,
+    "name": {
+      "en": "Dehumidifier",
+      "es": "Deshumidificador",
+      "fr": "Déshumidificateur",
+      "de": "Luftentfeuchter",
+      "ru": "Осушитель воздуха",
+      "zh": "除湿机"
+    },
     "assumption_note": {
       "en": "Median certified dehumidifier: 343 kWh/yr over the 1,095-hour test basis ≈ 313 W while running (n=523, ENERGY STAR dataset).",
-      "es": "Deshumidificador certificado mediano: 343 kWh/año sobre la base de prueba de 1.095 horas ≈ 313 W en funcionamiento (n=523, base ENERGY STAR)."
+      "es": "Deshumidificador certificado mediano: 343 kWh/año sobre la base de prueba de 1.095 horas ≈ 313 W en funcionamiento (n=523, base ENERGY STAR).",
+      "fr": "Déshumidificateur certifié médian : 343 kWh/an sur la base d’essai de 1 095 heures ≈ 313 W en fonctionnement (n = 523, base ENERGY STAR).",
+      "de": "Zertifizierter Median-Luftentfeuchter: 343 kWh/Jahr bei der Prüfbasis von 1.095 Stunden ≈ 313 W im Betrieb (n = 523, ENERGY-STAR-Datensatz).",
+      "ru": "Медианный сертифицированный осушитель: 343 кВт·ч/год при базе испытаний в 1095 часов ≈ 313 Вт во время работы (n = 523, база ENERGY STAR).",
+      "zh": "认证除湿机中位数：按 1,095 小时的测试基准计，每年 343 kWh，运行时约 313 W（n=523，ENERGY STAR 数据集）。"
     }
   },
   {
     "id": "electric_blanket",
-    "name": {
-      "en": "Electric blanket",
-      "es": "Manta eléctrica"
-    },
     "emoji": "🛏️",
     "category": "climate",
     "energy_model": "power",
@@ -482,17 +673,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "Electric blanket",
+      "es": "Manta eléctrica",
+      "fr": "Couverture chauffante",
+      "de": "Heizdecke",
+      "ru": "Электроодеяло",
+      "zh": "电热毯"
+    },
     "assumption_note": {
       "en": "Typical double electric blanket rated ~150 W on high (product-class range 60–200 W). Pending verification.",
-      "es": "Manta eléctrica doble típica de ~150 W al máximo (rango de la clase 60–200 W). Pendiente de verificación."
+      "es": "Manta eléctrica doble típica de ~150 W al máximo (rango de la clase 60–200 W). Pendiente de verificación.",
+      "fr": "Couverture chauffante double typique : ~150 W au maximum (fourchette de la catégorie 60–200 W). En attente de vérification.",
+      "de": "Typische Doppel-Heizdecke mit ~150 W auf höchster Stufe (Spanne der Produktklasse 60–200 W). Überprüfung ausstehend.",
+      "ru": "Типичное двуспальное электроодеяло мощностью ~150 Вт на максимуме (диапазон класса 60–200 Вт). Ожидает проверки.",
+      "zh": "典型双人电热毯最高档功率约 150 W（产品类别范围 60–200 W）。待核实。"
     }
   },
   {
     "id": "hairdryer",
-    "name": {
-      "en": "Hairdryer",
-      "es": "Secador de pelo"
-    },
     "emoji": "💨",
     "category": "personal",
     "energy_model": "power",
@@ -509,17 +708,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "Hairdryer",
+      "es": "Secador de pelo",
+      "fr": "Sèche-cheveux",
+      "de": "Haartrockner",
+      "ru": "Фен",
+      "zh": "吹风机"
+    },
     "assumption_note": {
       "en": "Typical consumer hairdryer on high: ~1,800 W (product-class range 1,200–2,200 W). Pending certified-dataset verification.",
-      "es": "Secador de pelo típico al máximo: ~1.800 W (rango de la clase 1.200–2.200 W). Pendiente de verificación."
+      "es": "Secador de pelo típico al máximo: ~1.800 W (rango de la clase 1.200–2.200 W). Pendiente de verificación.",
+      "fr": "Sèche-cheveux grand public typique, au maximum : ~1 800 W (fourchette de la catégorie 1 200–2 200 W). En attente de vérification sur données certifiées.",
+      "de": "Typischer Haartrockner auf höchster Stufe: ~1.800 W (Spanne der Produktklasse 1.200–2.200 W). Überprüfung anhand zertifizierter Daten ausstehend.",
+      "ru": "Типичный бытовой фен на максимуме: ~1800 Вт (диапазон класса 1200–2200 Вт). Ожидает проверки по сертифицированным данным.",
+      "zh": "典型家用吹风机最高档：约 1,800 W（产品类别范围 1,200–2,200 W）。有待用认证数据核实。"
     }
   },
   {
     "id": "electric_shower",
-    "name": {
-      "en": "Shower (electric water heater)",
-      "es": "Ducha (calentador eléctrico)"
-    },
     "emoji": "🚿",
     "category": "personal",
     "energy_model": "power",
@@ -537,17 +744,25 @@
     ],
     "value_year": 2026,
     "difficulty": 2,
+    "name": {
+      "en": "Shower (electric water heater)",
+      "es": "Ducha (calentador eléctrico)",
+      "fr": "Douche (chauffe-eau électrique)",
+      "de": "Dusche (elektrischer Durchlauferhitzer)",
+      "ru": "Душ (электрический водонагреватель)",
+      "zh": "淋浴（电热水器）"
+    },
     "assumption_note": {
       "en": "A shower running on an instantaneous electric water heater draws ~9.5 kW while the water flows (class range 7.5–10.5 kW).",
-      "es": "Una ducha con calentador eléctrico instantáneo consume ~9,5 kW mientras corre el agua (rango 7,5–10,5 kW)."
+      "es": "Una ducha con calentador eléctrico instantáneo consume ~9,5 kW mientras corre el agua (rango 7,5–10,5 kW).",
+      "fr": "Une douche alimentée par un chauffe-eau électrique instantané consomme ~9,5 kW tant que l’eau coule (fourchette de la catégorie 7,5–10,5 kW).",
+      "de": "Eine Dusche mit elektrischem Durchlauferhitzer zieht ~9,5 kW, solange das Wasser fließt (Spanne der Produktklasse 7,5–10,5 kW).",
+      "ru": "Душ с проточным электрическим водонагревателем потребляет ~9,5 кВт, пока течёт вода (диапазон класса 7,5–10,5 кВт).",
+      "zh": "使用即热式电热水器的淋浴在出水时功率约 9.5 kW（类别范围 7.5–10.5 kW）。"
     }
   },
   {
     "id": "hair_straightener",
-    "name": {
-      "en": "Hair straightener",
-      "es": "Plancha de pelo"
-    },
     "emoji": "💇",
     "category": "personal",
     "energy_model": "power",
@@ -564,25 +779,29 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "Hair straightener",
+      "es": "Plancha de pelo",
+      "fr": "Lisseur à cheveux",
+      "de": "Glätteisen",
+      "ru": "Утюжок для волос",
+      "zh": "直发器"
+    },
     "assumption_note": {
       "en": "Hair straighteners average ~120 W once at temperature (class range 40–300 W). Pending verification.",
-      "es": "Las planchas de pelo consumen de media ~120 W una vez calientes (rango 40–300 W). Pendiente de verificación."
+      "es": "Las planchas de pelo consumen de media ~120 W una vez calientes (rango 40–300 W). Pendiente de verificación.",
+      "fr": "Les lisseurs consomment en moyenne ~120 W une fois chauds (fourchette 40–300 W). En attente de vérification.",
+      "de": "Glätteisen ziehen im Schnitt ~120 W, sobald sie aufgeheizt sind (Spanne 40–300 W). Überprüfung ausstehend.",
+      "ru": "Утюжки для волос после нагрева потребляют в среднем ~120 Вт (диапазон 40–300 Вт). Ожидает проверки.",
+      "zh": "直发器加热到温后平均功率约 120 W（范围 40–300 W）。待核实。"
     }
   },
   {
     "id": "electric_toothbrush",
-    "name": {
-      "en": "Electric toothbrush",
-      "es": "Cepillo de dientes eléctrico"
-    },
     "emoji": "🪥",
     "category": "personal",
     "energy_model": "per_event",
     "kwh_per_event": 0.002,
-    "event_noun": {
-      "en": "charges",
-      "es": "cargas"
-    },
     "carrier": "electricity",
     "typical_unit": "events",
     "source_ids": [
@@ -590,25 +809,56 @@
     ],
     "value_year": 2026,
     "difficulty": 3,
+    "name": {
+      "en": "Electric toothbrush",
+      "es": "Cepillo de dientes eléctrico",
+      "fr": "Brosse à dents électrique",
+      "de": "Elektrozahnbürste",
+      "ru": "Электрическая зубная щётка",
+      "zh": "电动牙刷"
+    },
+    "event_noun": {
+      "en": {
+        "one": "charge",
+        "other": "charges"
+      },
+      "es": {
+        "one": "carga",
+        "other": "cargas"
+      },
+      "fr": {
+        "one": "recharge",
+        "other": "recharges"
+      },
+      "de": {
+        "one": "Ladung",
+        "other": "Ladungen"
+      },
+      "ru": {
+        "one": "зарядка",
+        "few": "зарядки",
+        "many": "зарядок",
+        "other": "зарядки"
+      },
+      "zh": {
+        "other": "次充电"
+      }
+    },
     "assumption_note": {
       "en": "One full charge of a ~1.4 Wh toothbrush battery plus charger losses ≈ 0.002 kWh — nearly negligible, which is the point.",
-      "es": "Una carga completa de una batería de ~1,4 Wh más las pérdidas del cargador ≈ 0,002 kWh — casi despreciable, y esa es la gracia."
+      "es": "Una carga completa de una batería de ~1,4 Wh más las pérdidas del cargador ≈ 0,002 kWh — casi despreciable, y esa es la gracia.",
+      "fr": "Une recharge complète d’une batterie de brosse à dents de ~1,4 Wh, plus les pertes du chargeur ≈ 0,002 kWh — presque négligeable, et c’est justement le propos.",
+      "de": "Eine volle Ladung eines Zahnbürsten-Akkus mit ~1,4 Wh plus Ladeverluste ≈ 0,002 kWh – fast vernachlässigbar, und genau darum geht es.",
+      "ru": "Полная зарядка аккумулятора зубной щётки на ~1,4 Вт·ч плюс потери зарядного устройства ≈ 0,002 кВт·ч — почти ничего, и в этом весь смысл.",
+      "zh": "为约 1.4 Wh 的牙刷电池充满一次电，加上充电器损耗，约 0.002 kWh——几乎可以忽略不计，这正是重点。"
     }
   },
   {
     "id": "washing_machine",
-    "name": {
-      "en": "Washing machine",
-      "es": "Lavadora"
-    },
     "emoji": "🧺",
     "category": "personal",
     "energy_model": "per_event",
     "kwh_per_event": 0.47,
-    "event_noun": {
-      "en": "loads",
-      "es": "lavados"
-    },
     "carrier": "electricity",
     "typical_unit": "events",
     "source_ids": [
@@ -616,25 +866,56 @@
     ],
     "value_year": 2026,
     "difficulty": 2,
+    "name": {
+      "en": "Washing machine",
+      "es": "Lavadora",
+      "fr": "Lave-linge",
+      "de": "Waschmaschine",
+      "ru": "Стиральная машина",
+      "zh": "洗衣机"
+    },
+    "event_noun": {
+      "en": {
+        "one": "load",
+        "other": "loads"
+      },
+      "es": {
+        "one": "lavado",
+        "other": "lavados"
+      },
+      "fr": {
+        "one": "lavage",
+        "other": "lavages"
+      },
+      "de": {
+        "one": "Waschgang",
+        "other": "Waschgänge"
+      },
+      "ru": {
+        "one": "стирка",
+        "few": "стирки",
+        "many": "стирок",
+        "other": "стирки"
+      },
+      "zh": {
+        "other": "次"
+      }
+    },
     "assumption_note": {
       "en": "Median certified washer: 110 kWh/yr over the 234-load label basis ≈ 0.47 kWh per warm load (n=393, ENERGY STAR dataset; certified units skew efficient).",
-      "es": "Lavadora certificada mediana: 110 kWh/año sobre la base de etiqueta de 234 lavados ≈ 0,47 kWh por lavado templado (n=393, base ENERGY STAR; las certificadas son más eficientes que la media)."
+      "es": "Lavadora certificada mediana: 110 kWh/año sobre la base de etiqueta de 234 lavados ≈ 0,47 kWh por lavado templado (n=393, base ENERGY STAR; las certificadas son más eficientes que la media).",
+      "fr": "Lave-linge certifié médian : 110 kWh/an sur la base d’étiquetage de 234 lavages ≈ 0,47 kWh par lavage à l’eau tiède (n = 393, base ENERGY STAR ; les modèles certifiés sont plus efficaces que la moyenne).",
+      "de": "Zertifizierte Median-Waschmaschine: 110 kWh/Jahr bei der Label-Basis von 234 Waschgängen ≈ 0,47 kWh pro Waschgang mit warmem Wasser (n = 393, ENERGY-STAR-Datensatz; zertifizierte Geräte sind effizienter als der Durchschnitt).",
+      "ru": "Медианная сертифицированная стиральная машина: 110 кВт·ч/год при базе маркировки в 234 стирки ≈ 0,47 кВт·ч за стирку в тёплой воде (n = 393, база ENERGY STAR; сертифицированные модели эффективнее среднего).",
+      "zh": "认证洗衣机中位数：按能效标签每年 234 次的基准计，每年 110 kWh，约合每次温水洗涤 0.47 kWh（n=393，ENERGY STAR 数据集；认证产品比平均水平更节能）。"
     }
   },
   {
     "id": "tumble_dryer",
-    "name": {
-      "en": "Tumble dryer",
-      "es": "Secadora"
-    },
     "emoji": "🌀",
     "category": "personal",
     "energy_model": "per_event",
     "kwh_per_event": 2.15,
-    "event_noun": {
-      "en": "loads",
-      "es": "secados"
-    },
     "carrier": "electricity",
     "typical_unit": "events",
     "source_ids": [
@@ -642,17 +923,52 @@
     ],
     "value_year": 2026,
     "difficulty": 2,
+    "name": {
+      "en": "Tumble dryer",
+      "es": "Secadora",
+      "fr": "Sèche-linge",
+      "de": "Wäschetrockner",
+      "ru": "Сушильная машина",
+      "zh": "干衣机"
+    },
+    "event_noun": {
+      "en": {
+        "one": "load",
+        "other": "loads"
+      },
+      "es": {
+        "one": "secado",
+        "other": "secados"
+      },
+      "fr": {
+        "one": "séchage",
+        "other": "séchages"
+      },
+      "de": {
+        "one": "Trockengang",
+        "other": "Trockengänge"
+      },
+      "ru": {
+        "one": "сушка",
+        "few": "сушки",
+        "many": "сушек",
+        "other": "сушки"
+      },
+      "zh": {
+        "other": "次"
+      }
+    },
     "assumption_note": {
       "en": "Median certified electric dryer: 608 kWh/yr over the 283-load test basis ≈ 2.15 kWh per load (n=644, ENERGY STAR dataset).",
-      "es": "Secadora eléctrica certificada mediana: 608 kWh/año sobre la base de prueba de 283 secados ≈ 2,15 kWh por secado (n=644, base ENERGY STAR)."
+      "es": "Secadora eléctrica certificada mediana: 608 kWh/año sobre la base de prueba de 283 secados ≈ 2,15 kWh por secado (n=644, base ENERGY STAR).",
+      "fr": "Sèche-linge électrique certifié médian : 608 kWh/an sur la base d’essai de 283 séchages ≈ 2,15 kWh par séchage (n = 644, base ENERGY STAR).",
+      "de": "Zertifizierter Median-Elektrotrockner: 608 kWh/Jahr bei der Prüfbasis von 283 Trockengängen ≈ 2,15 kWh pro Trockengang (n = 644, ENERGY-STAR-Datensatz).",
+      "ru": "Медианная сертифицированная электрическая сушильная машина: 608 кВт·ч/год при базе испытаний в 283 сушки ≈ 2,15 кВт·ч за сушку (n = 644, база ENERGY STAR).",
+      "zh": "认证电干衣机中位数：按每年 283 次的测试基准计，每年 608 kWh，约合每次 2.15 kWh（n=644，ENERGY STAR 数据集）。"
     }
   },
   {
     "id": "iron",
-    "name": {
-      "en": "Clothes iron",
-      "es": "Plancha de ropa"
-    },
     "emoji": "👕",
     "category": "personal",
     "energy_model": "power",
@@ -670,17 +986,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "Clothes iron",
+      "es": "Plancha de ropa",
+      "fr": "Fer à repasser",
+      "de": "Bügeleisen",
+      "ru": "Утюг",
+      "zh": "熨斗"
+    },
     "assumption_note": {
       "en": "Typical steam iron rated ~1,400 W; thermostat cycling lowers averages (class range 1,000–1,800 W). Pending verification.",
-      "es": "Plancha de vapor típica de ~1.400 W; el termostato reduce el promedio (rango 1.000–1.800 W). Pendiente de verificación."
+      "es": "Plancha de vapor típica de ~1.400 W; el termostato reduce el promedio (rango 1.000–1.800 W). Pendiente de verificación.",
+      "fr": "Fer à repasser à vapeur typique : ~1 400 W ; le thermostat abaisse la moyenne (fourchette 1 000–1 800 W). En attente de vérification.",
+      "de": "Typisches Dampfbügeleisen mit ~1.400 W; der Thermostat senkt den Durchschnitt (Spanne 1.000–1.800 W). Überprüfung ausstehend.",
+      "ru": "Типичный паровой утюг мощностью ~1400 Вт; термостат снижает среднее потребление (диапазон 1000–1800 Вт). Ожидает проверки.",
+      "zh": "典型蒸汽熨斗额定功率约 1,400 W；恒温器启停使平均功率降低（范围 1,000–1,800 W）。待核实。"
     }
   },
   {
     "id": "vacuum_cleaner",
-    "name": {
-      "en": "Vacuum cleaner",
-      "es": "Aspiradora"
-    },
     "emoji": "🧹",
     "category": "personal",
     "energy_model": "power",
@@ -697,17 +1021,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "Vacuum cleaner",
+      "es": "Aspiradora",
+      "fr": "Aspirateur",
+      "de": "Staubsauger",
+      "ru": "Пылесос",
+      "zh": "吸尘器"
+    },
     "assumption_note": {
       "en": "Corded vacuum cleaners draw ~1,200 W (class range 500–1,800 W; EU ecodesign caps at 900 W). Pending verification.",
-      "es": "Las aspiradoras con cable consumen ~1.200 W (rango 500–1.800 W; el ecodiseño de la UE limita a 900 W). Pendiente de verificación."
+      "es": "Las aspiradoras con cable consumen ~1.200 W (rango 500–1.800 W; el ecodiseño de la UE limita a 900 W). Pendiente de verificación.",
+      "fr": "Les aspirateurs filaires consomment ~1 200 W (fourchette 500–1 800 W ; l’écoconception de l’UE plafonne à 900 W). En attente de vérification.",
+      "de": "Staubsauger mit Kabel ziehen ~1.200 W (Spanne 500–1.800 W; die EU-Ökodesign-Verordnung begrenzt auf 900 W). Überprüfung ausstehend.",
+      "ru": "Проводные пылесосы потребляют ~1200 Вт (диапазон 500–1800 Вт; требования ЕС к экодизайну ограничивают мощность 900 Вт). Ожидает проверки.",
+      "zh": "有线吸尘器功率约 1,200 W（范围 500–1,800 W；欧盟生态设计法规的上限为 900 W）。待核实。"
     }
   },
   {
     "id": "tv_55",
-    "name": {
-      "en": "55″ LED TV",
-      "es": "Televisor LED de 55″"
-    },
     "emoji": "📺",
     "category": "electronics",
     "energy_model": "power",
@@ -719,17 +1051,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "55″ LED TV",
+      "es": "Televisor LED de 55″",
+      "fr": "Téléviseur LED 55″",
+      "de": "LED-Fernseher 55″",
+      "ru": "LED-телевизор 55″",
+      "zh": "55″ LED 电视"
+    },
     "assumption_note": {
       "en": "Median certified 53–57″ TV: 97.5 W on-mode per the federal test procedure (n=30, ENERGY STAR dataset).",
-      "es": "Televisor certificado mediano de 53–57″: 97,5 W encendido según el procedimiento federal de prueba (n=30, base ENERGY STAR)."
+      "es": "Televisor certificado mediano de 53–57″: 97,5 W encendido según el procedimiento federal de prueba (n=30, base ENERGY STAR).",
+      "fr": "Téléviseur certifié médian de 53–57″ : 97,5 W en marche selon la procédure d’essai fédérale (n = 30, base ENERGY STAR).",
+      "de": "Zertifizierter Median-Fernseher mit 53–57″: 97,5 W im Betrieb nach dem US-Prüfverfahren (n = 30, ENERGY-STAR-Datensatz).",
+      "ru": "Медианный сертифицированный телевизор 53–57″: 97,5 Вт во включённом состоянии по федеральной методике испытаний (n = 30, база ENERGY STAR).",
+      "zh": "认证 53–57″ 电视的中位数：按美国联邦测试程序，开机功率为 97.5 W（n=30，ENERGY STAR 数据集）。"
     }
   },
   {
     "id": "desktop_monitor",
-    "name": {
-      "en": "Computer monitor",
-      "es": "Monitor de ordenador"
-    },
     "emoji": "🖥️",
     "category": "electronics",
     "energy_model": "power",
@@ -741,17 +1081,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "Computer monitor",
+      "es": "Monitor de ordenador",
+      "fr": "Écran d’ordinateur",
+      "de": "Computermonitor",
+      "ru": "Монитор",
+      "zh": "电脑显示器"
+    },
     "assumption_note": {
       "en": "Median certified display draws 28.7 W in on-mode (n=2,789, ENERGY STAR dataset).",
-      "es": "El monitor certificado mediano consume 28,7 W encendido (n=2.789, base ENERGY STAR)."
+      "es": "El monitor certificado mediano consume 28,7 W encendido (n=2.789, base ENERGY STAR).",
+      "fr": "L’écran certifié médian consomme 28,7 W en marche (n = 2 789, base ENERGY STAR).",
+      "de": "Der zertifizierte Median-Monitor zieht im Betrieb 28,7 W (n = 2.789, ENERGY-STAR-Datensatz).",
+      "ru": "Медианный сертифицированный монитор потребляет 28,7 Вт во включённом состоянии (n = 2789, база ENERGY STAR).",
+      "zh": "认证显示器的中位数开机功率为 28.7 W（n=2,789，ENERGY STAR 数据集）。"
     }
   },
   {
     "id": "laptop",
-    "name": {
-      "en": "Laptop",
-      "es": "Portátil"
-    },
     "emoji": "💻",
     "category": "electronics",
     "energy_model": "power",
@@ -763,17 +1111,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "Laptop",
+      "es": "Portátil",
+      "fr": "Ordinateur portable",
+      "de": "Laptop",
+      "ru": "Ноутбук",
+      "zh": "笔记本电脑"
+    },
     "assumption_note": {
       "en": "Typical laptop in active use draws ~50 W (class range 20–100 W depending on load). Pending verification.",
-      "es": "Un portátil típico en uso activo consume ~50 W (rango 20–100 W según la carga). Pendiente de verificación."
+      "es": "Un portátil típico en uso activo consume ~50 W (rango 20–100 W según la carga). Pendiente de verificación.",
+      "fr": "Un ordinateur portable typique en usage actif consomme ~50 W (fourchette 20–100 W selon la charge). En attente de vérification.",
+      "de": "Ein typischer Laptop zieht bei aktiver Nutzung ~50 W (Spanne 20–100 W je nach Last). Überprüfung ausstehend.",
+      "ru": "Типичный ноутбук при активном использовании потребляет ~50 Вт (диапазон 20–100 Вт в зависимости от нагрузки). Ожидает проверки.",
+      "zh": "典型笔记本电脑在使用中功率约 50 W（视负载在 20–100 W 之间）。待核实。"
     }
   },
   {
     "id": "gaming_pc",
-    "name": {
-      "en": "Gaming PC",
-      "es": "PC gaming"
-    },
     "emoji": "🎮",
     "category": "electronics",
     "energy_model": "power",
@@ -785,17 +1141,25 @@
     ],
     "value_year": 2026,
     "difficulty": 2,
+    "name": {
+      "en": "Gaming PC",
+      "es": "PC gaming",
+      "fr": "PC de jeu",
+      "de": "Gaming-PC",
+      "ru": "Игровой ПК",
+      "zh": "游戏电脑"
+    },
     "assumption_note": {
-      "en": "A mid-to-high gaming desktop under game load draws ~350 W including monitor excluded (class range 200–600 W). Pending measured verification.",
-      "es": "Un PC de juegos medio-alto en carga consume ~350 W sin contar el monitor (rango 200–600 W). Pendiente de verificación medida."
+      "en": "A mid-to-high gaming desktop under game load draws ~350 W, monitor excluded (class range 200–600 W). Pending measured verification.",
+      "es": "Un PC de juegos medio-alto en carga consume ~350 W sin contar el monitor (rango 200–600 W). Pendiente de verificación medida.",
+      "fr": "Un PC de jeu milieu à haut de gamme en pleine partie consomme ~350 W, écran non compris (fourchette 200–600 W). En attente de vérification par mesure.",
+      "de": "Ein Gaming-Desktop der Mittel- bis Oberklasse zieht beim Spielen ~350 W, ohne Monitor (Spanne 200–600 W). Überprüfung durch Messung ausstehend.",
+      "ru": "Игровой ПК среднего и высокого класса под игровой нагрузкой потребляет ~350 Вт без учёта монитора (диапазон 200–600 Вт). Ожидает проверки измерениями.",
+      "zh": "中高端游戏台式机在游戏负载下功率约 350 W，不含显示器（范围 200–600 W）。有待实测核实。"
     }
   },
   {
     "id": "game_console",
-    "name": {
-      "en": "Game console",
-      "es": "Consola de videojuegos"
-    },
     "emoji": "🕹️",
     "category": "electronics",
     "energy_model": "power",
@@ -807,25 +1171,29 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "Game console",
+      "es": "Consola de videojuegos",
+      "fr": "Console de jeux",
+      "de": "Spielkonsole",
+      "ru": "Игровая приставка",
+      "zh": "游戏机"
+    },
     "assumption_note": {
       "en": "Current-generation consoles draw ~160 W while gaming (class range 70–220 W). Pending measured verification.",
-      "es": "Las consolas de la generación actual consumen ~160 W jugando (rango 70–220 W). Pendiente de verificación medida."
+      "es": "Las consolas de la generación actual consumen ~160 W jugando (rango 70–220 W). Pendiente de verificación medida.",
+      "fr": "Les consoles de la génération actuelle consomment ~160 W en jeu (fourchette 70–220 W). En attente de vérification par mesure.",
+      "de": "Konsolen der aktuellen Generation ziehen beim Spielen ~160 W (Spanne 70–220 W). Überprüfung durch Messung ausstehend.",
+      "ru": "Приставки текущего поколения потребляют ~160 Вт во время игры (диапазон 70–220 Вт). Ожидает проверки измерениями.",
+      "zh": "当代游戏机在游戏时功率约 160 W（范围 70–220 W）。有待实测核实。"
     }
   },
   {
     "id": "smartphone_charge",
-    "name": {
-      "en": "Smartphone charge",
-      "es": "Carga de móvil"
-    },
     "emoji": "📱",
     "category": "electronics",
     "energy_model": "per_event",
     "kwh_per_event": 0.015,
-    "event_noun": {
-      "en": "charges",
-      "es": "cargas"
-    },
     "carrier": "electricity",
     "typical_unit": "events",
     "source_ids": [
@@ -833,25 +1201,56 @@
     ],
     "value_year": 2026,
     "difficulty": 3,
+    "name": {
+      "en": "Smartphone (charge)",
+      "es": "Móvil (carga)",
+      "fr": "Smartphone (recharge)",
+      "de": "Smartphone-Akku",
+      "ru": "Смартфон (зарядка)",
+      "zh": "智能手机充电"
+    },
+    "event_noun": {
+      "en": {
+        "one": "charge",
+        "other": "charges"
+      },
+      "es": {
+        "one": "carga",
+        "other": "cargas"
+      },
+      "fr": {
+        "one": "recharge",
+        "other": "recharges"
+      },
+      "de": {
+        "one": "Ladung",
+        "other": "Ladungen"
+      },
+      "ru": {
+        "one": "зарядка",
+        "few": "зарядки",
+        "many": "зарядок",
+        "other": "зарядки"
+      },
+      "zh": {
+        "other": "次"
+      }
+    },
     "assumption_note": {
       "en": "One full charge of a ~13 Wh smartphone battery at ~85% charger efficiency ≈ 0.015 kWh.",
-      "es": "Una carga completa de una batería de móvil de ~13 Wh con ~85% de eficiencia del cargador ≈ 0,015 kWh."
+      "es": "Una carga completa de una batería de móvil de ~13 Wh con ~85% de eficiencia del cargador ≈ 0,015 kWh.",
+      "fr": "Une recharge complète d’une batterie de smartphone de ~13 Wh avec un chargeur efficace à ~85 % ≈ 0,015 kWh.",
+      "de": "Eine volle Ladung eines Smartphone-Akkus mit ~13 Wh bei ~85 % Ladewirkungsgrad ≈ 0,015 kWh.",
+      "ru": "Полная зарядка аккумулятора смартфона на ~13 Вт·ч при КПД зарядного устройства ~85% ≈ 0,015 кВт·ч.",
+      "zh": "为约 13 Wh 的智能手机电池充满一次电，充电器效率约 85%，约 0.015 kWh。"
     }
   },
   {
     "id": "tablet_charge",
-    "name": {
-      "en": "Tablet charge",
-      "es": "Carga de tableta"
-    },
     "emoji": "📲",
     "category": "electronics",
     "energy_model": "per_event",
     "kwh_per_event": 0.033,
-    "event_noun": {
-      "en": "charges",
-      "es": "cargas"
-    },
     "carrier": "electricity",
     "typical_unit": "events",
     "source_ids": [
@@ -859,17 +1258,52 @@
     ],
     "value_year": 2026,
     "difficulty": 3,
+    "name": {
+      "en": "Tablet (charge)",
+      "es": "Tableta (carga)",
+      "fr": "Tablette (recharge)",
+      "de": "Tablet-Akku",
+      "ru": "Планшет (зарядка)",
+      "zh": "平板电脑充电"
+    },
+    "event_noun": {
+      "en": {
+        "one": "charge",
+        "other": "charges"
+      },
+      "es": {
+        "one": "carga",
+        "other": "cargas"
+      },
+      "fr": {
+        "one": "recharge",
+        "other": "recharges"
+      },
+      "de": {
+        "one": "Ladung",
+        "other": "Ladungen"
+      },
+      "ru": {
+        "one": "зарядка",
+        "few": "зарядки",
+        "many": "зарядок",
+        "other": "зарядки"
+      },
+      "zh": {
+        "other": "次"
+      }
+    },
     "assumption_note": {
       "en": "One full charge of a ~28 Wh tablet battery at ~85% charger efficiency ≈ 0.033 kWh.",
-      "es": "Una carga completa de una batería de tableta de ~28 Wh con ~85% de eficiencia ≈ 0,033 kWh."
+      "es": "Una carga completa de una batería de tableta de ~28 Wh con ~85% de eficiencia ≈ 0,033 kWh.",
+      "fr": "Une recharge complète d’une batterie de tablette de ~28 Wh avec un chargeur efficace à ~85 % ≈ 0,033 kWh.",
+      "de": "Eine volle Ladung eines Tablet-Akkus mit ~28 Wh bei ~85 % Ladewirkungsgrad ≈ 0,033 kWh.",
+      "ru": "Полная зарядка аккумулятора планшета на ~28 Вт·ч при КПД зарядного устройства ~85% ≈ 0,033 кВт·ч.",
+      "zh": "为约 28 Wh 的平板电脑电池充满一次电，充电器效率约 85%，约 0.033 kWh。"
     }
   },
   {
     "id": "wifi_router",
-    "name": {
-      "en": "Wi-Fi router",
-      "es": "Router Wi-Fi"
-    },
     "emoji": "📶",
     "category": "electronics",
     "energy_model": "power",
@@ -881,17 +1315,25 @@
     ],
     "value_year": 2026,
     "difficulty": 2,
+    "name": {
+      "en": "Wi-Fi router",
+      "es": "Router Wi-Fi",
+      "fr": "Routeur Wi-Fi",
+      "de": "WLAN-Router",
+      "ru": "Wi-Fi-роутер",
+      "zh": "Wi-Fi 路由器"
+    },
     "assumption_note": {
       "en": "Home Wi-Fi routers draw ~8 W continuously (class range 5–20 W). Pending verification.",
-      "es": "Los routers Wi-Fi domésticos consumen ~8 W de forma continua (rango 5–20 W). Pendiente de verificación."
+      "es": "Los routers Wi-Fi domésticos consumen ~8 W de forma continua (rango 5–20 W). Pendiente de verificación.",
+      "fr": "Les routeurs Wi-Fi domestiques consomment ~8 W en continu (fourchette 5–20 W). En attente de vérification.",
+      "de": "WLAN-Router im Haushalt ziehen dauerhaft ~8 W (Spanne 5–20 W). Überprüfung ausstehend.",
+      "ru": "Домашние Wi-Fi-роутеры постоянно потребляют ~8 Вт (диапазон 5–20 Вт). Ожидает проверки.",
+      "zh": "家用 Wi-Fi 路由器持续耗电约 8 W（范围 5–20 W）。待核实。"
     }
   },
   {
     "id": "led_bulb",
-    "name": {
-      "en": "800-lumen LED bulb",
-      "es": "Bombilla LED de 800 lúmenes"
-    },
     "emoji": "💡",
     "category": "electronics",
     "energy_model": "power",
@@ -903,17 +1345,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "800-lumen LED bulb",
+      "es": "Bombilla LED de 800 lúmenes",
+      "fr": "Ampoule LED de 800 lumens",
+      "de": "LED-Lampe mit 800 Lumen",
+      "ru": "Светодиодная лампа 800 лм",
+      "zh": "800 流明 LED 灯泡"
+    },
     "assumption_note": {
       "en": "An 800-lumen LED (the light of a classic 60 W incandescent) draws ~9 W (DOE Energy Saver lighting guidance, range 8–10 W).",
-      "es": "Una LED de 800 lúmenes (la luz de una incandescente clásica de 60 W) consume ~9 W (guía de DOE Energy Saver, rango 8–10 W)."
+      "es": "Una LED de 800 lúmenes (la luz de una incandescente clásica de 60 W) consume ~9 W (guía de DOE Energy Saver, rango 8–10 W).",
+      "fr": "Une LED de 800 lumens (la lumière d’une ampoule à incandescence classique de 60 W) consomme ~9 W (guide d’éclairage DOE Energy Saver, fourchette 8–10 W).",
+      "de": "Eine LED mit 800 Lumen (so hell wie eine klassische 60-W-Glühbirne) zieht ~9 W (Beleuchtungsleitfaden von DOE Energy Saver, Spanne 8–10 W).",
+      "ru": "Светодиодная лампа на 800 лм (столько же света, сколько у классической лампы накаливания на 60 Вт) потребляет ~9 Вт (рекомендации DOE Energy Saver по освещению, диапазон 8–10 Вт).",
+      "zh": "一只 800 流明的 LED 灯泡（亮度相当于传统 60 W 白炽灯）功率约 9 W（美国能源部 Energy Saver 照明指南，范围 8–10 W）。"
     }
   },
   {
     "id": "led_bulb_1600",
-    "name": {
-      "en": "1600-lumen LED bulb",
-      "es": "Bombilla LED de 1600 lúmenes"
-    },
     "emoji": "🔆",
     "category": "electronics",
     "energy_model": "power",
@@ -925,17 +1375,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "1600-lumen LED bulb",
+      "es": "Bombilla LED de 1600 lúmenes",
+      "fr": "Ampoule LED de 1600 lumens",
+      "de": "LED-Lampe mit 1600 Lumen",
+      "ru": "Светодиодная лампа 1600 лм",
+      "zh": "1600 流明 LED 灯泡"
+    },
     "assumption_note": {
       "en": "A bright 1600-lumen LED (100 W-equivalent class) draws ~16 W (DOE Energy Saver lighting guidance, range 14–20 W).",
-      "es": "Una LED brillante de 1600 lúmenes (clase equivalente a 100 W) consume ~16 W (guía de DOE Energy Saver, rango 14–20 W)."
+      "es": "Una LED brillante de 1600 lúmenes (clase equivalente a 100 W) consume ~16 W (guía de DOE Energy Saver, rango 14–20 W).",
+      "fr": "Une LED puissante de 1600 lumens (classe équivalente à 100 W) consomme ~16 W (guide d’éclairage DOE Energy Saver, fourchette 14–20 W).",
+      "de": "Eine helle LED mit 1600 Lumen (Klasse entsprechend 100 W) zieht ~16 W (Beleuchtungsleitfaden von DOE Energy Saver, Spanne 14–20 W).",
+      "ru": "Яркая светодиодная лампа на 1600 лм (класс, эквивалентный 100 Вт) потребляет ~16 Вт (рекомендации DOE Energy Saver по освещению, диапазон 14–20 Вт).",
+      "zh": "一只 1600 流明的明亮 LED 灯泡（相当于 100 W 级别）功率约 16 W（美国能源部 Energy Saver 照明指南，范围 14–20 W）。"
     }
   },
   {
     "id": "incandescent_bulb",
-    "name": {
-      "en": "800-lumen incandescent bulb",
-      "es": "Bombilla incandescente de 800 lúmenes"
-    },
     "emoji": "🔦",
     "category": "electronics",
     "energy_model": "power",
@@ -947,17 +1405,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "800-lumen incandescent bulb",
+      "es": "Bombilla incandescente de 800 lúmenes",
+      "fr": "Ampoule à incandescence de 800 lumens",
+      "de": "Glühbirne mit 800 Lumen",
+      "ru": "Лампа накаливания 800 лм",
+      "zh": "800 流明白炽灯泡"
+    },
     "assumption_note": {
       "en": "The classic 60 W incandescent bulb produces ~800 lumens — same light as a 9 W LED, using 6–7× the energy.",
-      "es": "La clásica incandescente de 60 W produce ~800 lúmenes — la misma luz que una LED de 9 W, usando 6–7× la energía."
+      "es": "La clásica incandescente de 60 W produce ~800 lúmenes — la misma luz que una LED de 9 W, usando 6–7× la energía.",
+      "fr": "La classique ampoule à incandescence de 60 W produit ~800 lumens — la même lumière qu’une LED de 9 W, avec 6–7× plus d’énergie.",
+      "de": "Die klassische 60-W-Glühbirne liefert ~800 Lumen – dasselbe Licht wie eine 9-W-LED, aber mit dem 6–7-Fachen an Energie.",
+      "ru": "Классическая лампа накаливания на 60 Вт даёт ~800 лм — столько же света, сколько светодиодная лампа на 9 Вт, но расходует в 6–7 раз больше энергии.",
+      "zh": "传统 60 W 白炽灯泡发出约 800 流明的光——与 9 W 的 LED 灯泡一样亮，却要消耗 6–7 倍的能量。"
     }
   },
   {
     "id": "incandescent_bulb_1600",
-    "name": {
-      "en": "1600-lumen incandescent bulb",
-      "es": "Bombilla incandescente de 1600 lúmenes"
-    },
     "emoji": "🌟",
     "category": "electronics",
     "energy_model": "power",
@@ -969,17 +1435,25 @@
     ],
     "value_year": 2026,
     "difficulty": 1,
+    "name": {
+      "en": "1600-lumen incandescent bulb",
+      "es": "Bombilla incandescente de 1600 lúmenes",
+      "fr": "Ampoule à incandescence de 1600 lumens",
+      "de": "Glühbirne mit 1600 Lumen",
+      "ru": "Лампа накаливания 1600 лм",
+      "zh": "1600 流明白炽灯泡"
+    },
     "assumption_note": {
       "en": "A 100 W incandescent bulb produces ~1600 lumens — same light as a 16 W LED.",
-      "es": "Una incandescente de 100 W produce ~1600 lúmenes — la misma luz que una LED de 16 W."
+      "es": "Una incandescente de 100 W produce ~1600 lúmenes — la misma luz que una LED de 16 W.",
+      "fr": "Une ampoule à incandescence de 100 W produit ~1600 lumens — la même lumière qu’une LED de 16 W.",
+      "de": "Eine 100-W-Glühbirne liefert ~1600 Lumen – dasselbe Licht wie eine 16-W-LED.",
+      "ru": "Лампа накаливания на 100 Вт даёт ~1600 лм — столько же света, сколько светодиодная лампа на 16 Вт.",
+      "zh": "100 W 白炽灯泡发出约 1600 流明的光——与 16 W 的 LED 灯泡一样亮。"
     }
   },
   {
     "id": "smart_speaker",
-    "name": {
-      "en": "Smart speaker",
-      "es": "Altavoz inteligente"
-    },
     "emoji": "🔊",
     "category": "electronics",
     "energy_model": "power",
@@ -991,25 +1465,29 @@
     ],
     "value_year": 2026,
     "difficulty": 2,
+    "name": {
+      "en": "Smart speaker",
+      "es": "Altavoz inteligente",
+      "fr": "Enceinte connectée",
+      "de": "Smart Speaker",
+      "ru": "Умная колонка",
+      "zh": "智能音箱"
+    },
     "assumption_note": {
       "en": "Smart speakers idle/play at ~3 W (class range 1.5–6 W). Pending measured verification.",
-      "es": "Los altavoces inteligentes consumen ~3 W en reposo/reproducción (rango 1,5–6 W). Pendiente de verificación."
+      "es": "Los altavoces inteligentes consumen ~3 W en reposo/reproducción (rango 1,5–6 W). Pendiente de verificación.",
+      "fr": "Les enceintes connectées consomment ~3 W en veille ou en lecture (fourchette 1,5–6 W). En attente de vérification par mesure.",
+      "de": "Smart Speaker ziehen im Ruhezustand bzw. bei Wiedergabe ~3 W (Spanne 1,5–6 W). Überprüfung durch Messung ausstehend.",
+      "ru": "Умные колонки потребляют ~3 Вт в режиме ожидания или воспроизведения (диапазон 1,5–6 Вт). Ожидает проверки измерениями.",
+      "zh": "智能音箱待机或播放时功率约 3 W（范围 1.5–6 W）。有待实测核实。"
     }
   },
   {
     "id": "ereader_charge",
-    "name": {
-      "en": "E-reader charge",
-      "es": "Carga de e-reader"
-    },
     "emoji": "📚",
     "category": "electronics",
     "energy_model": "per_event",
     "kwh_per_event": 0.006,
-    "event_noun": {
-      "en": "charges",
-      "es": "cargas"
-    },
     "carrier": "electricity",
     "typical_unit": "events",
     "source_ids": [
@@ -1017,17 +1495,52 @@
     ],
     "value_year": 2026,
     "difficulty": 3,
+    "name": {
+      "en": "E-reader (charge)",
+      "es": "Lector de libros electrónicos (carga)",
+      "fr": "Liseuse (recharge)",
+      "de": "E-Reader-Akku",
+      "ru": "Электронная книга (зарядка)",
+      "zh": "电子阅读器充电"
+    },
+    "event_noun": {
+      "en": {
+        "one": "charge",
+        "other": "charges"
+      },
+      "es": {
+        "one": "carga",
+        "other": "cargas"
+      },
+      "fr": {
+        "one": "recharge",
+        "other": "recharges"
+      },
+      "de": {
+        "one": "Ladung",
+        "other": "Ladungen"
+      },
+      "ru": {
+        "one": "зарядка",
+        "few": "зарядки",
+        "many": "зарядок",
+        "other": "зарядки"
+      },
+      "zh": {
+        "other": "次"
+      }
+    },
     "assumption_note": {
       "en": "One full charge of a ~5 Wh e-reader battery at ~85% charger efficiency ≈ 0.006 kWh — weeks of reading.",
-      "es": "Una carga completa de una batería de e-reader de ~5 Wh con ~85% de eficiencia ≈ 0,006 kWh — semanas de lectura."
+      "es": "Una carga completa de una batería de e-reader de ~5 Wh con ~85% de eficiencia ≈ 0,006 kWh — semanas de lectura.",
+      "fr": "Une recharge complète d’une batterie de liseuse de ~5 Wh avec un chargeur efficace à ~85 % ≈ 0,006 kWh — des semaines de lecture.",
+      "de": "Eine volle Ladung eines E-Reader-Akkus mit ~5 Wh bei ~85 % Ladewirkungsgrad ≈ 0,006 kWh – das reicht für wochenlanges Lesen.",
+      "ru": "Полная зарядка аккумулятора электронной книги на ~5 Вт·ч при КПД зарядного устройства ~85% ≈ 0,006 кВт·ч — это недели чтения.",
+      "zh": "为约 5 Wh 的电子阅读器电池充满一次电，充电器效率约 85%，约 0.006 kWh——够读好几周。"
     }
   },
   {
     "id": "petrol_car",
-    "name": {
-      "en": "Petrol car",
-      "es": "Coche de gasolina"
-    },
     "emoji": "🚗",
     "category": "transport",
     "energy_model": "per_km",
@@ -1040,17 +1553,25 @@
     ],
     "value_year": 2025,
     "difficulty": 2,
+    "name": {
+      "en": "Petrol car",
+      "es": "Coche de gasolina",
+      "fr": "Voiture essence",
+      "de": "Benzinauto",
+      "ru": "Бензиновый автомобиль",
+      "zh": "汽油车"
+    },
     "assumption_note": {
       "en": "Uses your country’s average on-road car CO₂ per km where verified (see conversion table); global fallback 160 g/km ≈ the UK on-road average petrol car (DESNZ 2025).",
-      "es": "Usa el promedio de CO₂ por km de los coches de tu país cuando está verificado (ver tabla de conversión); reserva global de 160 g/km ≈ el coche de gasolina promedio en carretera del Reino Unido (DESNZ 2025)."
+      "es": "Usa el promedio de CO₂ por km de los coches de tu país cuando está verificado (ver tabla de conversión); reserva global de 160 g/km ≈ el coche de gasolina promedio en carretera del Reino Unido (DESNZ 2025).",
+      "fr": "Utilise la moyenne nationale de CO₂ par km des voitures en circulation lorsqu’elle est vérifiée (voir le tableau de conversion) ; valeur mondiale par défaut 160 g/km ≈ la voiture essence moyenne en circulation au Royaume-Uni (DESNZ 2025).",
+      "de": "Verwendet den durchschnittlichen CO₂-Ausstoß pro km der Autos im Straßenverkehr deines Landes, sofern verifiziert (siehe Umrechnungstabelle); globaler Ersatzwert 160 g/km ≈ das durchschnittliche Benzinauto im britischen Straßenverkehr (DESNZ 2025).",
+      "ru": "Используется средний для вашей страны выброс CO₂ на км у автомобилей на дорогах, если он проверен (см. таблицу пересчёта); общемировое значение по умолчанию — 160 г/км ≈ средний бензиновый автомобиль на дорогах Великобритании (DESNZ 2025).",
+      "zh": "在已核实的情况下，采用你所在国家在用汽车每公里 CO₂ 排放的平均值（见换算表）；全球默认值为 160 g/km，约等于英国在用汽油车的平均水平（DESNZ 2025）。"
     }
   },
   {
     "id": "diesel_car",
-    "name": {
-      "en": "Diesel car",
-      "es": "Coche diésel"
-    },
     "emoji": "🚙",
     "category": "transport",
     "energy_model": "per_km",
@@ -1062,17 +1583,25 @@
     ],
     "value_year": 2025,
     "difficulty": 2,
+    "name": {
+      "en": "Diesel car",
+      "es": "Coche diésel",
+      "fr": "Voiture diesel",
+      "de": "Dieselauto",
+      "ru": "Дизельный автомобиль",
+      "zh": "柴油车"
+    },
     "assumption_note": {
       "en": "Average on-road diesel car: 171.4 gCO₂/km (DESNZ 2025, CO₂ only, UK fleet — used as the representative value everywhere).",
-      "es": "Coche diésel promedio en carretera: 171,4 gCO₂/km (DESNZ 2025, solo CO₂, parque del Reino Unido — usado como valor representativo)."
+      "es": "Coche diésel promedio en carretera: 171,4 gCO₂/km (DESNZ 2025, solo CO₂, parque del Reino Unido — usado como valor representativo).",
+      "fr": "Voiture diesel moyenne en circulation : 171,4 gCO₂/km (DESNZ 2025, CO₂ seul, parc britannique — utilisé partout comme valeur représentative).",
+      "de": "Durchschnittliches Dieselauto im Straßenverkehr: 171,4 gCO₂/km (DESNZ 2025, nur CO₂, britischer Fahrzeugbestand – überall als repräsentativer Wert verwendet).",
+      "ru": "Средний дизельный автомобиль на дорогах: 171,4 гCO₂/км (DESNZ 2025, только CO₂, автопарк Великобритании — используется как типичное значение для всех стран).",
+      "zh": "在用柴油车平均值：171.4 gCO₂/km（DESNZ 2025，仅 CO₂，英国车队——在所有国家均作为代表值使用）。"
     }
   },
   {
     "id": "ev_car",
-    "name": {
-      "en": "Electric car",
-      "es": "Coche eléctrico"
-    },
     "emoji": "🔌",
     "category": "transport",
     "energy_model": "per_km",
@@ -1084,17 +1613,25 @@
     ],
     "value_year": 2024,
     "difficulty": 2,
+    "name": {
+      "en": "Electric car",
+      "es": "Coche eléctrico",
+      "fr": "Voiture électrique",
+      "de": "Elektroauto",
+      "ru": "Электромобиль",
+      "zh": "电动汽车"
+    },
     "assumption_note": {
       "en": "EPA combined rating of the best-selling EV (2024 Tesla Model Y LR AWD): 28.7 kWh/100 mi wall-to-wheels ≈ 0.178 kWh/km, charging losses included.",
-      "es": "Calificación combinada de la EPA del eléctrico más vendido (Tesla Model Y LR AWD 2024): 28,7 kWh/100 mi de enchufe a rueda ≈ 0,178 kWh/km, con pérdidas de carga."
+      "es": "Calificación combinada de la EPA del eléctrico más vendido (Tesla Model Y LR AWD 2024): 28,7 kWh/100 mi de enchufe a rueda ≈ 0,178 kWh/km, con pérdidas de carga.",
+      "fr": "Valeur EPA combinée de la voiture électrique la plus vendue (Tesla Model Y LR AWD 2024) : 28,7 kWh/100 mi de la prise aux roues ≈ 0,178 kWh/km, pertes de recharge comprises.",
+      "de": "Kombinierter EPA-Wert des meistverkauften Elektroautos (Tesla Model Y LR AWD 2024): 28,7 kWh/100 mi von der Steckdose bis zum Rad ≈ 0,178 kWh/km, Ladeverluste inbegriffen.",
+      "ru": "Комбинированный показатель EPA для самого продаваемого электромобиля (Tesla Model Y LR AWD 2024): 28,7 кВт·ч/100 миль от розетки до колёс ≈ 0,178 кВт·ч/км с учётом потерь при зарядке.",
+      "zh": "最畅销电动汽车（2024 款 Tesla Model Y LR AWD）的 EPA 综合工况数据：从插座到车轮 28.7 kWh/100 英里，约合 0.178 kWh/km，含充电损耗。"
     }
   },
   {
     "id": "motor_scooter",
-    "name": {
-      "en": "Motor scooter",
-      "es": "Moto/scooter"
-    },
     "emoji": "🛵",
     "category": "transport",
     "energy_model": "per_km",
@@ -1106,20 +1643,29 @@
     ],
     "value_year": 2025,
     "difficulty": 2,
+    "name": {
+      "en": "Motor scooter",
+      "es": "Moto/scooter",
+      "fr": "Scooter",
+      "de": "Motorroller",
+      "ru": "Скутер",
+      "zh": "踏板摩托车"
+    },
     "assumption_note": {
       "en": "Small motorbike (≤125 cc): 80.9 gCO₂/km (DESNZ 2025, CO₂ only).",
-      "es": "Motocicleta pequeña (≤125 cc): 80,9 gCO₂/km (DESNZ 2025, solo CO₂)."
+      "es": "Motocicleta pequeña (≤125 cc): 80,9 gCO₂/km (DESNZ 2025, solo CO₂).",
+      "fr": "Petite moto (≤125 cm³) : 80,9 gCO₂/km (DESNZ 2025, CO₂ seul).",
+      "de": "Kleines Motorrad (≤125 cm³): 80,9 gCO₂/km (DESNZ 2025, nur CO₂).",
+      "ru": "Небольшой мотоцикл (≤125 см³): 80,9 гCO₂/км (DESNZ 2025, только CO₂).",
+      "zh": "小型摩托车（≤125 cc）：80.9 gCO₂/km（DESNZ 2025，仅 CO₂）。"
     }
   },
   {
     "id": "city_bus",
-    "name": {
-      "en": "City bus (per passenger)",
-      "es": "Autobús urbano (por pasajero)"
-    },
     "emoji": "🚌",
     "category": "transport",
     "energy_model": "per_km",
+    "per_passenger": true,
     "gco2_per_km": 103.11,
     "carrier": "diesel",
     "typical_unit": "km",
@@ -1128,20 +1674,29 @@
     ],
     "value_year": 2025,
     "difficulty": 2,
+    "name": {
+      "en": "City bus (per passenger)",
+      "es": "Autobús urbano (por pasajero)",
+      "fr": "Bus urbain (par passager)",
+      "de": "Stadtbus (pro Person)",
+      "ru": "Городской автобус (на пассажира)",
+      "zh": "城市公交（人均）"
+    },
     "assumption_note": {
       "en": "Average local bus carrying its average load of ~12.7 passengers: 103.1 gCO₂ per passenger-km, CO₂ only (DESNZ 2025 / DfT bus statistics). A fuller bus emits less per person.",
-      "es": "Autobús urbano medio con su ocupación media de ~12,7 pasajeros: 103,1 gCO₂ por pasajero-km, solo CO₂ (DESNZ 2025 / estadísticas DfT). Un autobús más lleno emite menos por persona."
+      "es": "Autobús urbano medio con su ocupación media de ~12,7 pasajeros: 103,1 gCO₂ por pasajero-km, solo CO₂ (DESNZ 2025 / estadísticas DfT). Un autobús más lleno emite menos por persona.",
+      "fr": "Bus urbain moyen transportant sa charge moyenne de ~12,7 passagers : 103,1 gCO₂ par passager-km, CO₂ seul (DESNZ 2025 / statistiques DfT sur les bus). Un bus plus rempli émet moins par personne.",
+      "de": "Durchschnittlicher Linienbus mit seiner mittleren Auslastung von ~12,7 Fahrgästen: 103,1 gCO₂ pro Personenkilometer, nur CO₂ (DESNZ 2025 / DfT-Busstatistik). Ein vollerer Bus verursacht pro Person weniger.",
+      "ru": "Средний городской автобус при средней загрузке ~12,7 пассажира: 103,1 гCO₂ на пассажиро-километр, только CO₂ (DESNZ 2025 / статистика DfT по автобусам). Чем полнее автобус, тем меньше выбросы на человека.",
+      "zh": "一辆平均载客约 12.7 人的普通城市公交：每人公里 103.1 gCO₂，仅 CO₂（DESNZ 2025／英国交通部公交统计）。公交越满，人均排放越少。"
     }
   },
   {
     "id": "coach",
-    "name": {
-      "en": "Intercity coach (per passenger)",
-      "es": "Autocar interurbano (por pasajero)"
-    },
-    "emoji": "🚐",
+    "emoji": "🚍",
     "category": "transport",
     "energy_model": "per_km",
+    "per_passenger": true,
     "gco2_per_km": 27.27,
     "carrier": "diesel",
     "typical_unit": "km",
@@ -1150,20 +1705,29 @@
     ],
     "value_year": 2025,
     "difficulty": 3,
+    "name": {
+      "en": "Intercity bus (per passenger)",
+      "es": "Autobús interurbano (por pasajero)",
+      "fr": "Autocar interurbain (par passager)",
+      "de": "Fernbus (pro Person)",
+      "ru": "Междугородний автобус (на пассажира)",
+      "zh": "长途大巴（人均）"
+    },
     "assumption_note": {
-      "en": "Intercity coach carrying its average load of ~17.6 passengers: 27.3 gCO₂ per passenger-km, CO₂ only (DESNZ 2025) — among the cleanest motorized travel.",
-      "es": "Autocar interurbano con su ocupación media de ~17,6 pasajeros: 27,3 gCO₂ por pasajero-km, solo CO₂ (DESNZ 2025) — de los viajes motorizados más limpios."
+      "en": "Intercity bus carrying its average load of ~17.6 passengers: 27.3 gCO₂ per passenger-km, CO₂ only (DESNZ 2025) — among the cleanest motorized travel.",
+      "es": "Autobús interurbano con su ocupación media de ~17,6 pasajeros: 27,3 gCO₂ por pasajero-km, solo CO₂ (DESNZ 2025) — de los viajes motorizados más limpios.",
+      "fr": "Autocar interurbain transportant sa charge moyenne de ~17,6 passagers : 27,3 gCO₂ par passager-km, CO₂ seul (DESNZ 2025) — l’un des modes de transport motorisé les plus propres.",
+      "de": "Fernbus mit seiner mittleren Auslastung von ~17,6 Fahrgästen: 27,3 gCO₂ pro Personenkilometer, nur CO₂ (DESNZ 2025) – eine der saubersten motorisierten Reisearten.",
+      "ru": "Междугородний автобус при средней загрузке ~17,6 пассажира: 27,3 гCO₂ на пассажиро-километр, только CO₂ (DESNZ 2025) — один из самых чистых видов моторизованного транспорта.",
+      "zh": "一辆平均载客约 17.6 人的长途大巴：每人公里 27.3 gCO₂，仅 CO₂（DESNZ 2025）——是最清洁的机动出行方式之一。"
     }
   },
   {
     "id": "train_national",
-    "name": {
-      "en": "Train (per passenger)",
-      "es": "Tren (por pasajero)"
-    },
     "emoji": "🚆",
     "category": "transport",
     "energy_model": "per_km",
+    "per_passenger": true,
     "gco2_per_km": 35.1,
     "carrier": "diesel",
     "typical_unit": "km",
@@ -1172,20 +1736,29 @@
     ],
     "value_year": 2025,
     "difficulty": 3,
+    "name": {
+      "en": "Train (per passenger)",
+      "es": "Tren (por pasajero)",
+      "fr": "Train (par passager)",
+      "de": "Zug (pro Person)",
+      "ru": "Поезд (на пассажира)",
+      "zh": "火车（人均）"
+    },
     "assumption_note": {
       "en": "National rail average: 35.1 gCO₂ per passenger-km, CO₂ only — the whole network’s energy (electric + diesel trains) divided by all passenger-km at typical ridership (DESNZ 2025; fully electrified networks differ).",
-      "es": "Promedio de tren nacional: 35,1 gCO₂ por pasajero-km, solo CO₂ — toda la energía de la red (trenes eléctricos y diésel) dividida por todos los pasajeros-km con ocupación típica (DESNZ 2025; las redes totalmente electrificadas difieren)."
+      "es": "Promedio de tren nacional: 35,1 gCO₂ por pasajero-km, solo CO₂ — toda la energía de la red (trenes eléctricos y diésel) dividida por todos los pasajeros-km con ocupación típica (DESNZ 2025; las redes totalmente electrificadas difieren).",
+      "fr": "Moyenne du rail national : 35,1 gCO₂ par passager-km, CO₂ seul — toute l’énergie du réseau (trains électriques + diesel) divisée par l’ensemble des passagers-km à fréquentation habituelle (DESNZ 2025 ; les réseaux entièrement électrifiés diffèrent).",
+      "de": "Durchschnitt der nationalen Bahn: 35,1 gCO₂ pro Personenkilometer, nur CO₂ – die gesamte Energie des Netzes (Elektro- und Dieselzüge) geteilt durch alle Personenkilometer bei üblicher Auslastung (DESNZ 2025; vollständig elektrifizierte Netze weichen ab).",
+      "ru": "Среднее по национальной железной дороге: 35,1 гCO₂ на пассажиро-километр, только CO₂ — вся энергия сети (электро- и дизельные поезда), делённая на все пассажиро-километры при обычной загрузке (DESNZ 2025; полностью электрифицированные сети отличаются).",
+      "zh": "国家铁路平均值：每人公里 35.1 gCO₂，仅 CO₂——整个铁路网的能耗（电力和柴油列车）除以正常载客率下的全部人公里数（DESNZ 2025；全面电气化的铁路网有所不同）。"
     }
   },
   {
     "id": "flight_short_haul",
-    "name": {
-      "en": "Flight, short-haul (per passenger)",
-      "es": "Vuelo de corta distancia (por pasajero)"
-    },
     "emoji": "✈️",
     "category": "transport",
     "energy_model": "per_km",
+    "per_passenger": true,
     "gco2_per_km": 73.44,
     "carrier": "petrol",
     "typical_unit": "km",
@@ -1194,17 +1767,25 @@
     ],
     "value_year": 2025,
     "difficulty": 3,
+    "name": {
+      "en": "Flight, short-haul (per passenger)",
+      "es": "Vuelo de corta distancia (por pasajero)",
+      "fr": "Vol court-courrier (par passager)",
+      "de": "Kurzstreckenflug (pro Person)",
+      "ru": "Ближнемагистральный рейс (на пассажира)",
+      "zh": "短途航班（人均）"
+    },
     "assumption_note": {
       "en": "Short-haul economy flight with ~83% of seats filled (fleet average, CAA 2023): 73.4 gCO₂ per passenger-km, CO₂ only, excluding radiative forcing (DESNZ 2025; with RF the climate impact roughly doubles).",
-      "es": "Vuelo económico de corta distancia con ~83% de los asientos ocupados (promedio de flota, CAA 2023): 73,4 gCO₂ por pasajero-km, solo CO₂, sin forzamiento radiativo (DESNZ 2025; con FR el impacto climático casi se duplica)."
+      "es": "Vuelo económico de corta distancia con ~83% de los asientos ocupados (promedio de flota, CAA 2023): 73,4 gCO₂ por pasajero-km, solo CO₂, sin forzamiento radiativo (DESNZ 2025; con FR el impacto climático casi se duplica).",
+      "fr": "Vol court-courrier en classe économique avec ~83 % des sièges occupés (moyenne de flotte, CAA 2023) : 73,4 gCO₂ par passager-km, CO₂ seul, hors forçage radiatif (DESNZ 2025 ; avec le forçage radiatif, l’impact climatique double environ).",
+      "de": "Kurzstreckenflug in der Economy Class mit ~83 % belegten Sitzen (Flottendurchschnitt, CAA 2023): 73,4 gCO₂ pro Personenkilometer, nur CO₂, ohne Strahlungsantrieb (DESNZ 2025; mit Strahlungsantrieb verdoppelt sich die Klimawirkung etwa).",
+      "ru": "Ближнемагистральный рейс экономклассом при заполнении ~83% мест (среднее по парку, CAA 2023): 73,4 гCO₂ на пассажиро-километр, только CO₂, без учёта радиационного форсинга (DESNZ 2025; с его учётом климатическое воздействие примерно удваивается).",
+      "zh": "经济舱短途航班，上座率约 83%（机队平均，CAA 2023）：每人公里 73.4 gCO₂，仅 CO₂，不含辐射强迫（DESNZ 2025；计入辐射强迫后气候影响约翻一番）。"
     }
   },
   {
     "id": "e_bike",
-    "name": {
-      "en": "E-bike",
-      "es": "Bicicleta eléctrica"
-    },
     "emoji": "🚲",
     "category": "transport",
     "energy_model": "per_km",
@@ -1216,9 +1797,21 @@
     ],
     "value_year": 2026,
     "difficulty": 3,
+    "name": {
+      "en": "E-bike",
+      "es": "Bicicleta eléctrica",
+      "fr": "Vélo électrique",
+      "de": "E-Bike",
+      "ru": "Электровелосипед",
+      "zh": "电动自行车"
+    },
     "assumption_note": {
       "en": "A ~0.5 kWh e-bike battery delivers ~45 km of assisted riding ≈ 0.011 kWh/km including charging losses. Pending measured verification.",
-      "es": "Una batería de e-bike de ~0,5 kWh da ~45 km asistidos ≈ 0,011 kWh/km con pérdidas de carga. Pendiente de verificación medida."
+      "es": "Una batería de e-bike de ~0,5 kWh da ~45 km asistidos ≈ 0,011 kWh/km con pérdidas de carga. Pendiente de verificación medida.",
+      "fr": "Une batterie de vélo électrique de ~0,5 kWh permet ~45 km d’assistance ≈ 0,011 kWh/km, pertes de recharge comprises. En attente de vérification par mesure.",
+      "de": "Ein E-Bike-Akku mit ~0,5 kWh reicht für ~45 km mit Unterstützung ≈ 0,011 kWh/km, Ladeverluste inbegriffen. Überprüfung durch Messung ausstehend.",
+      "ru": "Аккумулятора электровелосипеда на ~0,5 кВт·ч хватает на ~45 км с поддержкой ≈ 0,011 кВт·ч/км с учётом потерь при зарядке. Ожидает проверки измерениями.",
+      "zh": "约 0.5 kWh 的电动自行车电池可提供约 45 km 的助力骑行，约合 0.011 kWh/km，含充电损耗。有待实测核实。"
     }
   }
 ]

@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     const result = await claimName(player.id, parsed.data.name);
     return NextResponse.json(result);
   } catch (err) {
-    if (err instanceof NameError) return NextResponse.json({ error: err.message }, { status: err.status });
+    if (err instanceof NameError) return NextResponse.json({ error: err.message, code: err.code }, { status: err.status });
     throw err;
   }
 }

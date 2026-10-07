@@ -7,10 +7,10 @@
  */
 import type { ClientRound, GuessResponse } from '@/lib/api-types';
 import type { Lang, Unit } from '@/lib/types';
-import { L, t, type StringKey } from '@/lib/i18n';
-import { formatCO2 } from '@/lib/format';
+import { L, pluralWord, t, type StringKey } from '@/lib/i18n';
+import { clueTitle, formatCO2 } from '@/lib/format';
 import LogSlider from './LogSlider';
-import RevealPanel, { clueLabel, qtyLabel, UnitFacts } from './RevealPanel';
+import RevealPanel, { UnitFacts } from './RevealPanel';
 
 function connectorKey(unit: Unit): StringKey {
   switch (unit) {
@@ -70,7 +70,7 @@ export default function RoundView({
                 <div className="emoji" aria-hidden="true">
                   {item.emoji}
                 </div>
-                <div className="title">{clueLabel(qty, item, lang)}</div>
+                <div className="title">{clueTitle(qty, item, lang)}</div>
                 {revealed && grams != null && (
                   <div className="co2-badge">
                     {formatCO2(grams, lang)}
@@ -87,7 +87,7 @@ export default function RoundView({
           <>
             <div style={{ textAlign: 'center' }} aria-live="polite">
               <span className={`score-pill ${reveal!.correct ? 'good' : 'bad'}`}>
-                {reveal!.correct ? '✓' : '✗'} +{reveal!.score} {t('points', lang)}
+                {reveal!.correct ? '✓' : '✗'} +{reveal!.score} {pluralWord('points', reveal!.score, lang)}
               </span>
             </div>
             <UnitFacts facts={reveal!.unit_facts} lang={lang} />
@@ -104,7 +104,7 @@ export default function RoundView({
           {round.item_a.emoji}
         </div>
         <div className="title">
-          {clueLabel(round.qty_a, round.item_a, lang)} <span aria-hidden="true">{flag}</span>
+          {clueTitle(round.qty_a, round.item_a, lang)} <span aria-hidden="true">{flag}</span>
         </div>
         {revealed && <div className="co2-badge">{formatCO2(reveal!.breakdown_a.grams, lang)}</div>}
       </div>
@@ -114,7 +114,7 @@ export default function RoundView({
           {round.item_b.emoji}
         </div>
         <div className="title">
-          {revealed ? clueLabel(reveal!.truth, round.item_b, lang) : L(round.item_b.name, lang)}
+          {revealed ? clueTitle(reveal!.truth, round.item_b, lang) : L(round.item_b.name, lang)}
         </div>
         {revealed && <div className="co2-badge">{formatCO2(reveal!.breakdown_b.grams, lang)}</div>}
       </div>
@@ -130,7 +130,7 @@ export default function RoundView({
             onChange={onGuessChange}
             unit={round.item_b.typical_unit}
             lang={lang}
-            eventNoun={round.item_b.event_noun ? L(round.item_b.event_noun, lang) : undefined}
+            eventNoun={round.item_b.event_noun}
           />
           {guess == null && (
             <p className="muted" style={{ textAlign: 'center' }}>

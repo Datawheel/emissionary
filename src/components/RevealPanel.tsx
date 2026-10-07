@@ -3,8 +3,8 @@
 import type { Breakdown } from '@/lib/emissions';
 import type { ClientItem, GuessResponse, RevealItemInfo, UnitFact } from '@/lib/api-types';
 import type { Lang } from '@/lib/types';
-import { L, t } from '@/lib/i18n';
-import { formatCO2, formatQty, proseName } from '@/lib/format';
+import { L, pluralWord, t } from '@/lib/i18n';
+import { clueLabel, formatCO2, formatItemQty, formatKwh, unitClueTitle } from '@/lib/format';
 import { logPosition } from '@/lib/rounds';
 import ConversionTable from './ConversionTable';
 
@@ -32,7 +32,7 @@ export default function RevealPanel({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
           <h2 style={{ fontSize: '1rem' }}>{t('results', lang)}</h2>
           <span className={`score-pill ${scoreClass}`}>
-            +{score} {t('points', lang)}
+            +{score} {pluralWord('points', score, lang)}
           </span>
         </div>
         <div className="log-axis" style={{ margin: '26px 8px 8px' }}>
@@ -46,12 +46,12 @@ export default function RevealPanel({
           <div>
             <div className="muted">🟡 {t('your_guess', lang)}</div>
             <div style={{ fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
-              {guess != null ? qtyLabel(guess, itemB, lang) : '—'}
+              {guess != null ? formatItemQty(guess, itemB, lang) : '—'}
             </div>
           </div>
           <div style={{ textAlign: 'right' }}>
             <div className="muted">🟢 {t('truth', lang)}</div>
-            <div style={{ fontWeight: 800, fontVariantNumeric: 'tabular-nums' }}>{qtyLabel(truth, itemB, lang)}</div>
+            <div style={{ fontWeight: 800, fontVariantNumeric: 'tabular-nums' }}>{formatItemQty(truth, itemB, lang)}</div>
           </div>
         </div>
         <UnitFacts facts={data.unit_facts} lang={lang} />
@@ -72,11 +72,6 @@ export default function RevealPanel({
   );
 }
 
-/** Concrete anchor phrase, e.g. "10 km of petrol car" / "10 km de coche de gasolina". */
-export function clueLabel(qty: number, item: ClientItem, lang: Lang): string {
-  return `${qtyLabel(qty, item, lang)} ${lang === 'es' ? 'de' : 'of'} ${proseName(L(item.name, lang))}`;
-}
-
 /** The memorable per-unit numbers, shown after every answer. */
 export function UnitFacts({ facts, lang }: { facts: UnitFact[]; lang: Lang }) {
   return (
@@ -86,10 +81,11 @@ export function UnitFacts({ facts, lang }: { facts: UnitFact[]; lang: Lang }) {
       </p>
       {facts.map((f, i) => (
         <p key={i} className="unit-fact">
-          <span aria-hidden="true">{f.emoji}</span> {unitFactLabel(f, lang)} ={' '}
+          {/* "1 min of hairdryer = 0.03 kWh or 12 g CO₂" */}
+          <span aria-hidden="true">{f.emoji}</span> {unitClueTitle(f, lang)} ={' '}
           {f.kwh != null && (
             <>
-              <strong>{f.kwh} kWh</strong> {lang === 'es' ? 'o' : 'or'}{' '}
+              <strong>{formatKwh(f.kwh, lang)}</strong> {t('or', lang)}{' '}
             </>
           )}
           <strong>{formatCO2(f.grams, lang)}</strong>
@@ -97,27 +93,6 @@ export function UnitFacts({ facts, lang }: { facts: UnitFact[]; lang: Lang }) {
       ))}
     </div>
   );
-}
-
-/** "1 min of hairdryer", "1 km of petrol car", "1 load of washing machine". */
-function unitFactLabel(f: UnitFact, lang: Lang): string {
-  const name = proseName(L(f.name, lang));
-  const of = lang === 'es' ? 'de' : 'of';
-  switch (f.unit) {
-    case 'minutes':
-      return `1 min ${of} ${name}`;
-    case 'hours':
-      return `1 h ${of} ${name}`;
-    case 'km':
-      return `1 km ${of} ${name}`;
-    case 'liters_boiled':
-      return `1 L ${of} ${name}`;
-    case 'events': {
-      // nouns are stored plural; trailing-s singularization works in EN and ES here
-      const noun = f.event_noun ? L(f.event_noun, lang).replace(/s$/, '') : lang === 'es' ? 'vez' : 'use';
-      return `1 ${noun} ${of} ${name}`;
-    }
-  }
 }
 
 function BreakdownBlock({
@@ -138,8 +113,8 @@ function BreakdownBlock({
       </div>
       {breakdown.steps.map((s, i) => (
         <div key={i} className="step">
-          <span className="label">{lang === 'es' ? s.label_es : s.label_en}</span>
-          <span className="math">{s.math}</span>
+          <span className="label">{L(s.label, lang)}</span>
+          <span className="math">{L(s.math, lang)}</span>
         </div>
       ))}
       <p className="assumption">
@@ -152,13 +127,6 @@ function BreakdownBlock({
       </p>
     </div>
   );
-}
-
-export function qtyLabel(qty: number, item: ClientItem, lang: Lang): string {
-  if (item.typical_unit === 'events' && item.event_noun) {
-    return `${formatQty(qty, 'events', lang).replace('×', '')} ${L(item.event_noun, lang)}`;
-  }
-  return formatQty(qty, item.typical_unit, lang);
 }
 
 function clampPct(p: number): number {

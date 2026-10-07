@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import AppHeader from '@/components/AppHeader';
-import { pickLang, t } from '@/lib/i18n';
+import { t } from '@/lib/i18n';
+import { requestLang } from '@/lib/request-lang';
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: Promise<{ lang?: string }>;
-}) {
-  const lang = pickLang((await searchParams).lang);
+export const dynamic = 'force-dynamic';
+
+export default async function Home() {
+  const lang = await requestLang();
   const q = `?lang=${lang}`;
   return (
     <>
@@ -56,9 +55,6 @@ export default async function Home({
           </Link>
           <Link href={`/about${q}`} className="muted">
             {t('about', lang)}
-          </Link>
-          <Link href={lang === 'en' ? '/?lang=es' : '/?lang=en'} className="muted">
-            {lang === 'en' ? 'Español' : 'English'}
           </Link>
         </div>
       </main>

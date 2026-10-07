@@ -1,16 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import { itemSchema } from '@/lib/data';
+import { loc } from '../helpers/loc';
 
 const validItem = {
   id: 'hairdryer',
-  name: { en: 'Hairdryer', es: 'Secador de pelo' },
+  name: loc('Hairdryer', 'Secador de pelo'),
   emoji: '💨',
   category: 'personal_care',
   energy_model: 'power',
   power_watts: 1800,
   carrier: 'electricity',
   typical_unit: 'minutes',
-  assumption_note: { en: 'Typical 1800 W consumer hairdryer.', es: 'Secador de 1800 W típico.' },
+  assumption_note: loc('Typical 1800 W consumer hairdryer.', 'Secador de 1800 W típico.'),
   source_ids: ['doe_energysaver'],
   value_year: 2025,
   difficulty: 2,
@@ -19,6 +20,11 @@ const validItem = {
 describe('itemSchema', () => {
   it('accepts a valid power-model item', () => {
     expect(itemSchema.parse(validItem).id).toBe('hairdryer');
+  });
+
+  it('rejects an item missing any language', () => {
+    const { zh: _omitted, ...noChinese } = validItem.name;
+    expect(() => itemSchema.parse({ ...validItem, name: noChinese })).toThrow();
   });
 
   it('rejects an item with no sources', () => {

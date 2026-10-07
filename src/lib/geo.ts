@@ -7,13 +7,20 @@ const ISO2_TO_ISO3: Record<string, string> = {
   HU: 'HUN', RO: 'ROU', UA: 'UKR', ID: 'IDN', TH: 'THA', VN: 'VNM', PH: 'PHL', MY: 'MYS',
   SG: 'SGP', NZ: 'NZL', IL: 'ISR', SA: 'SAU', AE: 'ARE', EG: 'EGY', NG: 'NGA', KE: 'KEN',
   PE: 'PER', VE: 'VEN', EC: 'ECU', UY: 'URY', BO: 'BOL', PY: 'PRY', CR: 'CRI', PA: 'PAN',
+  RU: 'RUS', KZ: 'KAZ', BY: 'BLR', TW: 'TWN', HK: 'HKG', LU: 'LUX',
 };
 
+/** When the browser sends a bare language ("ru", "zh"), suggest its largest country. */
+const LANG_TO_ISO3: Record<string, string> = { fr: 'FRA', de: 'DEU', es: 'ESP', ru: 'RUS', zh: 'CHN' };
+
 export function suggestCountry(acceptLanguage: string | null, known: { iso3: string }[]): string {
-  const m = acceptLanguage?.match(/[a-z]{2}-([A-Z]{2})/);
-  if (m) {
-    const iso3 = ISO2_TO_ISO3[m[1]];
-    if (iso3 && known.some((f) => f.iso3 === iso3)) return iso3;
+  const isKnown = (iso3: string | undefined): iso3 is string => !!iso3 && known.some((f) => f.iso3 === iso3);
+  const tags = (acceptLanguage ?? '').split(',').map((t) => t.split(';')[0].trim());
+  for (const tag of tags) {
+    const region = tag.match(/^[a-z]{2,3}-(?:[a-z]{4}-)?([a-z]{2})$/i)?.[1]?.toUpperCase();
+    if (region && isKnown(ISO2_TO_ISO3[region])) return ISO2_TO_ISO3[region];
   }
-  return 'FRA';
+  const primary = tags[0]?.split('-')[0].toLowerCase();
+  const byLang = primary ? LANG_TO_ISO3[primary] : undefined;
+  return isKnown(byLang) ? byLang : 'FRA';
 }

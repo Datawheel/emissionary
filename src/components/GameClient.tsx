@@ -9,7 +9,8 @@ import type { ClientRound, FreeplayTotals, GuessResponse } from '@/lib/api-types
 import type { Lang } from '@/lib/types';
 import { t } from '@/lib/i18n';
 import RoundView from './RoundView';
-import CountryPicker, { type CountryOption } from './CountryPicker';
+import CountryPicker from './CountryPicker';
+import type { CountryOption } from '@/lib/country-names';
 
 type Phase = 'country' | 'loading' | 'guess' | 'reveal' | 'error';
 

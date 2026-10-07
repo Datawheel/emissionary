@@ -6,7 +6,8 @@
  * progress stay in the country of their first guess (server-enforced).
  */
 import type { Lang } from '@/lib/types';
-import type { CountryOption } from './CountryPicker';
+import { t } from '@/lib/i18n';
+import type { CountryOption } from '@/lib/country-names';
 
 export default function CountryMenu({
   current,
@@ -34,7 +35,7 @@ export default function CountryMenu({
       <span aria-hidden="true">{cf?.flag ?? '🌍'}</span>
       <span>{current}</span>
       <select
-        aria-label={lang === 'es' ? 'País (mezcla eléctrica)' : 'Country (electricity mix)'}
+        aria-label={t('country_menu_label', lang)}
         value={current}
         onChange={(e) => void change(e.target.value)}
       >

@@ -1,12 +1,22 @@
 export type Carrier = 'electricity' | 'natural_gas' | 'lpg' | 'petrol' | 'diesel';
 export type EnergyModel = 'power' | 'per_event' | 'task' | 'per_km';
 export type Unit = 'minutes' | 'hours' | 'events' | 'km' | 'liters_boiled';
-export type Lang = 'en' | 'es';
 
-export interface Localized {
-  en: string;
-  es: string;
+/** Supported languages, in the order the language menu lists them. */
+export const LANGS = ['en', 'es', 'fr', 'de', 'ru', 'zh'] as const;
+export type Lang = (typeof LANGS)[number];
+
+/** Text in every supported language — all six are required. */
+export type Localized = Record<Lang, string>;
+
+/** CLDR plural categories (Intl.PluralRules); `other` is the required fallback. */
+export interface PluralForms {
+  one?: string;
+  few?: string;
+  many?: string;
+  other: string;
 }
+export type LocalizedPlural = Record<Lang, PluralForms>;
 
 export interface Item {
   id: string;
@@ -18,7 +28,7 @@ export interface Item {
   power_watts?: number;
   /** model=per_event: consumed kWh per event (cycle, load, charge) */
   kwh_per_event?: number;
-  event_noun?: Localized;
+  event_noun?: LocalizedPlural;
   /** model=task: useful kWh per unit of task (e.g. per liter boiled) */
   task_kwh_useful?: number;
   /** model=task: device efficiency, 0–1 */
@@ -32,6 +42,8 @@ export interface Item {
   l_per_100km?: number;
   /** model=per_km with a direct emission factor (e.g. bus per passenger-km) */
   gco2_per_km?: number;
+  /** shared vehicle: the factor is per passenger-km at average occupancy */
+  per_passenger?: boolean;
   typical_unit: Unit;
   /** override of the natural clue quantities offered for this item (in typical_unit) */
   clue_quantities?: number[];

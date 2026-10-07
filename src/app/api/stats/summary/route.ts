@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { q } from '@/lib/db';
 import { loadItems } from '@/lib/data';
+import { LANGS } from '@/lib/types';
 
 /**
  * Public research-telemetry aggregates (spec §13): per-item calibration
@@ -37,7 +38,7 @@ export async function GET() {
   const items = loadItems();
   const meta = (id: string) => {
     const item = items.find((i) => i.id === id);
-    return item ? { name: item.name, emoji: item.emoji } : { name: { en: id, es: id }, emoji: '❓' };
+    return item ? { name: item.name, emoji: item.emoji } : { name: Object.fromEntries(LANGS.map((l) => [l, id])), emoji: '❓' };
   };
 
   return NextResponse.json(

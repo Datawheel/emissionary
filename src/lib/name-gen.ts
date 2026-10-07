@@ -25,14 +25,19 @@ const BLOCKLIST = [
   'puta', 'mierda', 'polla', 'joder', 'gilipollas',
 ];
 
-export function validateName(raw: string): { ok: true; name: string } | { ok: false; error: string } {
+/** Error codes are translated client-side (NamePrompt); messages are for logs and tests. */
+export type NameErrorCode = 'length' | 'chars' | 'blocked' | 'cooldown' | 'taken' | 'auth';
+
+export function validateName(
+  raw: string,
+): { ok: true; name: string } | { ok: false; error: string; code: NameErrorCode } {
   const name = raw.trim().normalize('NFC');
   const codepoints = [...name];
-  if (codepoints.length < 3 || codepoints.length > 20) return { ok: false, error: 'name must be 3–20 characters' };
-  if (/[\n\r\t<>@#]/.test(name)) return { ok: false, error: 'name contains invalid characters' };
+  if (codepoints.length < 3 || codepoints.length > 20) return { ok: false, error: 'name must be 3–20 characters', code: 'length' };
+  if (/[\n\r\t<>@#]/.test(name)) return { ok: false, error: 'name contains invalid characters', code: 'chars' };
   const lower = name.toLowerCase();
   if (lower === 'oec' || lower.startsWith('oec ') || BLOCKLIST.some((b) => lower.includes(b))) {
-    return { ok: false, error: 'name not allowed' };
+    return { ok: false, error: 'name not allowed', code: 'blocked' };
   }
   return { ok: true, name };
 }

@@ -1,49 +1,104 @@
 [
   {
     "id": "hairdryer",
-    "name": { "en": "Hairdryer", "es": "Secador de pelo" },
+    "name": {
+      "en": "Hairdryer",
+      "es": "Secador de pelo",
+      "fr": "Hairdryer",
+      "de": "Hairdryer",
+      "ru": "Hairdryer",
+      "zh": "Hairdryer"
+    },
     "emoji": "💨",
     "category": "personal_care",
     "energy_model": "power",
     "power_watts": 1800,
     "carrier": "electricity",
     "typical_unit": "minutes",
-    "assumption_note": { "en": "Test fixture.", "es": "Dato de prueba." },
-    "source_ids": ["test_source"],
+    "assumption_note": {
+      "en": "Test fixture.",
+      "es": "Dato de prueba.",
+      "fr": "Test fixture.",
+      "de": "Test fixture.",
+      "ru": "Test fixture.",
+      "zh": "Test fixture."
+    },
+    "source_ids": [
+      "test_source"
+    ],
     "value_year": 2025,
     "difficulty": 1
   },
   {
     "id": "fridge",
-    "name": { "en": "Refrigerator", "es": "Nevera" },
+    "name": {
+      "en": "Refrigerator",
+      "es": "Nevera",
+      "fr": "Refrigerator",
+      "de": "Refrigerator",
+      "ru": "Refrigerator",
+      "zh": "Refrigerator"
+    },
     "emoji": "🧊",
     "category": "kitchen",
     "energy_model": "power",
     "power_watts": 28.5,
     "carrier": "electricity",
     "typical_unit": "hours",
-    "assumption_note": { "en": "Test fixture.", "es": "Dato de prueba." },
-    "source_ids": ["test_source"],
+    "assumption_note": {
+      "en": "Test fixture.",
+      "es": "Dato de prueba.",
+      "fr": "Test fixture.",
+      "de": "Test fixture.",
+      "ru": "Test fixture.",
+      "zh": "Test fixture."
+    },
+    "source_ids": [
+      "test_source"
+    ],
     "value_year": 2025,
     "difficulty": 2
   },
   {
     "id": "tv",
-    "name": { "en": "TV", "es": "Televisor" },
+    "name": {
+      "en": "TV",
+      "es": "Televisor",
+      "fr": "TV",
+      "de": "TV",
+      "ru": "TV",
+      "zh": "TV"
+    },
     "emoji": "📺",
     "category": "electronics",
     "energy_model": "power",
     "power_watts": 90,
     "carrier": "electricity",
     "typical_unit": "hours",
-    "assumption_note": { "en": "Test fixture.", "es": "Dato de prueba." },
-    "source_ids": ["test_source"],
+    "assumption_note": {
+      "en": "Test fixture.",
+      "es": "Dato de prueba.",
+      "fr": "Test fixture.",
+      "de": "Test fixture.",
+      "ru": "Test fixture.",
+      "zh": "Test fixture."
+    },
+    "source_ids": [
+      "test_source"
+    ],
     "value_year": 2025,
     "difficulty": 1
   },
   {
     "id": "kettle",
-    "name": { "en": "Electric kettle", "es": "Hervidor" },
+    "name": {
+      "en": "Electric kettle",
+      "es": "Hervidor",
+      "fr": "Electric kettle",
+      "de": "Electric kettle",
+      "ru": "Electric kettle",
+      "zh": "Electric kettle"
+    },
     "emoji": "🫖",
     "category": "kitchen",
     "energy_model": "task",
@@ -51,14 +106,30 @@
     "efficiency": 0.85,
     "carrier": "electricity",
     "typical_unit": "liters_boiled",
-    "assumption_note": { "en": "Test fixture.", "es": "Dato de prueba." },
-    "source_ids": ["test_source"],
+    "assumption_note": {
+      "en": "Test fixture.",
+      "es": "Dato de prueba.",
+      "fr": "Test fixture.",
+      "de": "Test fixture.",
+      "ru": "Test fixture.",
+      "zh": "Test fixture."
+    },
+    "source_ids": [
+      "test_source"
+    ],
     "value_year": 2025,
     "difficulty": 2
   },
   {
     "id": "gas_hob",
-    "name": { "en": "Gas hob", "es": "Fogón de gas" },
+    "name": {
+      "en": "Gas hob",
+      "es": "Fogón de gas",
+      "fr": "Gas hob",
+      "de": "Gas hob",
+      "ru": "Gas hob",
+      "zh": "Gas hob"
+    },
     "emoji": "🔥",
     "category": "kitchen",
     "energy_model": "task",
@@ -66,22 +137,47 @@
     "efficiency": 0.4,
     "carrier": "natural_gas",
     "typical_unit": "liters_boiled",
-    "assumption_note": { "en": "Test fixture.", "es": "Dato de prueba." },
-    "source_ids": ["test_source"],
+    "assumption_note": {
+      "en": "Test fixture.",
+      "es": "Dato de prueba.",
+      "fr": "Test fixture.",
+      "de": "Test fixture.",
+      "ru": "Test fixture.",
+      "zh": "Test fixture."
+    },
+    "source_ids": [
+      "test_source"
+    ],
     "value_year": 2025,
     "difficulty": 3
   },
   {
     "id": "petrol_car",
-    "name": { "en": "Petrol car", "es": "Coche de gasolina" },
+    "name": {
+      "en": "Petrol car",
+      "es": "Coche de gasolina",
+      "fr": "Petrol car",
+      "de": "Petrol car",
+      "ru": "Petrol car",
+      "zh": "Petrol car"
+    },
     "emoji": "🚗",
     "category": "transport",
     "energy_model": "per_km",
     "uses_country_car_default": true,
     "carrier": "petrol",
     "typical_unit": "km",
-    "assumption_note": { "en": "Test fixture.", "es": "Dato de prueba." },
-    "source_ids": ["test_source"],
+    "assumption_note": {
+      "en": "Test fixture.",
+      "es": "Dato de prueba.",
+      "fr": "Test fixture.",
+      "de": "Test fixture.",
+      "ru": "Test fixture.",
+      "zh": "Test fixture."
+    },
+    "source_ids": [
+      "test_source"
+    ],
     "value_year": 2025,
     "difficulty": 2
   }

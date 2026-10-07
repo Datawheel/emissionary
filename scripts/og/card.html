@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<!-- Social preview card. Rendered by scripts/render-og.ts; {{…}} are filled per language. -->
+<style>
+  @font-face {
+    font-family: 'Bricolage Grotesque';
+    src: url('../../public/fonts/bricolage-latin.woff2') format('woff2');
+    font-weight: 200 800;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #221c33;
+    --ink-soft: #5c5470;
+    --paper: #f6f4ee;
+    --card: #ffffff;
+    --rule: rgba(34, 28, 51, 0.055);
+    --spark: #ffb03a;
+    --spark-deep: #cf820b;
+    --ribbon: linear-gradient(90deg, #3ec28f 0%, #b8d24b 30%, #ffb03a 60%, #ff8a3d 80%, #e4593c 100%);
+    --display: 'Bricolage Grotesque', 'Noto Sans CJK SC', 'Droid Sans Fallback', 'Noto Sans', sans-serif;
+  }
+  html, body { width: 100%; height: 100%; }
+  body {
+    font-family: var(--display);
+    color: var(--ink);
+    background-color: var(--paper);
+    /* log-ruled paper: vertical rules at log10 of 1,2,3,5,7 — one decade = 260px */
+    background-image: repeating-linear-gradient(
+      90deg,
+      var(--rule) 0px, var(--rule) 3px, transparent 3px,
+      transparent 78.3px, var(--rule) 78.3px, var(--rule) 81.3px, transparent 81.3px,
+      transparent 124.1px, var(--rule) 124.1px, var(--rule) 127.1px, transparent 127.1px,
+      transparent 181.7px, var(--rule) 181.7px, var(--rule) 184.7px, transparent 184.7px,
+      transparent 219.7px, var(--rule) 219.7px, var(--rule) 222.7px, transparent 222.7px,
+      transparent 260px
+    );
+    display: flex;
+    flex-direction: column;
+    padding: 56px 72px 52px;
+  }
+  .brand { font-weight: 800; font-size: 44px; letter-spacing: 0.01em; }
+  .brand span { color: var(--spark-deep); }
+  .hero { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 26px; }
+  .qline { font-weight: 700; font-size: 58px; line-height: 1.12; display: flex; align-items: center; gap: 20px; }
+  .qline b { font-weight: 800; }
+  .qline .q { color: var(--spark-deep); }
+  .emoji {
+    font-size: 46px; line-height: 1; width: 84px; height: 84px; display: grid; place-items: center;
+    border-radius: 26px; flex: 0 0 auto;
+  }
+  .tok-personal { background: #ffe3ea; }
+  .tok-kitchen { background: #ffedd2; }
+  /* signature: the log slider whose track is the energy ribbon */
+  .slider { margin-top: 36px; }
+  .ticks {
+    display: flex; justify-content: space-between; font-weight: 600; font-size: 22px;
+    color: var(--ink-soft); margin-bottom: 10px; font-variant-numeric: tabular-nums;
+  }
+  .track { position: relative; height: 18px; border-radius: 9px; background: var(--ribbon); }
+  .thumb {
+    position: absolute; top: 50%; left: 38%; transform: translate(-50%, -50%);
+    width: 44px; height: 44px; border-radius: 50%; background: var(--spark);
+    border: 6px solid var(--card); box-shadow: 0 2px 10px rgba(34, 28, 51, 0.25);
+  }
+  .foot { margin-top: 40px; display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
+  .tagline { font-weight: 600; font-size: 30px; color: var(--ink-soft); }
+  .url { font-weight: 700; font-size: 28px; }
+  /* square (1:1) variant */
+  @media (max-aspect-ratio: 3/2) {
+    body { padding: 84px 80px 76px; }
+    .brand { font-size: 56px; }
+    .qline { font-size: 66px; }
+    .hero { gap: 52px; }
+    .slider { margin-top: 72px; }
+    .foot { flex-direction: column; gap: 14px; margin-top: 64px; }
+    .tagline { font-size: 36px; }
+    .url { font-size: 32px; color: var(--ink-soft); }
+  }
+</style>
+</head>
+<body>
+  <div class="brand">Emission<span>ary</span></div>
+  <div class="hero">
+    <div class="qline"><span class="emoji tok-personal">💨</span><span>{{CLUE}}</span></div>
+    <div class="qline"><span class="emoji tok-kitchen">🧊</span><span>= {{QUESTION}}</span></div>
+    <div class="slider">
+      <div class="ticks"><span>{{T1}}</span><span>{{T10}}</span><span>{{T100}}</span></div>
+      <div class="track"><div class="thumb"></div></div>
+    </div>
+  </div>
+  <div class="foot">
+    <div class="tagline">{{TAGLINE}}</div>
+    <div class="url">{{HOST}}</div>
+  </div>
+</body>
+</html>

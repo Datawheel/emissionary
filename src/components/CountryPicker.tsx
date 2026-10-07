@@ -3,12 +3,7 @@
 import { useMemo, useState } from 'react';
 import type { Lang } from '@/lib/types';
 import { t } from '@/lib/i18n';
-
-export interface CountryOption {
-  iso3: string;
-  name: string;
-  flag: string;
-}
+import type { CountryOption } from '@/lib/country-names';
 
 /**
  * First-visit welcome screen (spec §5): a few words on how to play and what
@@ -50,9 +45,7 @@ export default function CountryPicker({
         {t('choose_country', lang)}
       </h2>
       <p className="muted" style={{ textAlign: 'center', fontSize: '0.92rem' }}>
-        {lang === 'es'
-          ? 'Las emisiones de la electricidad dependen de la red de tu país.'
-          : 'Electricity emissions depend on your country’s grid.'}
+        {t('country_grid_note', lang)}
       </p>
 
       <button

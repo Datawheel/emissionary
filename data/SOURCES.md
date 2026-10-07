@@ -71,56 +71,56 @@ IPCC — *2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 2
 
 | Item | Value | Year | Sources |
 |---|---|---|---|
-| 🍟 Air fryer (`air_fryer`) | 1500 W (electricity) | 2026 | doe_energysaver |
+| 🍟 Air fryer (`air_fryer`) | 1,500 W (electricity) | 2026 | doe_energysaver |
 | 🪭 Ceiling fan (`ceiling_fan`) | 29.8 W (electricity) | 2026 | energystar |
 | ❄️ Freezer (`chest_freezer`) | 46.2 W (electricity) | 2026 | energystar |
 | 🚌 City bus (per passenger) (`city_bus`) | 103.11 gCO₂/km | 2025 | desnz_2025 |
-| 🚐 Intercity coach (per passenger) (`coach`) | 27.27 gCO₂/km | 2025 | desnz_2025 |
+| 🚍 Intercity bus (per passenger) (`coach`) | 27.27 gCO₂/km | 2025 | desnz_2025 |
 | 💧 Dehumidifier (`dehumidifier`) | 313 W (electricity) | 2026 | energystar |
 | 🖥️ Computer monitor (`desktop_monitor`) | 28.7 W (electricity) | 2026 | energystar |
 | 🚙 Diesel car (`diesel_car`) | 171.36 gCO₂/km | 2025 | desnz_2025 |
-| 🍽️ Dishwasher (`dishwasher`) | 1.11 kWh/cycles | 2026 | energystar |
+| 🍽️ Dishwasher (`dishwasher`) | 1.11 kWh/cycle | 2026 | energystar |
 | 🚲 E-bike (`e_bike`) | 0.011 kWh/km | 2026 | codata_physics |
 | 🛏️ Electric blanket (`electric_blanket`) | 150 W (electricity) | 2026 | doe_energysaver |
 | 🍳 Electric coil hob (boiling) (`electric_hob`) | 0.093 kWh useful/L ÷ 74% (electricity) | 2009 | codata_physics, doe_tsd_cooking |
 | 🫖 Electric kettle (`electric_kettle`) | 0.093 kWh useful/L ÷ 85% (electricity) | 2009 | codata_physics, doe_tsd_cooking |
-| 🥧 Electric oven (`electric_oven`) | 2000 W (electricity) | 2026 | doe_energysaver |
-| 🚿 Shower (electric water heater) (`electric_shower`) | 9500 W (electricity) | 2026 | doe_energysaver |
-| 🪥 Electric toothbrush (`electric_toothbrush`) | 0.002 kWh/charges | 2026 | codata_physics |
-| 📚 E-reader charge (`ereader_charge`) | 0.006 kWh/charges | 2026 | codata_physics |
-| ☕ Espresso machine (`espresso_machine`) | 0.02 kWh/espressos | 2026 | codata_physics |
+| 🥧 Electric oven (`electric_oven`) | 2,000 W (electricity) | 2026 | doe_energysaver |
+| 🚿 Shower (electric water heater) (`electric_shower`) | 9,500 W (electricity) | 2026 | doe_energysaver |
+| 🪥 Electric toothbrush (`electric_toothbrush`) | 0.002 kWh/charge | 2026 | codata_physics |
+| 📚 E-reader (charge) (`ereader_charge`) | 0.006 kWh/charge | 2026 | codata_physics |
+| ☕ Espresso machine (`espresso_machine`) | 0.02 kWh/espresso | 2026 | codata_physics |
 | 🔌 Electric car (`ev_car`) | 0.178 kWh/km | 2024 | epa_fueleconomy |
 | ✈️ Flight, short-haul (per passenger) (`flight_short_haul`) | 73.44 gCO₂/km | 2025 | desnz_2025 |
 | 🕹️ Game console (`game_console`) | 160 W (electricity) | 2026 | doe_energysaver |
 | 🎮 Gaming PC (`gaming_pc`) | 350 W (electricity) | 2026 | doe_energysaver |
-| 🏠 Gas boiler (heating) (`gas_boiler`) | 12000 W (natural_gas) | 2026 | doe_energysaver, desnz_2025 |
-| 🔥 Gas hob (boiling) (`gas_hob`) | 0.093 kWh useful/L ÷ 40% (natural_gas) | 2025 | codata_physics, doe_tsd_cooking, desnz_2025 |
-| 🍗 Gas oven (`gas_oven`) | 3000 W (natural_gas) | 2026 | doe_energysaver, desnz_2025 |
+| 🏠 Gas boiler (heating) (`gas_boiler`) | 12,000 W (natural gas) | 2026 | doe_energysaver, desnz_2025 |
+| 🔥 Gas hob (boiling) (`gas_hob`) | 0.093 kWh useful/L ÷ 40% (natural gas) | 2025 | codata_physics, doe_tsd_cooking, desnz_2025 |
+| 🍗 Gas oven (`gas_oven`) | 3,000 W (natural gas) | 2026 | doe_energysaver, desnz_2025 |
 | 💇 Hair straightener (`hair_straightener`) | 120 W (electricity) | 2026 | doe_energysaver |
-| 💨 Hairdryer (`hairdryer`) | 1800 W (electricity) | 2026 | doe_energysaver |
+| 💨 Hairdryer (`hairdryer`) | 1,800 W (electricity) | 2026 | doe_energysaver |
 | ♻️ Heat pump (heating) (`heat_pump`) | 800 W (electricity) | 2026 | doe_energysaver |
 | 🔦 800-lumen incandescent bulb (`incandescent_bulb`) | 60 W (electricity) | 2026 | doe_energysaver |
 | 🌟 1600-lumen incandescent bulb (`incandescent_bulb_1600`) | 100 W (electricity) | 2026 | doe_energysaver |
 | 🧲 Induction hob (boiling) (`induction_hob`) | 0.093 kWh useful/L ÷ 84% (electricity) | 2021 | codata_physics, energystar_induction |
-| 👕 Clothes iron (`iron`) | 1400 W (electricity) | 2026 | doe_energysaver |
+| 👕 Clothes iron (`iron`) | 1,400 W (electricity) | 2026 | doe_energysaver |
 | 💻 Laptop (`laptop`) | 50 W (electricity) | 2026 | doe_energysaver |
 | 💡 800-lumen LED bulb (`led_bulb`) | 9 W (electricity) | 2026 | doe_energysaver |
 | 🔆 1600-lumen LED bulb (`led_bulb_1600`) | 16 W (electricity) | 2026 | doe_energysaver |
-| 🍿 Microwave oven (`microwave`) | 1100 W (electricity) | 2026 | doe_energysaver |
+| 🍿 Microwave oven (`microwave`) | 1,100 W (electricity) | 2026 | doe_energysaver |
 | 🛵 Motor scooter (`motor_scooter`) | 80.94 gCO₂/km | 2025 | desnz_2025 |
 | 🚗 Petrol car (`petrol_car`) | country average gCO₂/km | 2025 | desnz_2025, epa_trends |
 | 🧊 Refrigerator (`refrigerator`) | 39.4 W (electricity) | 2026 | energystar |
 | 🌬️ Air conditioner (room) (`room_ac`) | 800 W (electricity) | 2026 | energystar |
 | 🔊 Smart speaker (`smart_speaker`) | 3 W (electricity) | 2026 | doe_energysaver |
-| 📱 Smartphone charge (`smartphone_charge`) | 0.015 kWh/charges | 2026 | codata_physics |
-| ♨️ Electric space heater (`space_heater`) | 1500 W (electricity) | 2026 | doe_energysaver |
-| 📲 Tablet charge (`tablet_charge`) | 0.033 kWh/charges | 2026 | codata_physics |
-| 🍞 Toaster (`toaster`) | 1000 W (electricity) | 2026 | doe_energysaver |
+| 📱 Smartphone (charge) (`smartphone_charge`) | 0.015 kWh/charge | 2026 | codata_physics |
+| ♨️ Electric space heater (`space_heater`) | 1,500 W (electricity) | 2026 | doe_energysaver |
+| 📲 Tablet (charge) (`tablet_charge`) | 0.033 kWh/charge | 2026 | codata_physics |
+| 🍞 Toaster (`toaster`) | 1,000 W (electricity) | 2026 | doe_energysaver |
 | 🚆 Train (per passenger) (`train_national`) | 35.1 gCO₂/km | 2025 | desnz_2025 |
-| 🌀 Tumble dryer (`tumble_dryer`) | 2.15 kWh/loads | 2026 | energystar |
+| 🌀 Tumble dryer (`tumble_dryer`) | 2.15 kWh/load | 2026 | energystar |
 | 📺 55″ LED TV (`tv_55`) | 97.5 W (electricity) | 2026 | energystar |
-| 🧹 Vacuum cleaner (`vacuum_cleaner`) | 1200 W (electricity) | 2026 | doe_energysaver |
-| 🧺 Washing machine (`washing_machine`) | 0.47 kWh/loads | 2026 | energystar |
+| 🧹 Vacuum cleaner (`vacuum_cleaner`) | 1,200 W (electricity) | 2026 | doe_energysaver |
+| 🧺 Washing machine (`washing_machine`) | 0.47 kWh/load | 2026 | energystar |
 | 📶 Wi-Fi router (`wifi_router`) | 8 W (electricity) | 2026 | doe_energysaver |
 
 ## Verification status
@@ -140,7 +140,7 @@ IPCC — *2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 2
 - `iron` — Typical steam iron rated ~1,400 W; thermostat cycling lowers averages (class range 1,000–1,800 W). Pending verification.
 - `vacuum_cleaner` — Corded vacuum cleaners draw ~1,200 W (class range 500–1,800 W; EU ecodesign caps at 900 W). Pending verification.
 - `laptop` — Typical laptop in active use draws ~50 W (class range 20–100 W depending on load). Pending verification.
-- `gaming_pc` — A mid-to-high gaming desktop under game load draws ~350 W including monitor excluded (class range 200–600 W). Pending measured verification.
+- `gaming_pc` — A mid-to-high gaming desktop under game load draws ~350 W, monitor excluded (class range 200–600 W). Pending measured verification.
 - `game_console` — Current-generation consoles draw ~160 W while gaming (class range 70–220 W). Pending measured verification.
 - `wifi_router` — Home Wi-Fi routers draw ~8 W continuously (class range 5–20 W). Pending verification.
 - `smart_speaker` — Smart speakers idle/play at ~3 W (class range 1.5–6 W). Pending measured verification.

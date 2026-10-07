@@ -101,3 +101,35 @@ test('quant submit is disabled until the slider is touched (anti center-click)',
     await expect(submit).toBeEnabled();
   }
 });
+
+/**
+ * Every language plays end to end with no English interface text on screen
+ * (item names, country names and units included).
+ */
+const ENGLISH_UI = [
+  'Lock in my guess', 'Next round', 'Worth remembering', 'How we computed this', 'Around the world',
+  'Your guess', 'Results', 'Leaderboard', 'Free Play', 'Energy consumed', 'Grid intensity', 'Total emissions',
+  'running for', 'emits as much', 'of refrigerator', 'Germany', 'Poland', 'United States',
+];
+for (const lang of ['es', 'fr', 'de', 'ru', 'zh']) {
+  test(`plays a round in ${lang} with no English interface text`, async ({ page, context }) => {
+    await context.clearCookies();
+    await page.goto(`/play?lang=${lang}`);
+    await expect(page.locator('html')).toHaveAttribute('lang', lang === 'zh' ? 'zh-Hans' : lang);
+    await page.getByTestId('confirm-country').click();
+    const slider = page.locator('input.log-slider');
+    const binaryCard = page.locator('.binary-choice button').first();
+    await expect(slider.or(binaryCard)).toBeVisible({ timeout: 15_000 });
+    if (await slider.isVisible()) {
+      await slider.focus();
+      await page.keyboard.press('ArrowRight');
+      await page.locator('.bottom-bar button').click();
+      await page.locator('details.breakdown summary').first().click(); // open the formula breakdown
+    } else {
+      await binaryCard.click();
+    }
+    await expect(page.locator('.unit-facts')).toBeVisible({ timeout: 15_000 });
+    const text = await page.locator('body').innerText();
+    for (const english of ENGLISH_UI) expect(text, `"${english}" on the ${lang} page`).not.toContain(english);
+  });
+}

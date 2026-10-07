@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { LeaderboardPage } from '@/lib/leaderboard';
 import type { Lang } from '@/lib/types';
-import { t } from '@/lib/i18n';
-import type { CountryOption } from './CountryPicker';
+import { pluralWord, t } from '@/lib/i18n';
+import type { CountryOption } from '@/lib/country-names';
 import NamePrompt, { namePromptDismissed } from './NamePrompt';
 
 type Scope = 'daily' | 'alltime' | 'days';
@@ -107,13 +107,7 @@ export default function LeaderboardClient({
               <span>
                 {r.flag} {r.name} {r.is_you && <strong>· {t('you', lang)}</strong>}
               </span>
-              <span className="value">
-                {scope === 'days' && r.days != null
-                  ? `${r.days} ${t('days_short', lang)} · ${r.score}`
-                  : r.days != null
-                    ? `${r.score} · ${r.days}${t('days_short', lang)[0]}`
-                    : r.score}
-              </span>
+              <span className="value">{rowValue(scope, r, lang)}</span>
             </div>
           ))}
           {youOffPage && page.you && (
@@ -122,13 +116,7 @@ export default function LeaderboardClient({
               <span>
                 {page.you.flag} {page.you.name} <strong>· {t('you', lang)}</strong>
               </span>
-              <span className="value">
-                {scope === 'days' && page.you.days != null
-                  ? `${page.you.days} ${t('days_short', lang)} · ${page.you.score}`
-                  : page.you.days != null
-                    ? `${page.you.score} · ${page.you.days}${t('days_short', lang)[0]}`
-                    : page.you.score}
-              </span>
+              <span className="value">{rowValue(scope, page.you, lang)}</span>
             </div>
           )}
         </section>
@@ -138,6 +126,13 @@ export default function LeaderboardClient({
       )}
     </main>
   );
+}
+
+/** "3 days · 1,240" when sorting by days played; "1,240 · 3 days" otherwise. */
+function rowValue(scope: Scope, r: { score: number; days?: number | null }, lang: Lang): string {
+  if (r.days == null) return String(r.score);
+  const days = `${r.days} ${pluralWord('days', r.days, lang)}`;
+  return scope === 'days' ? `${days} · ${r.score}` : `${r.score} · ${days}`;
 }
 
 /** Histogram of all players' results with the viewer's bucket highlighted. */
@@ -176,7 +171,7 @@ function Distribution({ page, lang }: { page: LeaderboardPage; lang: Lang }) {
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between' }} className="muted">
         <span>{Math.round(d.min)}</span>
-        <span>{d.metric === 'days' ? t('days_short', lang) : t('points', lang)}</span>
+        <span>{d.metric === 'days' ? t('axis_days', lang) : t('axis_points', lang)}</span>
         <span>{Math.round(d.max)}</span>
       </div>
       {page.you && pct != null && (

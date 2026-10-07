@@ -1,6 +1,6 @@
 /** Server-side name claiming (spec §10). Pure helpers live in name-gen.ts. */
 import { q } from './db';
-import { validateName } from './name-gen';
+import { validateName, type NameErrorCode } from './name-gen';
 
 export { generateName, validateName } from './name-gen';
 
@@ -8,6 +8,7 @@ export class NameError extends Error {
   constructor(
     public status: number,
     message: string,
+    public code: NameErrorCode,
   ) {
     super(message);
   }
@@ -24,7 +25,7 @@ export async function claimName(
   raw: string,
 ): Promise<{ name: string; discriminator: number | null }> {
   const v = validateName(raw);
-  if (!v.ok) throw new NameError(400, v.error);
+  if (!v.ok) throw new NameError(400, v.error, v.code);
 
   const player = (
     await q<{ name: string | null; renamed_at: Date | null }>(
@@ -32,10 +33,10 @@ export async function claimName(
       [playerId],
     )
   )[0];
-  if (!player) throw new NameError(401, 'no player');
+  if (!player) throw new NameError(401, 'no player', 'auth');
   if (player.name && player.renamed_at) {
     const days = (Date.now() - player.renamed_at.getTime()) / 86_400_000;
-    if (days < RENAME_COOLDOWN_DAYS) throw new NameError(429, 'rename allowed once per 30 days');
+    if (days < RENAME_COOLDOWN_DAYS) throw new NameError(429, 'rename allowed once per 30 days', 'cooldown');
   }
 
   for (let attempt = 0; attempt < 8; attempt++) {
@@ -58,5 +59,5 @@ export async function claimName(
       throw err;
     }
   }
-  throw new NameError(409, 'could not allocate a unique name, try another');
+  throw new NameError(409, 'could not allocate a unique name, try another', 'taken');
 }

@@ -3,6 +3,8 @@ import { getCountry, loadItems } from '@/lib/data';
 import { BOIL_KWH_PER_LITER, PETROL_KGCO2_PER_L } from '@/lib/constants';
 import { computeCO2 } from '@/lib/emissions';
 import { proseName } from '@/lib/format';
+import { t } from '@/lib/i18n';
+import { LANGS } from '@/lib/types';
 import type { Item } from '@/lib/types';
 
 /**
@@ -68,10 +70,10 @@ describe('lumen-class bulbs are mutually consistent', () => {
     expect(get('incandescent_bulb_1600').power_watts).toBe(100);
   });
 
-  it('every bulb name states its lumens', () => {
+  it('every bulb name states its lumens, in every language', () => {
+    const lumens = { en: /\d+-lumen/, es: /\d+ lúmenes/, fr: /\d+ lumens/, de: /\d+ Lumen/, ru: /\d+ лм/, zh: /\d+ 流明/ };
     for (const id of ['led_bulb', 'led_bulb_1600', 'incandescent_bulb', 'incandescent_bulb_1600']) {
-      expect(get(id).name.en).toMatch(/\d+-lumen/);
-      expect(get(id).name.es).toMatch(/lúmenes/);
+      for (const lang of LANGS) expect(get(id).name[lang]).toMatch(lumens[lang]);
     }
   });
 });
@@ -79,10 +81,10 @@ describe('lumen-class bulbs are mutually consistent', () => {
 describe('shared vehicles state their per-passenger basis and occupancy', () => {
   const shared = ['city_bus', 'coach', 'train_national', 'flight_short_haul'];
 
-  it('every shared vehicle is named per passenger in both languages', () => {
-    for (const id of shared) {
-      expect(get(id).name.en).toContain('(per passenger)');
-      expect(get(id).name.es).toContain('(por pasajero)');
+  it('exactly the shared vehicles are flagged and named per passenger, in every language', () => {
+    for (const item of items) {
+      expect(item.per_passenger === true).toBe(shared.includes(item.id));
+      for (const lang of LANGS) expect(item.name[lang].includes(t('per_passenger', lang))).toBe(shared.includes(item.id));
     }
   });
 
@@ -94,10 +96,13 @@ describe('shared vehicles state their per-passenger basis and occupancy', () => 
     expect(get('train_national').assumption_note.en).toMatch(/network.s energy/);
   });
 
-  it('proseName keeps the per-passenger basis in sentences', () => {
-    expect(proseName('City bus (per passenger)')).toBe('city bus (per passenger)');
-    expect(proseName('Autobús urbano (por pasajero)')).toBe('autobús urbano (por pasajero)');
-    expect(proseName('Gas hob (boiling)')).toBe('gas hob');
+  it('proseName keeps the per-passenger basis in sentences, in every language', () => {
+    for (const lang of LANGS) {
+      expect(proseName(get('city_bus').name[lang], lang)).toContain(t('per_passenger', lang));
+      expect(proseName(get('gas_hob').name[lang], lang)).not.toMatch(/[(（]/);
+    }
+    expect(proseName('City bus (per passenger)', 'en')).toBe('city bus (per passenger)');
+    expect(proseName('Gas hob (boiling)', 'en')).toBe('gas hob');
   });
 });
 

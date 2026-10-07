@@ -1,11 +1,12 @@
 import { computeCO2, solveEquivalent } from './emissions';
 import { PINNED_COUNTRIES } from './data';
 import { toSigFigs } from './format';
-import type { CountryFactors, Item } from './types';
+import { countryNames } from './country-names';
+import type { CountryFactors, Item, Localized } from './types';
 
 export interface ConversionRow {
   iso3: string;
-  name: string;
+  name: Localized;
   flag: string;
   qtyB: number;
   gramsA: number;
@@ -30,7 +31,7 @@ export function buildConversionRows(
     if (!cf) continue;
     rows.push({
       iso3,
-      name: cf.name,
+      name: countryNames(iso3),
       flag: cf.flag,
       qtyB: toSigFigs(solveEquivalent(itemA, qtyA, itemB, cf).qtyB),
       gramsA: computeCO2(itemA, qtyA, cf).grams,
@@ -44,8 +45,8 @@ export function buildConversionRows(
 export interface Takeaway {
   /** 'a_cleaner': the clue activity itself varies by country; 'b_more': the clue is country-invariant but the equivalent varies */
   kind: 'a_cleaner' | 'b_more';
-  clean: string;
-  dirty: string;
+  clean: Localized;
+  dirty: Localized;
   ratio: number;
 }
 

@@ -8,7 +8,13 @@
     "build": "next build",
     "start": "next start",
     "pretest": "npm run validate",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "db:migrate": "tsx --env-file=.env db/migrate.ts",
+    "db:sync": "tsx --env-file=.env scripts/sync-items.ts",
+    "data:items": "tsx scripts/build-items.ts && tsx scripts/generate-sources-md.ts",
+    "data:countries": "tsx scripts/update-country-factors.ts && tsx scripts/build-country-names.ts && tsx scripts/generate-sources-md.ts",
+    "og": "tsx --env-file-if-exists=.env scripts/render-og.ts",
+    "package": "mkdir -p dist && git archive --format=zip --prefix=emissionary/ -o dist/emissionary-$(date +%Y-%m-%d).zip HEAD && echo \"wrote dist/emissionary-$(date +%Y-%m-%d).zip\""
   },
   "description": "A carbon-intuition guessing game for the OEC",
   "dependencies": {

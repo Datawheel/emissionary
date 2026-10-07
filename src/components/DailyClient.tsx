@@ -6,7 +6,8 @@ import type { DailyProgress } from '@/lib/daily-service';
 import type { Lang } from '@/lib/types';
 import { t } from '@/lib/i18n';
 import RoundView from './RoundView';
-import CountryPicker, { type CountryOption } from './CountryPicker';
+import CountryPicker from './CountryPicker';
+import type { CountryOption } from '@/lib/country-names';
 import ShareCard from './ShareCard';
 
 type Phase = 'country' | 'loading' | 'guess' | 'reveal' | 'done' | 'error';
@@ -163,7 +164,7 @@ export default function DailyClient({
   // ——— play ———
   const round = progress.rounds[progress.next_index ?? 0];
   const isBinary = round.round_type === 'binary';
-  const roundLabel = `${(progress.next_index ?? 0) + 1} ${t('of', lang)} 5`;
+  const roundLabel = t('round_of', lang, { n: (progress.next_index ?? 0) + 1, total: 5 });
 
   return (
     <main className="screen">

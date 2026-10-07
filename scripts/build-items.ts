@@ -8,15 +8,48 @@
  */
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { Item } from '../src/lib/types';
+import type { Item, LocalizedPlural, PluralForms } from '../src/lib/types';
+import { ITEMS_FR } from './i18n/items-fr';
+import { ITEMS_DE } from './i18n/items-de';
+import { ITEMS_RU } from './i18n/items-ru';
+import { ITEMS_ZH } from './i18n/items-zh';
 
 const BOIL = 0.093; // kWh useful per liter, 20→100 °C (NIST water properties)
 
-type Partial9 = Omit<Item, 'assumption_note'> & { note_en: string; note_es: string };
+/** English and Spanish live inline; French, German, Russian and Chinese in scripts/i18n/. */
+type Draft = Omit<Item, 'name' | 'assumption_note' | 'event_noun'> & {
+  name: { en: string; es: string };
+  note_en: string;
+  note_es: string;
+  event_noun?: { en: PluralForms; es: PluralForms };
+};
 
-function item(p: Partial9): Item {
-  const { note_en, note_es, ...rest } = p;
-  return { ...rest, assumption_note: { en: note_en, es: note_es } };
+const TRANSLATIONS = { fr: ITEMS_FR, de: ITEMS_DE, ru: ITEMS_RU, zh: ITEMS_ZH };
+
+function item(p: Draft): Item {
+  const { note_en, note_es, name, event_noun, ...rest } = p;
+  const tr = Object.fromEntries(
+    Object.entries(TRANSLATIONS).map(([lang, table]) => {
+      const entry = table[p.id];
+      if (!entry) throw new Error(`${p.id}: missing ${lang} translation`);
+      if (event_noun && !entry.event) throw new Error(`${p.id}: missing ${lang} event noun`);
+      return [lang, entry];
+    }),
+  ) as Record<keyof typeof TRANSLATIONS, (typeof ITEMS_FR)[string]>;
+  return {
+    ...rest,
+    name: { ...name, fr: tr.fr.name, de: tr.de.name, ru: tr.ru.name, zh: tr.zh.name },
+    ...(event_noun && {
+      event_noun: {
+        ...event_noun,
+        fr: tr.fr.event!,
+        de: tr.de.event!,
+        ru: tr.ru.event!,
+        zh: tr.zh.event!,
+      } satisfies LocalizedPlural,
+    }),
+    assumption_note: { en: note_en, es: note_es, fr: tr.fr.note, de: tr.de.note, ru: tr.ru.note, zh: tr.zh.note },
+  };
 }
 
 const ES_YEAR = 2026; // ENERGY STAR dataset medians retrieved 2026-07-16
@@ -75,7 +108,7 @@ const items: Item[] = [
   item({
     id: 'dishwasher', name: { en: 'Dishwasher', es: 'Lavavajillas' }, emoji: '🍽️',
     category: 'kitchen', energy_model: 'per_event', kwh_per_event: 1.11,
-    event_noun: { en: 'cycles', es: 'ciclos' },
+    event_noun: { en: { one: 'cycle', other: 'cycles' }, es: { one: 'ciclo', other: 'ciclos' } },
     carrier: 'electricity', typical_unit: 'events',
     note_en: 'Median certified dishwasher: 239 kWh/yr over the 215-cycle federal test basis ≈ 1.11 kWh per cycle (n=736, ENERGY STAR dataset), water heating included.',
     note_es: 'Lavavajillas certificado mediano: 239 kWh/año sobre la base federal de 215 ciclos ≈ 1,11 kWh por ciclo (n=736, base ENERGY STAR), incluido el calentamiento de agua.',
@@ -111,7 +144,7 @@ const items: Item[] = [
   item({
     id: 'espresso_machine', name: { en: 'Espresso machine', es: 'Cafetera espresso' }, emoji: '☕',
     category: 'kitchen', energy_model: 'per_event', kwh_per_event: 0.02,
-    event_noun: { en: 'espressos', es: 'espressos' },
+    event_noun: { en: { one: 'espresso', other: 'espressos' }, es: { one: 'espresso', other: 'espressos' } },
     carrier: 'electricity', typical_unit: 'events',
     note_en: 'One espresso ≈ 0.02 kWh: heating ~40 mL of brew water plus boiler losses (physics estimate; range 0.01–0.05 kWh). Pending measured verification.',
     note_es: 'Un espresso ≈ 0,02 kWh: calentar ~40 mL de agua más las pérdidas de la caldera (estimación física; rango 0,01–0,05 kWh). Pendiente de verificación medida.',
@@ -225,7 +258,7 @@ const items: Item[] = [
   item({
     id: 'electric_toothbrush', name: { en: 'Electric toothbrush', es: 'Cepillo de dientes eléctrico' }, emoji: '🪥',
     category: 'personal', energy_model: 'per_event', kwh_per_event: 0.002,
-    event_noun: { en: 'charges', es: 'cargas' },
+    event_noun: { en: { one: 'charge', other: 'charges' }, es: { one: 'carga', other: 'cargas' } },
     carrier: 'electricity', typical_unit: 'events',
     note_en: 'One full charge of a ~1.4 Wh toothbrush battery plus charger losses ≈ 0.002 kWh — nearly negligible, which is the point.',
     note_es: 'Una carga completa de una batería de ~1,4 Wh más las pérdidas del cargador ≈ 0,002 kWh — casi despreciable, y esa es la gracia.',
@@ -234,7 +267,7 @@ const items: Item[] = [
   item({
     id: 'washing_machine', name: { en: 'Washing machine', es: 'Lavadora' }, emoji: '🧺',
     category: 'personal', energy_model: 'per_event', kwh_per_event: 0.47,
-    event_noun: { en: 'loads', es: 'lavados' },
+    event_noun: { en: { one: 'load', other: 'loads' }, es: { one: 'lavado', other: 'lavados' } },
     carrier: 'electricity', typical_unit: 'events',
     note_en: 'Median certified washer: 110 kWh/yr over the 234-load label basis ≈ 0.47 kWh per warm load (n=393, ENERGY STAR dataset; certified units skew efficient).',
     note_es: 'Lavadora certificada mediana: 110 kWh/año sobre la base de etiqueta de 234 lavados ≈ 0,47 kWh por lavado templado (n=393, base ENERGY STAR; las certificadas son más eficientes que la media).',
@@ -243,7 +276,7 @@ const items: Item[] = [
   item({
     id: 'tumble_dryer', name: { en: 'Tumble dryer', es: 'Secadora' }, emoji: '🌀',
     category: 'personal', energy_model: 'per_event', kwh_per_event: 2.15,
-    event_noun: { en: 'loads', es: 'secados' },
+    event_noun: { en: { one: 'load', other: 'loads' }, es: { one: 'secado', other: 'secados' } },
     carrier: 'electricity', typical_unit: 'events',
     note_en: 'Median certified electric dryer: 608 kWh/yr over the 283-load test basis ≈ 2.15 kWh per load (n=644, ENERGY STAR dataset).',
     note_es: 'Secadora eléctrica certificada mediana: 608 kWh/año sobre la base de prueba de 283 secados ≈ 2,15 kWh por secado (n=644, base ENERGY STAR).',
@@ -297,7 +330,7 @@ const items: Item[] = [
     id: 'gaming_pc', name: { en: 'Gaming PC', es: 'PC gaming' }, emoji: '🎮',
     category: 'electronics', energy_model: 'power', power_watts: 350,
     carrier: 'electricity', typical_unit: 'hours',
-    note_en: 'A mid-to-high gaming desktop under game load draws ~350 W including monitor excluded (class range 200–600 W). Pending measured verification.',
+    note_en: 'A mid-to-high gaming desktop under game load draws ~350 W, monitor excluded (class range 200–600 W). Pending measured verification.',
     note_es: 'Un PC de juegos medio-alto en carga consume ~350 W sin contar el monitor (rango 200–600 W). Pendiente de verificación medida.',
     source_ids: ['doe_energysaver'], value_year: 2026, difficulty: 2,
   }),
@@ -310,18 +343,18 @@ const items: Item[] = [
     source_ids: ['doe_energysaver'], value_year: 2026, difficulty: 1,
   }),
   item({
-    id: 'smartphone_charge', name: { en: 'Smartphone charge', es: 'Carga de móvil' }, emoji: '📱',
+    id: 'smartphone_charge', name: { en: 'Smartphone (charge)', es: 'Móvil (carga)' }, emoji: '📱',
     category: 'electronics', energy_model: 'per_event', kwh_per_event: 0.015,
-    event_noun: { en: 'charges', es: 'cargas' },
+    event_noun: { en: { one: 'charge', other: 'charges' }, es: { one: 'carga', other: 'cargas' } },
     carrier: 'electricity', typical_unit: 'events',
     note_en: 'One full charge of a ~13 Wh smartphone battery at ~85% charger efficiency ≈ 0.015 kWh.',
     note_es: 'Una carga completa de una batería de móvil de ~13 Wh con ~85% de eficiencia del cargador ≈ 0,015 kWh.',
     source_ids: ['codata_physics'], value_year: 2026, difficulty: 3,
   }),
   item({
-    id: 'tablet_charge', name: { en: 'Tablet charge', es: 'Carga de tableta' }, emoji: '📲',
+    id: 'tablet_charge', name: { en: 'Tablet (charge)', es: 'Tableta (carga)' }, emoji: '📲',
     category: 'electronics', energy_model: 'per_event', kwh_per_event: 0.033,
-    event_noun: { en: 'charges', es: 'cargas' },
+    event_noun: { en: { one: 'charge', other: 'charges' }, es: { one: 'carga', other: 'cargas' } },
     carrier: 'electricity', typical_unit: 'events',
     note_en: 'One full charge of a ~28 Wh tablet battery at ~85% charger efficiency ≈ 0.033 kWh.',
     note_es: 'Una carga completa de una batería de tableta de ~28 Wh con ~85% de eficiencia ≈ 0,033 kWh.',
@@ -376,9 +409,9 @@ const items: Item[] = [
     source_ids: ['doe_energysaver'], value_year: 2026, difficulty: 2,
   }),
   item({
-    id: 'ereader_charge', name: { en: 'E-reader charge', es: 'Carga de e-reader' }, emoji: '📚',
+    id: 'ereader_charge', name: { en: 'E-reader (charge)', es: 'Lector de libros electrónicos (carga)' }, emoji: '📚',
     category: 'electronics', energy_model: 'per_event', kwh_per_event: 0.006,
-    event_noun: { en: 'charges', es: 'cargas' },
+    event_noun: { en: { one: 'charge', other: 'charges' }, es: { one: 'carga', other: 'cargas' } },
     carrier: 'electricity', typical_unit: 'events',
     note_en: 'One full charge of a ~5 Wh e-reader battery at ~85% charger efficiency ≈ 0.006 kWh — weeks of reading.',
     note_es: 'Una carga completa de una batería de e-reader de ~5 Wh con ~85% de eficiencia ≈ 0,006 kWh — semanas de lectura.',
@@ -420,23 +453,23 @@ const items: Item[] = [
   }),
   item({
     id: 'city_bus', name: { en: 'City bus (per passenger)', es: 'Autobús urbano (por pasajero)' }, emoji: '🚌',
-    category: 'transport', energy_model: 'per_km', gco2_per_km: 103.11,
+    category: 'transport', energy_model: 'per_km', per_passenger: true, gco2_per_km: 103.11,
     carrier: 'diesel', typical_unit: 'km',
     note_en: 'Average local bus carrying its average load of ~12.7 passengers: 103.1 gCO₂ per passenger-km, CO₂ only (DESNZ 2025 / DfT bus statistics). A fuller bus emits less per person.',
     note_es: 'Autobús urbano medio con su ocupación media de ~12,7 pasajeros: 103,1 gCO₂ por pasajero-km, solo CO₂ (DESNZ 2025 / estadísticas DfT). Un autobús más lleno emite menos por persona.',
     source_ids: ['desnz_2025'], value_year: 2025, difficulty: 2,
   }),
   item({
-    id: 'coach', name: { en: 'Intercity coach (per passenger)', es: 'Autocar interurbano (por pasajero)' }, emoji: '🚐',
-    category: 'transport', energy_model: 'per_km', gco2_per_km: 27.27,
+    id: 'coach', name: { en: 'Intercity bus (per passenger)', es: 'Autobús interurbano (por pasajero)' }, emoji: '🚍',
+    category: 'transport', energy_model: 'per_km', per_passenger: true, gco2_per_km: 27.27,
     carrier: 'diesel', typical_unit: 'km',
-    note_en: 'Intercity coach carrying its average load of ~17.6 passengers: 27.3 gCO₂ per passenger-km, CO₂ only (DESNZ 2025) — among the cleanest motorized travel.',
-    note_es: 'Autocar interurbano con su ocupación media de ~17,6 pasajeros: 27,3 gCO₂ por pasajero-km, solo CO₂ (DESNZ 2025) — de los viajes motorizados más limpios.',
+    note_en: 'Intercity bus carrying its average load of ~17.6 passengers: 27.3 gCO₂ per passenger-km, CO₂ only (DESNZ 2025) — among the cleanest motorized travel.',
+    note_es: 'Autobús interurbano con su ocupación media de ~17,6 pasajeros: 27,3 gCO₂ por pasajero-km, solo CO₂ (DESNZ 2025) — de los viajes motorizados más limpios.',
     source_ids: ['desnz_2025'], value_year: 2025, difficulty: 3,
   }),
   item({
     id: 'train_national', name: { en: 'Train (per passenger)', es: 'Tren (por pasajero)' }, emoji: '🚆',
-    category: 'transport', energy_model: 'per_km', gco2_per_km: 35.1,
+    category: 'transport', energy_model: 'per_km', per_passenger: true, gco2_per_km: 35.1,
     carrier: 'diesel', typical_unit: 'km',
     note_en: 'National rail average: 35.1 gCO₂ per passenger-km, CO₂ only — the whole network’s energy (electric + diesel trains) divided by all passenger-km at typical ridership (DESNZ 2025; fully electrified networks differ).',
     note_es: 'Promedio de tren nacional: 35,1 gCO₂ por pasajero-km, solo CO₂ — toda la energía de la red (trenes eléctricos y diésel) dividida por todos los pasajeros-km con ocupación típica (DESNZ 2025; las redes totalmente electrificadas difieren).',
@@ -444,7 +477,7 @@ const items: Item[] = [
   }),
   item({
     id: 'flight_short_haul', name: { en: 'Flight, short-haul (per passenger)', es: 'Vuelo de corta distancia (por pasajero)' }, emoji: '✈️',
-    category: 'transport', energy_model: 'per_km', gco2_per_km: 73.44,
+    category: 'transport', energy_model: 'per_km', per_passenger: true, gco2_per_km: 73.44,
     carrier: 'petrol', typical_unit: 'km',
     note_en: 'Short-haul economy flight with ~83% of seats filled (fleet average, CAA 2023): 73.4 gCO₂ per passenger-km, CO₂ only, excluding radiative forcing (DESNZ 2025; with RF the climate impact roughly doubles).',
     note_es: 'Vuelo económico de corta distancia con ~83% de los asientos ocupados (promedio de flota, CAA 2023): 73,4 gCO₂ por pasajero-km, solo CO₂, sin forzamiento radiativo (DESNZ 2025; con FR el impacto climático casi se duplica).',

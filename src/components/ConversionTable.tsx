@@ -4,9 +4,8 @@ import { useState } from 'react';
 import type { ConversionRow, Takeaway } from '@/lib/conversion';
 import type { ClientItem } from '@/lib/api-types';
 import type { Lang } from '@/lib/types';
-import { L, t } from '@/lib/i18n';
-import { formatCO2, formatQty, proseName } from '@/lib/format';
-
+import { L, pluralWord, t } from '@/lib/i18n';
+import { formatCO2, formatItemQty, proseName } from '@/lib/format';
 
 /** Ribbon semantics: bar color encodes how clean the electricity is for this row. */
 function barColor(dirtiness: number): string {
@@ -40,13 +39,14 @@ export default function ConversionTable({
     gHi - gLo > 0.05
       ? (Math.log10(row.gramsA) - gLo) / (gHi - gLo)
       : 1 - (Math.log10(row.qtyB) - minLog) / span;
-  const itemBName = proseName(L(itemB.name, lang));
+  const itemBName = proseName(L(itemB.name, lang), lang);
 
   const noteText = note
     ? t(note.kind === 'a_cleaner' ? 'takeaway_cleaner' : 'takeaway_more', lang, {
-        clean: note.clean,
-        dirty: note.dirty,
+        clean: L(note.clean, lang),
+        dirty: L(note.dirty, lang),
         ratio: note.ratio,
+        times: pluralWord('times', note.ratio, lang),
         clue,
         item: itemBName,
       })
@@ -74,7 +74,7 @@ export default function ConversionTable({
                 <div key={row.iso3} className={`conversion-row${row.isPlayer ? ' own' : ''}`} role="row">
                   <span aria-hidden="true">{row.flag}</span>
                   <div>
-                    <div style={{ fontWeight: row.isPlayer ? 700 : 500 }}>{row.name}</div>
+                    <div style={{ fontWeight: row.isPlayer ? 700 : 500 }}>{L(row.name, lang)}</div>
                     <div className="bar-track" aria-hidden="true">
                       <div
                         className="bar"
@@ -111,7 +111,7 @@ export default function ConversionTable({
           <div key={row.iso3} className={`conversion-row${row.isPlayer ? ' own' : ''}`} role="row">
             <span aria-hidden="true">{row.flag}</span>
             <div>
-              <div style={{ fontWeight: row.isPlayer ? 700 : 500 }}>{row.name}</div>
+              <div style={{ fontWeight: row.isPlayer ? 700 : 500 }}>{L(row.name, lang)}</div>
               <div className="bar-track" aria-hidden="true">
                 <div
                   className="bar"
@@ -122,7 +122,7 @@ export default function ConversionTable({
                 />
               </div>
             </div>
-            <span className="value">{item2Label(row.qtyB, itemB, lang)}</span>
+            <span className="value">{formatItemQty(row.qtyB, itemB, lang)}</span>
           </div>
         ))}
       </div>
@@ -134,11 +134,4 @@ export default function ConversionTable({
       {noteText && <p className="takeaway" style={{ marginTop: 10 }}>{noteText}</p>}
     </section>
   );
-}
-
-function item2Label(qty: number, itemB: ClientItem, lang: Lang): string {
-  if (itemB.typical_unit === 'events' && itemB.event_noun) {
-    return `${formatQty(qty, 'events', lang).replace('×', '')} ${L(itemB.event_noun, lang)}`;
-  }
-  return formatQty(qty, itemB.typical_unit, lang);
 }

@@ -1,23 +1,23 @@
 import AppHeader from '@/components/AppHeader';
 import LeaderboardClient from '@/components/LeaderboardClient';
 import { loadCountryFactors } from '@/lib/data';
+import { countryOptions } from '@/lib/country-names';
 import { currentPlayer } from '@/lib/player';
-import { pickLang } from '@/lib/i18n';
+import { requestLang } from '@/lib/request-lang';
 
 export const dynamic = 'force-dynamic';
 
-export default async function LeaderboardPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ lang?: string }>;
-}) {
-  const lang = pickLang((await searchParams).lang);
-  const countries = loadCountryFactors().map((c) => ({ iso3: c.iso3, name: c.name, flag: c.flag }));
+export default async function LeaderboardPage() {
+  const lang = await requestLang();
   const player = await currentPlayer();
   return (
     <>
       <AppHeader lang={lang} />
-      <LeaderboardClient countries={countries} lang={lang} canClaimName={player != null && player.name == null} />
+      <LeaderboardClient
+        countries={countryOptions(loadCountryFactors(), lang)}
+        lang={lang}
+        canClaimName={player != null && player.name == null}
+      />
     </>
   );
 }

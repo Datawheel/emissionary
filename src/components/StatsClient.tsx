@@ -6,7 +6,7 @@
  */
 import { useEffect, useState } from 'react';
 import type { Lang, Localized } from '@/lib/types';
-import { L, t } from '@/lib/i18n';
+import { L, LOCALE_TAGS, pluralWord, t } from '@/lib/i18n';
 
 interface ItemStat {
   item: string;
@@ -31,6 +31,9 @@ interface Summary {
   most_misjudged_pairs: PairStat[];
 }
 
+const fmt2 = (v: number, lang: Lang) =>
+  v.toLocaleString(LOCALE_TAGS[lang], { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
 export default function StatsClient({ lang }: { lang: Lang }) {
   const [data, setData] = useState<Summary | null>(null);
   const [failed, setFailed] = useState(false);
@@ -52,25 +55,23 @@ export default function StatsClient({ lang }: { lang: Lang }) {
       <h1 style={{ fontSize: '1.3rem' }}>{t('stats', lang)}</h1>
       <section className="card" style={{ display: 'flex', justifyContent: 'space-around', textAlign: 'center' }}>
         <div>
-          <div className="readout" style={{ fontSize: '1.8rem' }}>{data.players.toLocaleString()}</div>
-          <div className="muted">{lang === 'es' ? 'jugadores' : 'players'}</div>
+          <div className="readout" style={{ fontSize: '1.8rem' }}>{data.players.toLocaleString(LOCALE_TAGS[lang])}</div>
+          <div className="muted">{pluralWord('players', data.players, lang)}</div>
         </div>
         <div>
-          <div className="readout" style={{ fontSize: '1.8rem' }}>{data.guesses.toLocaleString()}</div>
-          <div className="muted">{lang === 'es' ? 'respuestas' : 'guesses'}</div>
+          <div className="readout" style={{ fontSize: '1.8rem' }}>{data.guesses.toLocaleString(LOCALE_TAGS[lang])}</div>
+          <div className="muted">{pluralWord('guesses', data.guesses, lang)}</div>
         </div>
       </section>
 
       <section className="card">
         <h2 style={{ fontSize: '1rem', marginBottom: 4 }}>
-          {lang === 'es' ? 'Calibración por producto' : 'Calibration by item'}
+          {t('stats_calibration_title', lang)}
         </h2>
         <p className="muted" style={{ marginBottom: 10 }}>
-          {lang === 'es'
-            ? '¿La gente sobreestima (→) o subestima (←) las emisiones equivalentes?'
-            : 'Do people overestimate (→) or underestimate (←) the equivalent amount?'}
+          {t('stats_calibration_desc', lang)}
         </p>
-        {data.per_item.length === 0 && <p className="muted">{lang === 'es' ? 'Aún no hay datos suficientes.' : 'Not enough data yet.'}</p>}
+        {data.per_item.length === 0 && <p className="muted">{t('stats_not_enough', lang)}</p>}
         {data.per_item.map((i) => {
           const frac = i.median_signed_log_error / maxAbs; // -1..1
           const pct = Math.abs(frac) * 46;
@@ -82,7 +83,7 @@ export default function StatsClient({ lang }: { lang: Lang }) {
                 </span>
                 <span className="muted">
                   {i.median_signed_log_error > 0 ? '+' : ''}
-                  {i.median_signed_log_error.toFixed(2)} · n={i.n}
+                  {fmt2(i.median_signed_log_error, lang)} · n={i.n}
                 </span>
               </div>
               <div className="bar-track" style={{ position: 'relative', height: 10, marginTop: 4 }} aria-hidden="true">
@@ -104,10 +105,10 @@ export default function StatsClient({ lang }: { lang: Lang }) {
 
       <section className="card">
         <h2 style={{ fontSize: '1rem', marginBottom: 8 }}>
-          {lang === 'es' ? 'Comparaciones más malinterpretadas' : 'Most misjudged comparisons'}
+          {t('stats_misjudged_title', lang)}
         </h2>
         {data.most_misjudged_pairs.length === 0 && (
-          <p className="muted">{lang === 'es' ? 'Aún no hay datos suficientes.' : 'Not enough data yet.'}</p>
+          <p className="muted">{t('stats_not_enough', lang)}</p>
         )}
         {data.most_misjudged_pairs.map((p, idx) => (
           <div key={idx} className="conversion-row">
@@ -117,15 +118,13 @@ export default function StatsClient({ lang }: { lang: Lang }) {
             </span>
             <span className="value">
               {p.median_signed_log_error > 0 ? '+' : ''}
-              {p.median_signed_log_error.toFixed(2)}
+              {fmt2(p.median_signed_log_error, lang)}
             </span>
           </div>
         ))}
       </section>
       <p className="muted">
-        {lang === 'es'
-          ? 'El error es el log₁₀ de (respuesta ÷ valor real): +1 significa adivinar 10× de más.'
-          : 'Error is log₁₀ of (guess ÷ truth): +1 means guessing 10× too high.'}
+        {t('stats_error_note', lang)}
       </p>
     </main>
   );

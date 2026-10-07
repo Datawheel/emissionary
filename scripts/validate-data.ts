@@ -7,7 +7,10 @@ import { join } from 'node:path';
 import { getCountry, loadCountryFactors, loadItems, loadSources, PINNED_COUNTRIES } from '../src/lib/data';
 import { generateSourcesMd } from './generate-sources-md';
 import { computeCO2 } from '../src/lib/emissions';
-import type { CountryFactors, Item } from '../src/lib/types';
+import { LANGS, type CountryFactors, type Item } from '../src/lib/types';
+import { rawString, STRING_KEYS, t } from '../src/lib/i18n';
+import { numberMismatches, placeholderMismatches } from '../src/lib/i18n-check';
+import { countryNames } from '../src/lib/country-names';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -99,9 +102,27 @@ export function validateData(): string[] {
     if (cf.grid_year < CURRENT_YEAR - 3) errors.push(`${iso3}: grid_year ${cf.grid_year} stale`);
   }
 
-  // 5) localization completeness
+  // 5) localization: every language present (the schema enforces it), the
+  //    same numbers in every translation of a note, shared-vehicle names
+  //    marked per passenger, and every country named in every language
   for (const item of items) {
-    if (!item.name.es || !item.assumption_note.es) errors.push(`${item.id}: missing Spanish strings`);
+    for (const m of numberMismatches(item.assumption_note)) errors.push(`${item.id} note — ${m}`);
+    for (const lang of LANGS) {
+      const marked = item.name[lang].includes(t('per_passenger', lang));
+      if (marked !== (item.per_passenger === true)) {
+        errors.push(`${item.id}: ${lang} name ${marked ? 'says' : 'must say'} "${t('per_passenger', lang)}"`);
+      }
+    }
+  }
+  for (const key of STRING_KEYS) {
+    for (const m of placeholderMismatches(rawString(key))) errors.push(`string ${key} — ${m}`);
+  }
+  for (const cf of factors) {
+    try {
+      countryNames(cf.iso3);
+    } catch {
+      errors.push(`${cf.iso3}: no localized names — run: npx tsx scripts/build-country-names.ts`);
+    }
   }
 
   // 6) SOURCES.md must be regenerated whenever data changes

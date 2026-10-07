@@ -1,9 +1,17 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { z } from 'zod';
-import type { CountryFactors, Item, Source } from './types';
+import { LANGS, type CountryFactors, type Item, type Source } from './types';
 
-const localized = z.object({ en: z.string().min(1), es: z.string().min(1) });
+/** Every supported language is required — a missing translation fails loading. */
+const localized = z.object(Object.fromEntries(LANGS.map((l) => [l, z.string().min(1)])) as Record<(typeof LANGS)[number], z.ZodString>);
+const pluralForms = z.object({
+  one: z.string().min(1).optional(),
+  few: z.string().min(1).optional(),
+  many: z.string().min(1).optional(),
+  other: z.string().min(1),
+});
+const localizedPlural = z.object(Object.fromEntries(LANGS.map((l) => [l, pluralForms])) as Record<(typeof LANGS)[number], typeof pluralForms>);
 
 export const itemSchema = z
   .object({
@@ -14,7 +22,7 @@ export const itemSchema = z
     energy_model: z.enum(['power', 'per_event', 'task', 'per_km']),
     power_watts: z.number().positive().optional(),
     kwh_per_event: z.number().positive().optional(),
-    event_noun: localized.optional(),
+    event_noun: localizedPlural.optional(),
     task_kwh_useful: z.number().positive().optional(),
     efficiency: z.number().gt(0).lte(1).optional(),
     carrier: z.enum(['electricity', 'natural_gas', 'lpg', 'petrol', 'diesel']),
@@ -22,6 +30,7 @@ export const itemSchema = z
     uses_country_car_default: z.boolean().optional(),
     l_per_100km: z.number().positive().optional(),
     gco2_per_km: z.number().positive().optional(),
+    per_passenger: z.boolean().optional(),
     typical_unit: z.enum(['minutes', 'hours', 'events', 'km', 'liters_boiled']),
     clue_quantities: z.array(z.number().positive()).min(2).optional(),
     assumption_note: localized,

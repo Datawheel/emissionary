@@ -1,6 +1,6 @@
 import type { Breakdown } from './emissions';
 import type { ConversionRow, Takeaway } from './conversion';
-import type { Localized, Unit } from './types';
+import type { Localized, LocalizedPlural, Unit } from './types';
 
 /** What the client sees BEFORE guessing — no truths, no factors (spec §12). */
 export interface ClientRound {
@@ -21,7 +21,7 @@ export interface ClientItem {
   emoji: string;
   category: string;
   typical_unit: Unit;
-  event_noun?: Localized;
+  event_noun?: LocalizedPlural;
 }
 
 export interface FreeplayTotals {
@@ -36,8 +36,8 @@ export interface FreeplayTotals {
 export interface UnitFact {
   emoji: string;
   name: Localized;
-  unit: Unit;
-  event_noun?: Localized;
+  typical_unit: Unit;
+  event_noun?: LocalizedPlural;
   kwh: number | null;
   grams: number;
 }

@@ -7,12 +7,12 @@ import { shareSquare } from '@/lib/scoring';
 
 /**
  * Wordle-style share text (spec §11): day number, flag, score, one square per
- * round. Never includes items or answers.
+ * round, and the address the game is served from. Never includes items or answers.
  */
-export function buildShareText(dayNo: number, flag: string, scores: number[], maxTotal: number): string {
+export function buildShareText(dayNo: number, flag: string, scores: number[], maxTotal: number, host: string): string {
   const total = scores.reduce((a, b) => a + b, 0);
   const squares = scores.map((s) => shareSquare(s)).join('');
-  return `Emissionary #${dayNo} ${flag} ${total}/${maxTotal}\n${squares}\nemissionary.oec.world`;
+  return `Emissionary #${dayNo} ${flag} ${total}/${maxTotal}\n${squares}\n${host}`;
 }
 
 export default function ShareCard({
@@ -29,7 +29,9 @@ export default function ShareCard({
   lang: Lang;
 }) {
   const [copied, setCopied] = useState(false);
-  const text = buildShareText(dayNo, flag, scores, maxTotal);
+  // only rendered client-side (after the daily progress fetch), so window is defined
+  const host = typeof window === 'undefined' ? '' : window.location.host;
+  const text = buildShareText(dayNo, flag, scores, maxTotal, host);
 
   async function share() {
     if (navigator.share) {

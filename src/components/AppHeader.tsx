@@ -2,11 +2,14 @@ import Link from 'next/link';
 import type { Lang } from '@/lib/types';
 import { t } from '@/lib/i18n';
 import { loadCountryFactors } from '@/lib/data';
+import { countryOptions } from '@/lib/country-names';
 import { currentPlayer } from '@/lib/player';
 import CountryMenu from './CountryMenu';
+import LanguageMenu from './LanguageMenu';
 
 /**
- * Global navigation: brand, country setting (grid assumptions), leaderboard.
+ * Global navigation: brand, country setting (grid assumptions), leaderboard,
+ * About, and language.
  * Server component — reads the player cookie to show the current country.
  */
 export default async function AppHeader({
@@ -17,9 +20,7 @@ export default async function AppHeader({
   right?: React.ReactNode;
 }) {
   const player = await currentPlayer().catch(() => null);
-  const countries = player
-    ? loadCountryFactors().map((c) => ({ iso3: c.iso3, name: c.name, flag: c.flag }))
-    : [];
+  const countries = player ? countryOptions(loadCountryFactors(), lang) : [];
 
   return (
     <header className="app-header">
@@ -35,6 +36,7 @@ export default async function AppHeader({
         <Link className="header-btn" href={`/about?lang=${lang}`}>
           {t('about', lang)}
         </Link>
+        <LanguageMenu lang={lang} />
       </div>
     </header>
   );
