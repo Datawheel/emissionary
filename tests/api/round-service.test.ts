@@ -165,3 +165,79 @@ describe('freeplayTotals', () => {
     expect(totals.best_streak).toBe(2);
   });
 });
+
+describe('Free Play survival runs', () => {
+  /** A finished free-play round in a run, scored as given (0 = a strike). */
+  async function answered(player: PlayerRow, runNo: number, score: number) {
+    const roundId = randomUUID();
+    await q(
+      `INSERT INTO rounds (id, player_id, item_a, qty_a, item_b, round_type, difficulty, run_no)
+       VALUES ($1, $2, 'hairdryer', 10, 'fridge', 'quant', 1, $3)`,
+      [roundId, player.id, runNo],
+    );
+    await q(
+      `INSERT INTO guesses (id, player_id, round_id, country, guess, truth, score)
+       VALUES ($1, $2, $3, 'FRA', 1, 1, $4)`,
+      [randomUUID(), player.id, roundId, score],
+    );
+  }
+
+  it('counts 0-point rounds as strikes and ends the run at the third', async () => {
+    const player = await makePlayer();
+    for (const s of [80, 0, 55, 0]) await answered(player, 1, s);
+    let totals = await freeplayTotals(player.id);
+    expect(totals.run).toMatchObject({ rounds: 4, score: 135, strikes: 2, max_strikes: 3, over: false });
+
+    await answered(player, 1, 0);
+    totals = await freeplayTotals(player.id);
+    expect(totals.run).toMatchObject({ rounds: 5, strikes: 3, over: true });
+    expect(totals.best_run_rounds).toBe(5);
+  });
+
+  it('starts a fresh run after striking out, keeping the personal best', async () => {
+    const player = await makePlayer();
+    for (const s of [0, 90, 0, 0]) await answered(player, 1, s);
+    const round = await createFreeplayRound(player);
+    const rows = await q<RoundRow>('SELECT * FROM rounds WHERE id = $1', [round.round_id]);
+    expect(rows[0].run_no).toBe(2);
+    const totals = await freeplayTotals(player.id);
+    expect(totals.run).toMatchObject({ rounds: 0, score: 0, strikes: 0, over: false });
+    expect(totals.best_run_rounds).toBe(4);
+  });
+
+  it('returns the unanswered round on reload instead of dealing a new one', async () => {
+    const player = await makePlayer();
+    const first = await createFreeplayRound(player);
+    const again = await createFreeplayRound(player);
+    expect(again.round_id).toBe(first.round_id);
+  });
+
+  it('refuses answers to a round from a run that already struck out', async () => {
+    const player = await makePlayer();
+    for (let i = 0; i < 3; i++) await answered(player, 1, 0);
+    const stale = randomUUID(); // e.g. left open in a second tab
+    await q(
+      `INSERT INTO rounds (id, player_id, item_a, qty_a, item_b, round_type, difficulty, slider_min, slider_max, run_no)
+       VALUES ($1, $2, 'hairdryer', 10, 'fridge', 'quant', 1, 0.1, 100, 1)`,
+      [stale, player.id],
+    );
+    await expect(submitGuess(player, stale, { value: 1 })).rejects.toMatchObject({ status: 409 });
+  });
+
+  it('does not let daily rounds or pre-run history count toward a run', async () => {
+    const player = await makePlayer();
+    const legacy = randomUUID();
+    await q(
+      `INSERT INTO rounds (id, player_id, item_a, qty_a, item_b, round_type, difficulty)
+       VALUES ($1, $2, 'hairdryer', 10, 'fridge', 'quant', 1)`,
+      [legacy, player.id],
+    );
+    await q(
+      `INSERT INTO guesses (id, player_id, round_id, country, guess, truth, score)
+       VALUES ($1, $2, $3, 'FRA', 1, 1, 0)`,
+      [randomUUID(), player.id, legacy],
+    );
+    const totals = await freeplayTotals(player.id);
+    expect(totals.run).toMatchObject({ rounds: 0, strikes: 0, over: false });
+  });
+});

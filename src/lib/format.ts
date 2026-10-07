@@ -96,7 +96,14 @@ export function clueLabel(qty: number, item: Describable, lang: Lang): string {
 }
 
 function clueText(qty: string, item: Describable, lang: Lang): string {
-  return t('clue_pattern', lang, { qty, name: proseName(L(item.name, lang), lang) });
+  const pattern = item.typical_unit === 'liters_boiled' ? 'clue_pattern_boil' : 'clue_pattern';
+  return t(pattern, lang, { qty, name: proseName(L(item.name, lang), lang) });
+}
+
+/** An item as the thing being counted: "refrigerator", or "water boiled with gas hob". */
+export function itemProse(item: Describable, lang: Lang): string {
+  const name = proseName(L(item.name, lang), lang);
+  return item.typical_unit === 'liters_boiled' ? t('boil_item', lang, { name }) : name;
 }
 
 /**

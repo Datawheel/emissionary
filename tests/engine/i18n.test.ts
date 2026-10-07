@@ -85,6 +85,14 @@ describe('quantities in every language', () => {
     expect(unitClueTitle(get('hairdryer'), 'en')).toBe('1 min of hairdryer');
     expect(unitClueTitle(get('refrigerator'), 'de')).toBe('1 Std. Kühlschrank');
     expect(unitClueTitle(get('vacuum_cleaner'), 'ru')).toBe('Пылесос: 1 мин');
+    // boiling items say the litres are water ("1 L de placa de inducción" was unclear)
+    const hob = get('induction_hob');
+    expect(clueTitle(1, hob, 'es')).toBe('Hervir 1 L de agua con placa de inducción');
+    expect(clueTitle(5, get('electric_hob'), 'es')).toBe('Hervir 5 L de agua con placa eléctrica de resistencia');
+    expect(clueTitle(1, hob, 'en')).toBe('Boiling 1 L of water with induction hob');
+    expect(clueTitle(2, hob, 'ru')).toBe('Индукционная плита: вскипятить 2 л воды');
+    expect(clueTitle(2, hob, 'zh')).toBe('用电磁炉烧开 2 升水');
+    expect(unitClueTitle(get('electric_kettle'), 'fr')).toBe('Faire bouillir 1 L d’eau avec bouilloire électrique');
     // the charge items no longer read "3 charges of smartphone charge"
     expect(clueLabel(3, get('smartphone_charge'), 'en')).toBe('3 charges of smartphone');
   });

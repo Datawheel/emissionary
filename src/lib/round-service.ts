@@ -25,6 +25,8 @@ export interface RoundRow {
   difficulty: number;
   slider_min: string | null;
   slider_max: string | null;
+  /** free play only: which survival run the round belongs to */
+  run_no: number | null;
 }
 
 function toClientItem(item: Item): ClientItem {
@@ -71,7 +73,55 @@ async function playerRecent(playerId: string): Promise<{ pairs: Set<string>; avg
   return { pairs, avg, count: rows.length };
 }
 
+/** Free Play is a survival run: this many 0-point rounds and it is over. */
+export const MAX_STRIKES = 3;
+
+interface RunStats {
+  rounds: number;
+  score: number;
+  strikes: number;
+}
+
+async function runStats(playerId: string, runNo: number): Promise<RunStats> {
+  const rows = await q<RunStats>(
+    `SELECT count(g.id)::int AS rounds,
+            coalesce(sum(g.score), 0)::int AS score,
+            (count(g.id) FILTER (WHERE g.score = 0))::int AS strikes
+       FROM rounds r JOIN guesses g ON g.round_id = r.id AND g.player_id = r.player_id
+      WHERE r.player_id = $1 AND r.set_date IS NULL AND r.run_no = $2`,
+    [playerId, runNo],
+  );
+  return rows[0];
+}
+
+async function latestRunNo(playerId: string): Promise<number | null> {
+  const rows = await q<{ run_no: number | null }>(
+    'SELECT max(run_no) AS run_no FROM rounds WHERE player_id = $1 AND set_date IS NULL',
+    [playerId],
+  );
+  return rows[0]?.run_no ?? null;
+}
+
+/** The run the next free-play round belongs to: the latest one, unless it has struck out. */
+async function activeRunNo(playerId: string): Promise<number> {
+  const latest = await latestRunNo(playerId);
+  if (latest == null) return 1;
+  return (await runStats(playerId, latest)).strikes >= MAX_STRIKES ? latest + 1 : latest;
+}
+
 export async function createFreeplayRound(player: PlayerRow): Promise<ClientRound> {
+  const runNo = await activeRunNo(player.id);
+  // an unanswered round comes back (reloading must not deal a fresh round and dodge a strike)
+  const pending = await q<RoundRow>(
+    `SELECT r.* FROM rounds r
+       LEFT JOIN guesses g ON g.round_id = r.id AND g.player_id = r.player_id
+      WHERE r.player_id = $1 AND r.set_date IS NULL AND r.run_no = $2 AND g.id IS NULL
+      ORDER BY r.created_at DESC
+      LIMIT 1`,
+    [player.id, runNo],
+  );
+  if (pending[0]) return toClientRound(pending[0]);
+
   const items = loadItems();
   const cf = getCountry(player.country);
   const { pairs, avg, count } = await playerRecent(player.id);
@@ -105,10 +155,10 @@ export async function createFreeplayRound(player: PlayerRow): Promise<ClientRoun
   }
 
   const rows = await q<RoundRow>(
-    `INSERT INTO rounds (id, player_id, item_a, qty_a, item_b, qty_b, round_type, difficulty, slider_min, slider_max)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+    `INSERT INTO rounds (id, player_id, item_a, qty_a, item_b, qty_b, round_type, difficulty, slider_min, slider_max, run_no)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
      RETURNING *`,
-    [id, player.id, spec.item_a, spec.qty_a, spec.item_b, spec.qty_b ?? null, spec.round_type, spec.difficulty, sliderMin, sliderMax],
+    [id, player.id, spec.item_a, spec.qty_a, spec.item_b, spec.qty_b ?? null, spec.round_type, spec.difficulty, sliderMin, sliderMax, runNo],
   );
   return toClientRound(rows[0]);
 }
@@ -139,6 +189,25 @@ export async function freeplayTotals(playerId: string): Promise<FreeplayTotals> 
     avg_score: scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null,
     current_streak: current,
     best_streak: best,
+    ...(await runSummary(playerId)),
+  };
+}
+
+/** The latest run (just ended, or in progress) and the player's longest run. */
+async function runSummary(playerId: string): Promise<Pick<FreeplayTotals, 'run' | 'best_run_rounds'>> {
+  const latest = await latestRunNo(playerId);
+  const stats = latest == null ? { rounds: 0, score: 0, strikes: 0 } : await runStats(playerId, latest);
+  const best = await q<{ best: number | null }>(
+    `SELECT max(n)::int AS best FROM (
+       SELECT count(g.id) AS n
+         FROM rounds r JOIN guesses g ON g.round_id = r.id AND g.player_id = r.player_id
+        WHERE r.player_id = $1 AND r.set_date IS NULL AND r.run_no IS NOT NULL
+        GROUP BY r.run_no) runs`,
+    [playerId],
+  );
+  return {
+    run: { ...stats, max_strikes: MAX_STRIKES, over: stats.strikes >= MAX_STRIKES },
+    best_run_rounds: best[0]?.best ?? 0,
   };
 }
 
@@ -197,6 +266,13 @@ export async function submitGuess(
     } catch (err) {
       if (err instanceof SessionExpiredError) throw new GuessError(403, 'daily session expired');
       throw err;
+    }
+  }
+  // a run that has struck out takes no more answers (e.g. a second tab)
+  if (round.set_date == null && round.run_no != null) {
+    const answered = await q('SELECT 1 FROM guesses WHERE player_id = $1 AND round_id = $2', [player.id, roundId]);
+    if (!answered.length && (await runStats(player.id, round.run_no)).strikes >= MAX_STRIKES) {
+      throw new GuessError(409, 'run over');
     }
   }
   const cf = getCountry(guessCountry);

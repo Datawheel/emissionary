@@ -5,7 +5,7 @@ import type { ConversionRow, Takeaway } from '@/lib/conversion';
 import type { ClientItem } from '@/lib/api-types';
 import type { Lang } from '@/lib/types';
 import { L, pluralWord, t } from '@/lib/i18n';
-import { formatCO2, formatItemQty, proseName } from '@/lib/format';
+import { formatCO2, formatItemQty, itemProse } from '@/lib/format';
 
 /** Ribbon semantics: bar color encodes how clean the electricity is for this row. */
 function barColor(dirtiness: number): string {
@@ -39,7 +39,7 @@ export default function ConversionTable({
     gHi - gLo > 0.05
       ? (Math.log10(row.gramsA) - gLo) / (gHi - gLo)
       : 1 - (Math.log10(row.qtyB) - minLog) / span;
-  const itemBName = proseName(L(itemB.name, lang), lang);
+  const itemBName = itemProse(itemB, lang);
 
   const noteText = note
     ? t(note.kind === 'a_cleaner' ? 'takeaway_cleaner' : 'takeaway_more', lang, {

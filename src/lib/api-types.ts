@@ -29,6 +29,10 @@ export interface FreeplayTotals {
   avg_score: number | null;
   current_streak: number;
   best_streak: number;
+  /** the latest survival run — in progress, or just ended when `over` */
+  run: { rounds: number; score: number; strikes: number; max_strikes: number; over: boolean };
+  /** the player's longest run, in rounds answered */
+  best_run_rounds: number;
 }
 
 /** Per-single-unit basics ("1 min of hairdryer = 0.03 kWh · 1.2 g CO₂") — the
