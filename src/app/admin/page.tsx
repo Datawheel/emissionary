@@ -1,3 +1,5 @@
+import { cookies } from 'next/headers';
+import { ADMIN_COOKIE, adminKey, validSession } from '@/lib/admin-auth';
 import { loadCountryFactors, loadItems, getCountry } from '@/lib/data';
 import { computeCO2 } from '@/lib/emissions';
 import { formatCO2 } from '@/lib/format';
@@ -10,24 +12,33 @@ export const dynamic = 'force-dynamic';
 /**
  * Internal inventory page for playtest feedback: every item numbered, with
  * its physical value and hourly emissions at the grid extremes, today's daily
- * set, and the most-served pairs. Lightly password-protected — it's a game,
- * not sensitive data.
+ * set, and the most-served pairs. It reveals today's Daily Game answers, so it
+ * sits behind ADMIN_KEY (see lib/admin-auth.ts).
  */
+export const metadata = { robots: { index: false, follow: false } };
+
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams: Promise<{ key?: string }>;
+  searchParams: Promise<{ error?: string }>;
 }) {
-  const { key } = await searchParams;
-  const adminKey = process.env.ADMIN_KEY ?? 'dev-admin';
-  if (key !== adminKey) {
+  const { error } = await searchParams;
+  if (!adminKey()) {
     return (
       <main className="screen" style={{ paddingTop: 60 }}>
-        <form method="GET" className="card" style={{ display: 'flex', gap: 8 }}>
+        <p className="muted">Admin is disabled: set ADMIN_KEY in .env.</p>
+      </main>
+    );
+  }
+  if (!validSession((await cookies()).get(ADMIN_COOKIE)?.value)) {
+    return (
+      <main className="screen" style={{ paddingTop: 60 }}>
+        <form method="POST" action="/api/admin/login" className="card" style={{ display: 'flex', gap: 8 }}>
           <input
             type="password"
-            name="key"
+            name="password"
             placeholder="Password"
+            autoComplete="current-password"
             autoFocus
             className="card"
             style={{ flex: 1, padding: '10px 12px', fontSize: '1rem' }}
@@ -39,6 +50,7 @@ export default async function AdminPage({
             →
           </button>
         </form>
+        {error && <p className="muted" style={{ color: 'var(--alert)', marginTop: 8 }}>Wrong password.</p>}
       </main>
     );
   }

@@ -582,14 +582,16 @@ const UI_STRINGS = {
     zh: '所有玩家',
   },
   you: { en: 'You', es: 'Tú', fr: 'Toi', de: 'Du', ru: 'Вы', zh: '你' },
-  you_rank: {
-    en: 'You: #{rank} of {total} (top {pct}%)',
-    es: 'Tú: #{rank} de {total} (top {pct}%)',
-    fr: 'Toi : n° {rank} sur {total} (top {pct} %)',
-    de: 'Du: Platz {rank} von {total} (Top {pct} %)',
-    ru: 'Вы: №{rank} из {total} (топ-{pct}%)',
-    zh: '你：第 {rank} 名，共 {total} 人（前 {pct}%）',
+  /** the viewer among every player, anonymous included (histogram card) */
+  you_top_pct: {
+    en: 'You: top {pct}% of all players ({total})',
+    es: 'Tú: top {pct}% de todos los jugadores ({total})',
+    fr: 'Toi : top {pct} % de tous les joueurs ({total})',
+    de: 'Du: Top {pct} % aller Spieler ({total})',
+    ru: 'Вы: топ-{pct}% среди всех игроков ({total})',
+    zh: '你：位列所有玩家（{total} 人）的前 {pct}%',
   },
+  anonymous_you: { en: 'Anonymous 🦊', es: 'Anónimo 🦊', fr: 'Anonyme 🦊', de: 'Anonym 🦊', ru: 'Аноним 🦊', zh: '匿名 🦊' },
   /** axis labels under the leaderboard histogram */
   axis_days: { en: 'days', es: 'días', fr: 'jours', de: 'Tage', ru: 'дни', zh: '天数' },
   axis_points: { en: 'points', es: 'puntos', fr: 'points', de: 'Punkte', ru: 'очки', zh: '分数' },

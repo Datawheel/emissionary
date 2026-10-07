@@ -23,7 +23,7 @@ export default function LeaderboardClient({
     // set after mount — localStorage is client-only (avoids hydration mismatch)
     if (canClaimName && !namePromptDismissed()) setShowNamePrompt(true);
   }, [canClaimName]);
-  const [scope, setScope] = useState<Scope>('daily');
+  const [scope, setScope] = useState<Scope>('alltime');
   const [country, setCountry] = useState<string>('');
   const [page, setPage] = useState<LeaderboardPage | null>(null);
   const [loading, setLoading] = useState(true);
@@ -42,8 +42,8 @@ export default function LeaderboardClient({
   }, [scope, country, load]);
 
   const scopes: { key: Scope; label: string }[] = [
-    { key: 'daily', label: t('today', lang) },
     { key: 'alltime', label: t('all_time', lang) },
+    { key: 'daily', label: t('today', lang) },
     { key: 'days', label: t('days_played', lang) },
   ];
 
@@ -105,7 +105,7 @@ export default function LeaderboardClient({
             <div key={`${r.rank}-${r.name}`} className={`conversion-row${r.is_you ? ' own' : ''}`}>
               <span className="muted">#{r.rank}</span>
               <span>
-                {r.flag} {r.name} {r.is_you && <strong>· {t('you', lang)}</strong>}
+                {r.flag} {r.name || t('anonymous_you', lang)} {r.is_you && <strong>· {t('you', lang)}</strong>}
               </span>
               <span className="value">{rowValue(scope, r, lang)}</span>
             </div>
@@ -114,14 +114,14 @@ export default function LeaderboardClient({
             <div className="conversion-row own" style={{ borderTop: '2px dashed var(--line)' }}>
               <span className="muted">#{page.you.rank}</span>
               <span>
-                {page.you.flag} {page.you.name} <strong>· {t('you', lang)}</strong>
+                {page.you.flag} {page.you.name || t('anonymous_you', lang)} <strong>· {t('you', lang)}</strong>
               </span>
               <span className="value">{rowValue(scope, page.you, lang)}</span>
             </div>
           )}
         </section>
       )}
-      {page?.distribution && page.total_players > 0 && (
+      {page?.distribution && page.all_players > 0 && (
         <Distribution page={page} lang={lang} />
       )}
     </main>
@@ -146,7 +146,6 @@ function Distribution({ page, lang }: { page: LeaderboardPage; lang: Lang }) {
       : youValue != null
         ? 0
         : null;
-  const pct = page.you ? Math.max(1, Math.round((100 * page.you.rank) / Math.max(1, page.total_players))) : null;
 
   return (
     <section className="card">
@@ -174,9 +173,9 @@ function Distribution({ page, lang }: { page: LeaderboardPage; lang: Lang }) {
         <span>{d.metric === 'days' ? t('axis_days', lang) : t('axis_points', lang)}</span>
         <span>{Math.round(d.max)}</span>
       </div>
-      {page.you && pct != null && (
+      {page.you_top_pct != null && (
         <p style={{ marginTop: 6, fontWeight: 600 }}>
-          {t('you_rank', lang, { rank: page.you.rank, total: page.total_players, pct })}
+          {t('you_top_pct', lang, { pct: page.you_top_pct, total: page.all_players })}
         </p>
       )}
     </section>

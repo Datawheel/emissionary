@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { createPlayer, currentPlayer, setPlayerCookie } from '@/lib/player';
 import { loadCountryFactors } from '@/lib/data';
 import { q } from '@/lib/db';
-import { clientIp, rateLimit } from '@/lib/ratelimit';
+import { clientIp, limited, rateLimit } from '@/lib/ratelimit';
 
 const bodySchema = z.object({ country: z.string().length(3) });
 
@@ -29,6 +29,8 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  const tooMany = limited(req, 'country', 30, 60 * 60 * 1000);
+  if (tooMany) return tooMany;
   const player = await currentPlayer();
   if (!player) return NextResponse.json({ error: 'no player' }, { status: 401 });
   const parsed = bodySchema.safeParse(await req.json().catch(() => null));

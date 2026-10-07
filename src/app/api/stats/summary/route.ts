@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
+import { limited } from '@/lib/ratelimit';
 import { q } from '@/lib/db';
 import { loadItems } from '@/lib/data';
 import { LANGS } from '@/lib/types';
@@ -8,7 +9,9 @@ import { LANGS } from '@/lib/types';
  * (median signed log-error), participation counts, most-misjudged pairs.
  * Pure SQL over guesses — no ETL.
  */
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const tooMany = limited(req, 'stats', 30, 60 * 1000);
+  if (tooMany) return tooMany;
   const [participation] = await q<{ players: string; guesses: string }>(
     `SELECT count(DISTINCT player_id)::text AS players, count(*)::text AS guesses FROM guesses`,
   );

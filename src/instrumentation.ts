@@ -17,6 +17,9 @@ export function register() {
       `Emissionary will not start: set ${bad.join(' and ')} in .env (generate with: openssl rand -hex 32). See DEPLOY.md.`,
     );
   }
+  if (!process.env.ADMIN_KEY || process.env.ADMIN_KEY === 'change_me_admin_key') {
+    console.warn('[emissionary] ADMIN_KEY is not set — /admin is disabled');
+  }
   for (const name of ['DATABASE_URL', 'LAUNCH_DATE', 'SITE_URL']) {
     if (!process.env[name]) console.warn(`[emissionary] ${name} is not set — see DEPLOY.md`);
   }

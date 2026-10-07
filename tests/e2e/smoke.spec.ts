@@ -124,7 +124,9 @@ for (const lang of ['es', 'fr', 'de', 'ru', 'zh']) {
       await slider.focus();
       await page.keyboard.press('ArrowRight');
       await page.locator('.bottom-bar button').click();
-      await page.locator('details.breakdown summary').first().click(); // open the formula breakdown
+      // open the formula breakdown directly: with longer translations the toggle can sit under the
+      // fixed bottom bar, where a pointer click is (correctly) refused until the test times out
+      await page.locator('details.breakdown').first().evaluate((d) => ((d as HTMLDetailsElement).open = true));
     } else {
       await binaryCard.click();
     }

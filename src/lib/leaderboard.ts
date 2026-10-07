@@ -4,6 +4,7 @@ import type { PlayerRow } from './player';
 
 export interface LeaderboardRow {
   rank: number;
+  /** empty for the viewer's own row while they are anonymous (the client shows a localized label) */
   name: string;
   flag: string;
   country: string;
@@ -17,8 +18,13 @@ export interface LeaderboardPage {
   scope: 'daily' | 'alltime' | 'days';
   rows: LeaderboardRow[];
   you: LeaderboardRow | null;
+  /** players in the ranking above: named players, plus the viewer */
   total_players: number;
   offset: number;
+  /** the viewer's standing among ALL players (anonymous included), as a top-X% figure */
+  you_top_pct: number | null;
+  /** every player with a result in this scope, anonymous included */
+  all_players: number;
   /** histogram of the ranked metric across ALL players, for context */
   distribution: {
     metric: 'score' | 'days';
@@ -37,9 +43,11 @@ function displayName(name: string, disc: number | null): string {
 
 /**
  * Leaderboards are queries over guesses — no mutable score tables (spec §15.2).
- * ONLY Daily Game rounds count: Free Play is practice and never earns board
- * points (volume must not be a strategy). Anonymous players (name IS NULL)
- * are excluded from public rows but always see their own rank (spec §10).
+ * ONLY Daily Game rounds count: Free Play never earns board points (volume must
+ * not be a strategy). The public ranking is named players PLUS the viewer, so
+ * an anonymous viewer sees exactly where they would stand among the names
+ * listed — one population for the list and the viewer's row (spec §10).
+ * Ranks use SQL rank(): ties share a rank.
  *
  * Scopes: 'daily' = today's completed sets; 'alltime' = cumulative daily
  * points; 'days' = loyalty, ranked by distinct days played.
@@ -76,6 +84,8 @@ export async function leaderboard(
 
   const countryFilter = opts.country ? `AND p.country = $${params.length + 1}` : '';
   if (opts.country) params.push(opts.country);
+  params.push(player?.id ?? null);
+  const viewer = `$${params.length}::uuid`;
 
   const ranked = `
     WITH totals AS (${totalsSql}),
@@ -83,57 +93,50 @@ export async function leaderboard(
       SELECT t.player_id, t.score, t.days, t.tiebreak, p.name, p.name_discriminator, p.country,
              rank() OVER (ORDER BY ${order}) AS rank
         FROM totals t JOIN players p ON p.id = t.player_id
-       WHERE p.name IS NOT NULL ${countryFilter}
+       WHERE (p.name IS NOT NULL OR p.id = ${viewer}) ${countryFilter}
     )`;
 
-  const rows = await q<{
-    player_id: string; score: number; days: number | null; name: string;
+  type Ranked = {
+    player_id: string; score: number; days: number | null; name: string | null;
     name_discriminator: number | null; country: string; rank: string;
-  }>(
-    `${ranked} SELECT * FROM named ORDER BY rank OFFSET $${params.length + 1} LIMIT ${PAGE}`,
+  };
+  const rows = await q<Ranked>(
+    `${ranked} SELECT * FROM named ORDER BY rank, name OFFSET $${params.length + 1} LIMIT ${PAGE}`,
     [...params, offset],
   );
   const count = await q<{ n: string }>(`${ranked} SELECT count(*)::text AS n FROM named`, params);
 
-  const toRow = (r: (typeof rows)[number], isYou: boolean): LeaderboardRow => ({
+  const toRow = (r: Ranked): LeaderboardRow => ({
     rank: Number(r.rank),
-    name: displayName(r.name, r.name_discriminator),
+    name: r.name ? displayName(r.name, r.name_discriminator) : '',
     flag: safeFlag(r.country),
     country: r.country,
     score: r.score,
     days: r.days,
-    is_you: isYou,
+    is_you: r.player_id === player?.id,
   });
 
   let you: LeaderboardRow | null = null;
   if (player) {
-    const inPage = rows.find((r) => r.player_id === player.id);
-    if (inPage) {
-      you = toRow(inPage, true);
-    } else {
-      const own = await q<{ score: number; days: number | null; rank: string }>(
-        `WITH totals AS (${totalsSql}),
-         all_ranked AS (
-           SELECT t.player_id, t.score, t.days,
-                  rank() OVER (ORDER BY ${order}) AS rank
-             FROM totals t
-         )
-         SELECT score, days, rank::text FROM all_ranked WHERE player_id = $${params.length + 1}`,
-        [...params, player.id],
-      );
-      if (own[0]) {
-        you = {
-          rank: Number(own[0].rank),
-          name: player.name ? displayName(player.name, player.name_discriminator) : 'Anonymous 🦊',
-          flag: safeFlag(player.country),
-          country: player.country,
-          score: own[0].score,
-          days: own[0].days,
-          is_you: true,
-        };
-      }
-    }
+    const own =
+      rows.find((r) => r.player_id === player.id) ??
+      (await q<Ranked>(`${ranked} SELECT * FROM named WHERE player_id = ${viewer}`, params))[0];
+    if (own) you = toRow(own);
   }
+
+  // the viewer among ALL players (anonymous included), for the histogram card
+  const scopeParams = params.slice(0, scope === 'daily' ? 1 : 0);
+  const all = await q<{ n: string; mine: string | null }>(
+    `WITH totals AS (${totalsSql}),
+     ranked_all AS (SELECT player_id, rank() OVER (ORDER BY ${order}) AS rank FROM totals)
+     SELECT count(*)::text AS n,
+            (SELECT rank::text FROM ranked_all WHERE player_id = $${scopeParams.length + 1}::uuid) AS mine
+       FROM ranked_all`,
+    [...scopeParams, player?.id ?? null],
+  );
+  const allPlayers = Number(all[0]?.n ?? 0);
+  const allRank = all[0]?.mine != null ? Number(all[0].mine) : null;
+  const youTopPct = allRank != null && allPlayers > 0 ? Math.max(1, Math.round((100 * allRank) / allPlayers)) : null;
 
   // distribution of the ranked metric across ALL players (anonymous included —
   // it is context, not identity)
@@ -141,7 +144,7 @@ export async function leaderboard(
   let distribution: LeaderboardPage['distribution'] = null;
   const range = await q<{ mn: number | null; mx: number | null }>(
     `WITH totals AS (${totalsSql}) SELECT min(${metric})::float AS mn, max(${metric})::float AS mx FROM totals`,
-    params.slice(0, scope === 'daily' ? 1 : 0),
+    scopeParams,
   );
   const mn = range[0]?.mn;
   const mx = range[0]?.mx;
@@ -152,7 +155,7 @@ export async function leaderboard(
         `WITH totals AS (${totalsSql})
          SELECT width_bucket(${metric}, $${(scope === 'daily' ? 1 : 0) + 1}::float, $${(scope === 'daily' ? 1 : 0) + 2}::float, ${BUCKETS})::int AS bucket, count(*)::text AS n
            FROM totals GROUP BY 1`,
-        [...params.slice(0, scope === 'daily' ? 1 : 0), mn, mx + 1e-9],
+        [...scopeParams, mn, mx + 1e-9],
       );
       for (const h of hist) {
         const idx = Math.min(BUCKETS - 1, Math.max(0, h.bucket - 1));
@@ -161,7 +164,7 @@ export async function leaderboard(
     } else {
       const total = await q<{ n: string }>(
         `WITH totals AS (${totalsSql}) SELECT count(*)::text AS n FROM totals`,
-        params.slice(0, scope === 'daily' ? 1 : 0),
+        scopeParams,
       );
       buckets[0] = Number(total[0].n);
     }
@@ -170,10 +173,12 @@ export async function leaderboard(
 
   return {
     scope,
-    rows: rows.map((r) => toRow(r, r.player_id === player?.id)),
+    rows: rows.map(toRow),
     you,
     total_players: Number(count[0]?.n ?? 0),
     offset,
+    you_top_pct: youTopPct,
+    all_players: allPlayers,
     distribution,
   };
 }

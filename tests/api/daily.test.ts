@@ -149,11 +149,60 @@ describe('leaderboard', () => {
     await playFullDaily(alice, DATE);
     await playFullDaily(anon, DATE);
     const page = await leaderboard('daily', anon, { date: DATE });
-    expect(page.rows.some((r) => r.name.includes('Anonymous'))).toBe(false);
     expect(page.rows.some((r) => r.name === 'Alice')).toBe(true);
+    // the anonymous viewer is ranked among the named players, unnamed
     expect(page.you).not.toBeNull();
     expect(page.you!.is_you).toBe(true);
-    expect(page.you!.name).toContain('Anonymous');
+    expect(page.you!.name).toBe('');
+    // other anonymous players never appear publicly
+    const other = await makePlayer('DEU');
+    await playFullDaily(other, DATE);
+    const seenByAlice = await leaderboard('daily', alice, { date: DATE });
+    expect(seenByAlice.rows.map((r) => r.name)).toEqual(['Alice']);
+  });
+
+  it('ranks the viewer in the same population as the list (regression: #21 with 208 shown below #3 with 122)', async () => {
+    const rounds = await getDailyRounds(DATE);
+    const scoreAs = (p: PlayerRow, score: number) =>
+      q(
+        `INSERT INTO guesses (id, player_id, round_id, country, guess, truth, score)
+         VALUES ($1, $2, $3, $4, 1, 1, $5)`,
+        [randomUUID(), p.id, rounds[1].id, p.country, score],
+      );
+    for (const [name, score] of [['Ana', 651], ['Ben', 240], ['Cy', 122], ['Di', 90]] as const) {
+      await scoreAs(await makePlayer('FRA', name), score);
+    }
+    for (let i = 0; i < 10; i++) await scoreAs(await makePlayer('FRA'), 300); // anonymous, invisible
+    const viewer = await makePlayer('FRA'); // anonymous
+    await scoreAs(viewer, 208);
+
+    const page = await leaderboard('alltime', viewer, {});
+    expect(page.rows.map((r) => [r.rank, r.name, r.score])).toEqual([
+      [1, 'Ana', 651],
+      [2, 'Ben', 240],
+      [3, '', 208],
+      [4, 'Cy', 122],
+      [5, 'Di', 90],
+    ]);
+    expect(page.rows[2].is_you).toBe(true);
+    expect(page.you!.rank).toBe(3);
+    expect(page.total_players).toBe(5);
+    // among ALL 15 players: Ana, ten anonymous 300s and Ben are ahead → 13th → top 87%
+    expect(page.all_players).toBe(15);
+    expect(page.you_top_pct).toBe(87);
+  });
+
+  it('gives tied scores the same rank', async () => {
+    const rounds = await getDailyRounds(DATE);
+    for (const name of ['Tie1', 'Tie2']) {
+      const p = await makePlayer('FRA', name);
+      await q(
+        `INSERT INTO guesses (id, player_id, round_id, country, guess, truth, score) VALUES ($1, $2, $3, 'FRA', 1, 1, 100)`,
+        [randomUUID(), p.id, rounds[1].id],
+      );
+    }
+    const page = await leaderboard('alltime', null, {});
+    expect(page.rows.map((r) => r.rank)).toEqual([1, 1]);
   });
 
   it('filters by country', async () => {

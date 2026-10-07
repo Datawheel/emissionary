@@ -144,10 +144,10 @@ export default function DailyClient({
               {t('leaderboard', lang)} · {t('today', lang)}
             </h2>
             {top.map((r) => (
-              <div key={r.rank + r.name} className={`conversion-row${r.is_you ? ' own' : ''}`}>
+              <div key={`${r.rank}-${r.name}-${r.is_you}`} className={`conversion-row${r.is_you ? ' own' : ''}`}>
                 <span className="muted">#{r.rank}</span>
                 <span>
-                  {r.flag} {r.name}
+                  {r.flag} {r.name || t('anonymous_you', lang)}
                 </span>
                 <span className="value">{r.score}</span>
               </div>

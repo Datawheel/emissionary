@@ -34,7 +34,7 @@ cp .env.example .env
 | `DAILY_SALT` | Seeds the daily game sets. `openssl rand -hex 32`. **Never change after launch.** |
 | `LAUNCH_DATE` | UTC date of Daily Game #1 (`YYYY-MM-DD`); drives the "#N" in share texts. Set to the public launch day. |
 | `SITE_URL` | Public base URL, e.g. `https://emissionary.oec.world` (used for social-preview links). |
-| `ADMIN_KEY` | Password for `/admin` (usage inventory, today's daily set). Defaults to `dev-admin` if unset — set your own. |
+| `ADMIN_KEY` | Password for `/admin`. **It shows today's Daily Game answers**, so use a long random value (`openssl rand -base64 24`). Without it, `/admin` is disabled. |
 
 In production the server **refuses to start** while `PLAYER_TOKEN_SECRET` or `DAILY_SALT` are missing or still hold the placeholder values.
 
@@ -50,7 +50,7 @@ npm run build
 
 ## 6. Run
 
-`npm start -- -p 3040` (or any free port). Example systemd unit:
+Run it on **localhost only**, behind the proxy. Example systemd unit (the sandboxing lines make the code read-only to the running app, so even a compromised process can't modify it or touch the rest of the system):
 
 ```ini
 [Unit]
@@ -62,12 +62,32 @@ User=emissionary
 WorkingDirectory=/srv/emissionary
 EnvironmentFile=/srv/emissionary/.env
 Environment=NODE_ENV=production
-ExecStart=/usr/bin/node node_modules/next/dist/bin/next start -p 3040
+ExecStart=/usr/bin/node node_modules/next/dist/bin/next start -H 127.0.0.1 -p 3040
 Restart=always
+
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/srv/emissionary/.next/cache
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+RestrictNamespaces=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+UMask=0077
 
 [Install]
 WantedBy=multi-user.target
 ```
+
+Create `.next/cache` before the first start (`mkdir -p .next/cache`), make `.env` readable only by the service user (`chmod 640 .env`), and check the result with `systemd-analyze security emissionary`.
 
 Example nginx server block:
 
@@ -77,6 +97,7 @@ server {
   location / {
     proxy_pass http://127.0.0.1:3040;
     proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
   }
@@ -84,7 +105,7 @@ server {
 }
 ```
 
-The app relies on `X-Forwarded-For` for per-IP rate limiting, so keep that header.
+Rate limiting is per client IP and trusts only what the proxy writes: `X-Real-IP` (which `proxy_set_header` overwrites, so clients can't forge it), else the last `X-Forwarded-For` entry. If another load balancer or CDN sits in front of nginx, set `X-Real-IP` from that layer's real-client header instead.
 
 ## 7. Verify
 
@@ -94,6 +115,15 @@ npm run e2e       # Playwright smoke test on a phone-sized viewport (builds/star
 ```
 
 Then open the site, choose a country, play a round, and check `/about`, `/leaderboard`, and `/admin?key=<ADMIN_KEY>`.
+
+## Security notes
+
+- **Secrets** live only in `.env` (never committed; the zip from `npm run package` excludes it). Production refuses to start with missing or placeholder `PLAYER_TOKEN_SECRET`/`DAILY_SALT`.
+- **Database**: PostgreSQL should listen on localhost only, and the database must be owned by the app role. Don't reuse the test role (`emissionary_test`, password in the test files) on a production server.
+- **Headers**: the app sends its own Content-Security-Policy, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy` and HSTS (`next.config.mjs`).
+- **Admin** (`/admin`) takes the password by POST and sets an 8-hour `HttpOnly`/`SameSite=Strict` session cookie; login is rate-limited and the page is `noindex`/`no-store`.
+- **Players** are anonymous by default; sessions are HMAC-signed cookies. No personal data beyond an optional chosen nickname and country is stored.
+- Keep dependencies patched: run `npm audit` before each deploy (it reported 0 vulnerabilities at handoff).
 
 ## Languages
 
