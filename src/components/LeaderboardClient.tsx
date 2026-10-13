@@ -6,6 +6,8 @@ import type { Lang } from '@/lib/types';
 import { pluralWord, t } from '@/lib/i18n';
 import type { CountryOption } from '@/lib/country-names';
 import NamePrompt, { namePromptDismissed } from './NamePrompt';
+import OecBadge from './OecBadge';
+import { OEC_LINKED_EVENT, OEC_SETTLED_EVENT } from './OecSessionLink';
 
 type Scope = 'daily' | 'alltime' | 'days';
 
@@ -20,8 +22,20 @@ export default function LeaderboardClient({
 }) {
   const [showNamePrompt, setShowNamePrompt] = useState(false);
   useEffect(() => {
-    // set after mount — localStorage is client-only (avoids hydration mismatch)
-    if (canClaimName && !namePromptDismissed()) setShowNamePrompt(true);
+    // set after mount — localStorage and the iframe state are client-only (avoids hydration mismatch)
+    if (!canClaimName || namePromptDismissed()) {
+      setShowNamePrompt(false);
+      return;
+    }
+    // Inside OEC the visitor may be signed in: wait for the handshake to finish, since it
+    // can hand over a name and make the prompt pointless. A guest sees it right after.
+    if (window === window.top || window.__emyOecSettled) {
+      setShowNamePrompt(true);
+      return;
+    }
+    const show = () => setShowNamePrompt(true);
+    window.addEventListener(OEC_SETTLED_EVENT, show, { once: true });
+    return () => window.removeEventListener(OEC_SETTLED_EVENT, show);
   }, [canClaimName]);
   const [scope, setScope] = useState<Scope>('alltime');
   const [country, setCountry] = useState<string>('');
@@ -39,6 +53,13 @@ export default function LeaderboardClient({
 
   useEffect(() => {
     void load(scope, country);
+  }, [scope, country, load]);
+
+  useEffect(() => {
+    // the OEC link changed who "you" are (or your name): reload what was fetched before it
+    const reload = () => void load(scope, country);
+    window.addEventListener(OEC_LINKED_EVENT, reload);
+    return () => window.removeEventListener(OEC_LINKED_EVENT, reload);
   }, [scope, country, load]);
 
   const scopes: { key: Scope; label: string }[] = [
@@ -101,22 +122,32 @@ export default function LeaderboardClient({
       ) : (
         <section className="card">
           {page.rows.length === 0 && <p className="muted">—</p>}
+          {page.rows.length > 0 && <HeaderRow scope={scope} lang={lang} showDays={page.rows[0].days != null} />}
           {page.rows.map((r) => (
-            <div key={`${r.rank}-${r.name}`} className={`conversion-row${r.is_you ? ' own' : ''}`}>
+            <div key={`${r.rank}-${r.name}`} className={`conversion-row lb-row${r.days != null ? ' with-days' : ''}${r.is_you ? ' own' : ''}`}>
               <span className="muted">#{r.rank}</span>
-              <span>
-                {r.flag} {r.name || t('anonymous_you', lang)} {r.is_you && <strong>· {t('you', lang)}</strong>}
+              <span className="lb-name">
+                <span aria-hidden="true">{r.flag}</span>
+                <span className="lb-name-text">{r.name || t('anonymous_you', lang)}</span>
+                {r.oec && <OecBadge lang={lang} />}
+                {r.is_you && <strong className="lb-you">· {t('you', lang)}</strong>}
               </span>
-              <span className="value">{rowValue(scope, r, lang)}</span>
+              <ValueCells scope={scope} r={r} />
             </div>
           ))}
           {youOffPage && page.you && (
-            <div className="conversion-row own" style={{ borderTop: '2px dashed var(--line)' }}>
+            <div
+              className={`conversion-row lb-row${page.you.days != null ? ' with-days' : ''} own`}
+              style={{ borderTop: '2px dashed var(--line)' }}
+            >
               <span className="muted">#{page.you.rank}</span>
-              <span>
-                {page.you.flag} {page.you.name || t('anonymous_you', lang)} <strong>· {t('you', lang)}</strong>
+              <span className="lb-name">
+                <span aria-hidden="true">{page.you.flag}</span>
+                <span className="lb-name-text">{page.you.name || t('anonymous_you', lang)}</span>
+                {page.you.oec && <OecBadge lang={lang} />}
+                <strong className="lb-you">· {t('you', lang)}</strong>
               </span>
-              <span className="value">{rowValue(scope, page.you, lang)}</span>
+              <ValueCells scope={scope} r={page.you} />
             </div>
           )}
         </section>
@@ -129,10 +160,29 @@ export default function LeaderboardClient({
 }
 
 /** "3 days · 1,240" when sorting by days played; "1,240 · 3 days" otherwise. */
-function rowValue(scope: Scope, r: { score: number; days?: number | null }, lang: Lang): string {
-  if (r.days == null) return String(r.score);
-  const days = `${r.days} ${pluralWord('days', r.days, lang)}`;
-  return scope === 'days' ? `${days} · ${r.score}` : `${r.score} · ${days}`;
+/** Points (and, on the all-time/days boards, days played) as separate cells; the ranked one is bold. */
+function ValueCells({ scope, r }: { scope: Scope; r: { score: number; days?: number | null } }) {
+  if (r.days == null) return <span className="value">{r.score}</span>;
+  return (
+    <>
+      <span className="value" style={{ fontWeight: scope === 'days' ? 400 : 700 }}>{r.score}</span>
+      <span className="value" style={{ fontWeight: scope === 'days' ? 700 : 400 }}>{r.days}</span>
+    </>
+  );
+}
+
+function HeaderRow({ scope, lang, showDays }: { scope: Scope; lang: Lang; showDays: boolean }) {
+  const cap = (w: string) => w.charAt(0).toUpperCase() + w.slice(1);
+  return (
+    <div className={`conversion-row lb-row lb-head muted${showDays ? ' with-days' : ''}`} aria-hidden="true">
+      <span />
+      <span />
+      <span className="value" style={{ fontWeight: scope === 'days' ? 400 : 700 }}>{cap(pluralWord('points', 2, lang))}</span>
+      {showDays && (
+        <span className="value" style={{ fontWeight: scope === 'days' ? 700 : 400 }}>{cap(pluralWord('days', 2, lang))}</span>
+      )}
+    </div>
+  );
 }
 
 /** Histogram of all players' results with the viewer's bucket highlighted. */

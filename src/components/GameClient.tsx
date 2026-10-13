@@ -12,6 +12,7 @@ import { pluralWord, t } from '@/lib/i18n';
 import RoundView from './RoundView';
 import CountryPicker from './CountryPicker';
 import type { CountryOption } from '@/lib/country-names';
+import { PLAYER_READY_EVENT } from './OecSessionLink';
 
 type Phase = 'country' | 'loading' | 'guess' | 'reveal' | 'over' | 'error';
 
@@ -69,6 +70,7 @@ export default function GameClient({
     });
     if (res.ok) {
       setCountry(iso3);
+      window.dispatchEvent(new Event(PLAYER_READY_EVENT));
       void fetchNext();
     } else {
       setPhase('error');

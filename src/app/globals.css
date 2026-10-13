@@ -531,6 +531,57 @@ details.breakdown summary {
   font-size: 0.95rem;
 }
 
+.lb-row {
+  grid-template-columns: 2.6rem minmax(0, 1fr) auto;
+}
+
+.lb-row.with-days {
+  grid-template-columns: 2.6rem minmax(0, 1fr) auto auto;
+}
+
+.lb-row .value {
+  min-width: 3.4rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* name cell: flag + name (ellipsis) + badges that never shrink or wrap */
+.lb-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.lb-name > * {
+  flex-shrink: 0;
+}
+
+.lb-name .lb-name-text {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 400px) {
+  .lb-row,
+  .lb-row.with-days {
+    gap: 6px;
+    font-size: 0.9rem;
+  }
+
+  .lb-row .value {
+    min-width: 2.8rem;
+  }
+}
+
+.lb-row.lb-head {
+  padding: 2px 0 6px;
+  font-size: 0.8rem;
+}
+
 .conversion-row:last-child {
   border-bottom: none;
 }

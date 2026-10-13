@@ -592,6 +592,7 @@ const UI_STRINGS = {
     zh: '你：位列所有玩家（{total} 人）的前 {pct}%',
   },
   anonymous_you: { en: 'Anonymous 🦊', es: 'Anónimo 🦊', fr: 'Anonyme 🦊', de: 'Anonym 🦊', ru: 'Аноним 🦊', zh: '匿名 🦊' },
+  oec_account: { en: 'OEC account', es: 'Cuenta OEC', fr: 'Compte OEC', de: 'OEC-Konto', ru: 'Аккаунт OEC', zh: 'OEC 账户' },
   /** axis labels under the leaderboard histogram */
   axis_days: { en: 'days', es: 'días', fr: 'jours', de: 'Tage', ru: 'дни', zh: '天数' },
   axis_points: { en: 'points', es: 'puntos', fr: 'points', de: 'Punkte', ru: 'очки', zh: '分数' },
