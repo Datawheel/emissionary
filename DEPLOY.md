@@ -34,6 +34,8 @@ cp .env.example .env
 | `DAILY_SALT` | Seeds the daily game sets. `openssl rand -hex 32`. **Never change after launch.** |
 | `LAUNCH_DATE` | UTC date of Daily Game #1 (`YYYY-MM-DD`); drives the "#N" in share texts. Set to the public launch day. |
 | `SITE_URL` | Public base URL, e.g. `https://emissionary.oec.world` (used for social-preview links). |
+| `GAMES_TOKEN_SECRET` | Must equal the OEC site's `GAMES_TOKEN_SECRET`. It verifies the signed identity oec.world sends when the game is embedded. Without it everyone stays anonymous (no error). |
+| `EMBED_PARENTS` | Optional. Extra origins allowed to embed the game, e.g. `http://localhost:3000` to test a production build against a local OEC. Leave unset in production. |
 | `ADMIN_KEY` | Password for `/admin`. **It shows today's Daily Game answers**, so use a long random value (`openssl rand -base64 24`). Without it, `/admin` is disabled. |
 
 In production the server **refuses to start** while `PLAYER_TOKEN_SECRET` or `DAILY_SALT` are missing or still hold the placeholder values.
@@ -107,6 +109,17 @@ server {
 
 Rate limiting is per client IP and trusts only what the proxy writes: `X-Real-IP` (which `proxy_set_header` overwrites, so clients can't forge it), else the last `X-Forwarded-For` entry. If another load balancer or CDN sits in front of nginx, set `X-Real-IP` from that layer's real-client header instead.
 
+## Docker (OEC hosts)
+
+The OEC hosts run it like World Trade Cup: `Dockerfile`, `compose.yaml` and `deploy_latest.sh`. Create `.env` as in section 4 (`DATABASE_URL` must be reachable from the container, e.g. `host.docker.internal` for a Postgres on the host), then:
+
+```bash
+SYNC_ITEMS=1 ./deploy_latest.sh   # first deploy, and after data changes
+./deploy_latest.sh                # any other redeploy
+```
+
+The entrypoint applies the SQL migrations on every start; items and country factors are only synced when `SYNC_ITEMS=1` (the sync bumps item versions). The container listens on `127.0.0.1:3040`; point nginx (section 6) at it. Sections 5 and 6 (systemd) are the alternative without Docker.
+
 ## 7. Verify
 
 ```bash
@@ -120,7 +133,7 @@ Then open the site, choose a country, play a round, and check `/about`, `/leader
 
 - **Secrets** live only in `.env` (never committed; the zip from `npm run package` excludes it). Production refuses to start with missing or placeholder `PLAYER_TOKEN_SECRET`/`DAILY_SALT`.
 - **Database**: PostgreSQL should listen on localhost only, and the database must be owned by the app role. Don't reuse the test role (`emissionary_test`, password in the test files) on a production server.
-- **Headers**: the app sends its own Content-Security-Policy, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy` and HSTS (`next.config.mjs`).
+- **Headers**: the app sends its own Content-Security-Policy, `frame-ancestors` limited to `oec.world` and `*.oec.world` (so the OEC games hub can embed it), `nosniff`, `Referrer-Policy`, `Permissions-Policy` and HSTS (`next.config.mjs`).
 - **Admin** (`/admin`) takes the password by POST and sets an 8-hour `HttpOnly`/`SameSite=Strict` session cookie; login is rate-limited and the page is `noindex`/`no-store`.
 - **Players** are anonymous by default; sessions are HMAC-signed cookies. No personal data beyond an optional chosen nickname and country is stored.
 - Keep dependencies patched: run `npm audit` before each deploy (it reported 0 vulnerabilities at handoff).
@@ -137,6 +150,6 @@ The game is in English, Spanish, French, German, Russian and Simplified Chinese.
 
 ## Known items for the OEC team
 
-- **OEC sign-in** is stubbed (`src/lib/auth/provider.ts`): play is anonymous with optional leaderboard names. The merge logic for linking an anonymous player to an account is implemented and tested; only the OAuth flow needs wiring once its details are known (spec §18).
+- **OEC sign-in** works through the games hub: oec.world sends a signed token over `postMessage` and `src/lib/auth/oec-link.ts` binds it to the player (needs `GAMES_TOKEN_SECRET`). Outside oec.world play stays anonymous.
 - **~10 item values** are documented product-class conventions marked "Pending verification" in `data/SOURCES.md`, awaiting EPREL/measured data.
 - `next build` prints one harmless warning ("Encountered unexpected file in NFT list") caused by the runtime data loader in `src/lib/data.ts`. It only affects Next's optional standalone output tracing, not `next start`.

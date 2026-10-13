@@ -1,0 +1,14 @@
+.git
+.gitignore
+.next
+node_modules
+.env*
+coverage/
+test-results/
+playwright-report/
+tests/
+docs/
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+npm-debug.log*

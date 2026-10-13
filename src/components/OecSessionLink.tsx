@@ -22,8 +22,8 @@ const HANDSHAKE_TIMEOUT_MS = 2500;
 /** Let router.refresh() land before releasing prompts that depend on the player's name. */
 const REFRESH_SETTLE_MS = 600;
 
-function isOecOrigin(origin: string): boolean {
-  if (DEV_PARENT.includes(origin)) return true;
+function isOecOrigin(origin: string, extraParents: string[]): boolean {
+  if (DEV_PARENT.includes(origin) || extraParents.includes(origin)) return true;
   try {
     const { protocol, hostname } = new URL(origin);
     return protocol === 'https:' && (hostname === 'oec.world' || hostname.endsWith('.oec.world'));
@@ -44,13 +44,17 @@ function settle() {
  * shows the OEC name. Renders nothing; outside an iframe, or when the visitor
  * is a guest, the game simply stays anonymous.
  */
-export default function OecSessionLink() {
+export default function OecSessionLink({ extraParents = [] }: { extraParents?: string[] }) {
   const router = useRouter();
   const token = useRef<string | null>(null);
   const pending = useRef(false);
   const refreshed = useRef(false);
 
+  // a string dependency: the array prop is a new object after every router.refresh()
+  const parentsKey = extraParents.join(',');
+
   useEffect(() => {
+    const extraParents = parentsKey ? parentsKey.split(',') : [];
     if (window === window.top) {
       settle();
       return;
@@ -59,11 +63,11 @@ export default function OecSessionLink() {
     let parentOrigin: string | null = null;
     try {
       const ref = new URL(document.referrer).origin;
-      if (isOecOrigin(ref)) parentOrigin = ref;
+      if (isOecOrigin(ref, extraParents)) parentOrigin = ref;
     } catch {
       /* no referrer: fall back to the known origins below */
     }
-    const targets = parentOrigin ? [parentOrigin] : DEV_PARENT.concat('https://oec.world');
+    const targets = parentOrigin ? [parentOrigin] : [...DEV_PARENT, ...extraParents, 'https://oec.world'];
     const askParent = () =>
       targets.forEach((origin) => window.parent.postMessage({ type: 'requestSession', game: 'emissionary' }, origin));
     const timeout = window.setTimeout(settle, HANDSHAKE_TIMEOUT_MS);
@@ -100,7 +104,7 @@ export default function OecSessionLink() {
     }
 
     function onMessage(event: MessageEvent) {
-      if (event.source !== window.parent || !isOecOrigin(event.origin)) return;
+      if (event.source !== window.parent || !isOecOrigin(event.origin, extraParents)) return;
       const data = event.data as { type?: string; session?: { token?: string | null } | null } | null;
       if (data?.type !== 'session') return;
       token.current = data.session?.token ?? null;
@@ -119,7 +123,7 @@ export default function OecSessionLink() {
       window.removeEventListener('message', onMessage);
       window.removeEventListener(PLAYER_READY_EVENT, onPlayerReady);
     };
-  }, [router]);
+  }, [router, parentsKey]);
 
   return null;
 }

@@ -1,0 +1,23 @@
+services:
+  emissionary:
+    container_name: emissionary
+    image: emissionary:latest
+    restart: always
+    stop_signal: SIGTERM
+    stop_grace_period: 30s
+    env_file:
+      - .env
+    environment:
+      # 1 on the first deploy and after data changes (see docker-entrypoint.sh)
+      SYNC_ITEMS: ${SYNC_ITEMS:-0}
+    networks:
+      - emissionary
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    # Loopback only: nginx terminates TLS and proxies to this port.
+    ports:
+      - "127.0.0.1:3040:3000"
+
+networks:
+  emissionary:
+    driver: bridge
