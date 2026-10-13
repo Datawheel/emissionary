@@ -23,7 +23,7 @@ export default function LogSlider({ min, max, value, onChange, unit, lang, disab
   const space = readout.indexOf(' ');
 
   return (
-    <div className="slider-block">
+    <div className="slider-inner">
       <div className="readout" aria-hidden="true">
         {space > 0 ? readout.slice(0, space) : readout}
         <span className="unit">{space > 0 ? readout.slice(space + 1) : ''}</span>

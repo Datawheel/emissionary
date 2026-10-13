@@ -44,13 +44,19 @@ export default function RevealPanel({
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10 }}>
           <div>
-            <div className="muted">🟡 {t('your_guess', lang)}</div>
+            <div className="muted">
+              <span className="legend-dot guess" aria-hidden="true" />
+              {t('your_guess', lang)}
+            </div>
             <div style={{ fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
               {guess != null ? formatItemQty(guess, itemB, lang) : '—'}
             </div>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div className="muted">🟢 {t('truth', lang)}</div>
+            <div className="muted">
+              <span className="legend-dot truth" aria-hidden="true" />
+              {t('truth', lang)}
+            </div>
             <div style={{ fontWeight: 800, fontVariantNumeric: 'tabular-nums' }}>{formatItemQty(truth, itemB, lang)}</div>
           </div>
         </div>

@@ -30,6 +30,11 @@ export default function GameClient({
   lang: Lang;
 }) {
   const [phase, setPhase] = useState<Phase>(hasPlayer ? 'loading' : 'country');
+  // The run rules are open on tall screens; on short ones they start closed so the slider stays in view.
+  const [rulesOpen, setRulesOpen] = useState(false);
+  useEffect(() => {
+    setRulesOpen(window.innerHeight > 760);
+  }, []);
   const [round, setRound] = useState<ClientRound | null>(null);
   const [totals, setTotals] = useState<FreeplayTotals | null>(null);
   const [reveal, setReveal] = useState<GuessResponse | null>(null);
@@ -169,9 +174,12 @@ export default function GameClient({
         </span>
       </div>
       {run && run.rounds === 0 && phase === 'guess' && (
-        <p className="muted" style={{ fontSize: '0.92rem' }}>
-          {t('run_rules', lang)}
-        </p>
+        <details className="rules" open={rulesOpen} onToggle={(e) => setRulesOpen(e.currentTarget.open)}>
+          <summary>{t('rules_title', lang)}</summary>
+          <p className="muted" style={{ fontSize: '0.92rem' }}>
+            {t('run_rules', lang)}
+          </p>
+        </details>
       )}
       {struck && run && (
         <p className="strike-note" aria-live="polite">
