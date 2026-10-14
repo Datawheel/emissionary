@@ -3,6 +3,8 @@ import { clueTitle } from '@/lib/format';
 import { loadItems } from '@/lib/data';
 import { t } from '@/lib/i18n';
 import { requestLang } from '@/lib/request-lang';
+import OecSessionLink from '@/components/OecSessionLink';
+import { parseEmbedParents } from '@/lib/csp.mjs';
 import './globals.css';
 
 /** Public base URL, used for absolute social-preview links. Set SITE_URL in .env. */
@@ -55,9 +57,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         {children}
+        <OecSessionLink extraParents={parseEmbedParents(process.env.EMBED_PARENTS)} />
         <script
           dangerouslySetInnerHTML={{
-            __html: `if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').catch(()=>{})})}`,
+            // The worker caches /_next/static cache-first: right for production (hashed, immutable
+            // files) but it serves stale CSS/JS in dev. Dev removes any worker and its cache instead.
+            __html:
+              process.env.NODE_ENV === 'production'
+                ? `if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').catch(()=>{})})}`
+                : `if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister()})});if(window.caches){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k)})})}}`,
           }}
         />
       </body>

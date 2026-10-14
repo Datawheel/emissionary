@@ -1,29 +1,15 @@
+import { buildCsp } from './src/lib/csp.mjs';
+
 /**
  * Security headers ship with the app itself, so they apply behind any proxy.
- * script-src needs 'unsafe-inline' for Next's inline hydration scripts; React
- * escapes all rendered text, and the policy still blocks scripts, frames and
- * requests to any other origin. Dev mode additionally needs 'unsafe-eval'.
+ * The CSP lives in src/lib/csp.mjs; pages get it recomputed at runtime by
+ * src/proxy.ts (EMBED_PARENTS), the build-time value here covers everything else.
  */
 const dev = process.env.NODE_ENV !== 'production';
-
-const csp = [
-  "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ''}`,
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data:",
-  "font-src 'self'",
-  "connect-src 'self'",
-  "manifest-src 'self'",
-  "worker-src 'self'",
-  "object-src 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-  "frame-ancestors 'none'",
-].join('; ');
+const csp = buildCsp({ dev, embedParents: process.env.EMBED_PARENTS });
 
 const securityHeaders = [
   { key: 'Content-Security-Policy', value: csp },
-  { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=()' },

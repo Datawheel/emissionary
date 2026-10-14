@@ -9,6 +9,8 @@ import RoundView from './RoundView';
 import CountryPicker from './CountryPicker';
 import type { CountryOption } from '@/lib/country-names';
 import ShareCard from './ShareCard';
+import { PLAYER_READY_EVENT } from './OecSessionLink';
+import OecBadge from './OecBadge';
 
 type Phase = 'country' | 'loading' | 'guess' | 'reveal' | 'done' | 'error';
 
@@ -32,7 +34,7 @@ export default function DailyClient({
   const [reveal, setReveal] = useState<GuessResponse | null>(null);
   const [guess, setGuess] = useState<number | null>(null);
   const [country, setCountry] = useState<string | null>(playerCountry);
-  const [top, setTop] = useState<{ rank: number; name: string; flag: string; score: number; is_you: boolean }[]>([]);
+  const [top, setTop] = useState<{ rank: number; name: string; flag: string; score: number; is_you: boolean; oec: boolean }[]>([]);
   const startedAt = useRef(Date.now());
 
   const flag = countries.find((c) => c.iso3 === (progress?.locked_country ?? country))?.flag ?? '';
@@ -76,6 +78,7 @@ export default function DailyClient({
     });
     if (res.ok) {
       setCountry(iso3);
+      window.dispatchEvent(new Event(PLAYER_READY_EVENT));
       void load();
     } else setPhase('error');
   }
@@ -148,6 +151,7 @@ export default function DailyClient({
                 <span className="muted">#{r.rank}</span>
                 <span>
                   {r.flag} {r.name || t('anonymous_you', lang)}
+                  {r.oec && <OecBadge lang={lang} />}
                 </span>
                 <span className="value">{r.score}</span>
               </div>

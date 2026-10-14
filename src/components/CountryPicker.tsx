@@ -50,7 +50,8 @@ export default function CountryPicker({
 
       <button
         className="card item-card"
-        style={{ width: '100%' }}
+        style={{ width: '100%', textAlign: 'left' }}
+        aria-expanded={browsing}
         onClick={() => setBrowsing((b) => !b)}
         data-testid="country-select"
       >
@@ -61,6 +62,9 @@ export default function CountryPicker({
           <div className="qty">{selected.name}</div>
           <div className="name">{t('tap_to_change', lang)}</div>
         </div>
+        <span className="chevron" aria-hidden="true">
+          {browsing ? '⌃' : '⌄'}
+        </span>
       </button>
 
       {browsing && (

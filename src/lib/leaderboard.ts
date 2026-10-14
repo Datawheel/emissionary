@@ -12,6 +12,8 @@ export interface LeaderboardRow {
   /** distinct Daily Game dates played (null on the today board) */
   days: number | null;
   is_you: boolean;
+  /** linked to an OEC account (shown as the OEC badge) */
+  oec: boolean;
 }
 
 export interface LeaderboardPage {
@@ -91,6 +93,7 @@ export async function leaderboard(
     WITH totals AS (${totalsSql}),
     named AS (
       SELECT t.player_id, t.score, t.days, t.tiebreak, p.name, p.name_discriminator, p.country,
+             (p.oec_user_id IS NOT NULL) AS oec,
              rank() OVER (ORDER BY ${order}) AS rank
         FROM totals t JOIN players p ON p.id = t.player_id
        WHERE (p.name IS NOT NULL OR p.id = ${viewer}) ${countryFilter}
@@ -98,7 +101,7 @@ export async function leaderboard(
 
   type Ranked = {
     player_id: string; score: number; days: number | null; name: string | null;
-    name_discriminator: number | null; country: string; rank: string;
+    name_discriminator: number | null; country: string; oec: boolean; rank: string;
   };
   const rows = await q<Ranked>(
     `${ranked} SELECT * FROM named ORDER BY rank, name OFFSET $${params.length + 1} LIMIT ${PAGE}`,
@@ -114,6 +117,7 @@ export async function leaderboard(
     score: r.score,
     days: r.days,
     is_you: r.player_id === player?.id,
+    oec: r.oec,
   });
 
   let you: LeaderboardRow | null = null;
