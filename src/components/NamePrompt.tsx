@@ -59,7 +59,10 @@ export default function NamePrompt({
 
   function dismiss() {
     try {
-      localStorage.setItem(DISMISS_KEY, '1');
+      // Only remember the dismissal when the embedder passed consent=true.
+      if (new URLSearchParams(window.location.search).get('consent')?.toLowerCase() === 'true') {
+        localStorage.setItem(DISMISS_KEY, '1');
+      }
     } catch {
       /* ignore */
     }

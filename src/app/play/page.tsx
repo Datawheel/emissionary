@@ -4,6 +4,7 @@ import GameClient from '@/components/GameClient';
 import { loadCountryFactors } from '@/lib/data';
 import { countryOptions } from '@/lib/country-names';
 import { currentPlayer } from '@/lib/player';
+import { requestEmbed } from '@/lib/request-embed';
 import { requestLang } from '@/lib/request-lang';
 import { suggestCountry } from '@/lib/geo';
 
@@ -11,6 +12,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function PlayPage() {
   const lang = await requestLang();
+  const { consent } = await requestEmbed();
   const factors = loadCountryFactors();
   const player = await currentPlayer();
   const accept = (await headers()).get('accept-language');
@@ -23,6 +25,7 @@ export default async function PlayPage() {
         hasPlayer={player != null}
         playerCountry={player?.country ?? null}
         lang={lang}
+        consent={consent}
       />
     </>
   );

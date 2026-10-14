@@ -44,7 +44,14 @@ function settle() {
  * shows the OEC name. Renders nothing; outside an iframe, or when the visitor
  * is a guest, the game simply stays anonymous.
  */
-export default function OecSessionLink({ extraParents = [] }: { extraParents?: string[] }) {
+export default function OecSessionLink({
+  extraParents = [],
+  consent = false,
+}: {
+  extraParents?: string[];
+  /** When false, do not ask the parent for a session or POST it — that would store an identity. */
+  consent?: boolean;
+}) {
   const router = useRouter();
   const token = useRef<string | null>(null);
   const pending = useRef(false);
@@ -54,6 +61,10 @@ export default function OecSessionLink({ extraParents = [] }: { extraParents?: s
   const parentsKey = extraParents.join(',');
 
   useEffect(() => {
+    if (!consent) {
+      settle();
+      return;
+    }
     const extraParents = parentsKey ? parentsKey.split(',') : [];
     if (window === window.top) {
       settle();
@@ -123,7 +134,7 @@ export default function OecSessionLink({ extraParents = [] }: { extraParents?: s
       window.removeEventListener('message', onMessage);
       window.removeEventListener(PLAYER_READY_EVENT, onPlayerReady);
     };
-  }, [router, parentsKey]);
+  }, [router, parentsKey, consent]);
 
   return null;
 }

@@ -244,6 +244,103 @@ export class GuessError extends Error {
   }
 }
 
+export interface EvaluatedGuess {
+  truth: number;
+  scoreValue: number;
+  sle: number | null;
+  guessValue: number | null;
+  choiceValue: 'a' | 'b' | null;
+}
+
+/** Score a round in a country. No database access — persistence is the caller's job. */
+export function evaluateGuess(
+  round: RoundRow,
+  country: string,
+  input: { value?: number; choice?: 'a' | 'b' },
+): EvaluatedGuess {
+  const items = loadItems();
+  const itemA = items.find((i) => i.id === round.item_a)!;
+  const itemB = items.find((i) => i.id === round.item_b)!;
+  const cf = getCountry(country);
+  const qtyA = Number(round.qty_a);
+
+  if (round.round_type === 'quant') {
+    if (typeof input.value !== 'number' || !(input.value > 0)) throw new GuessError(400, 'value required');
+    const min = Number(round.slider_min);
+    const max = Number(round.slider_max);
+    if (input.value < min / 10 || input.value > max * 10) throw new GuessError(400, 'guess out of bounds');
+    const truth = solveEquivalent(itemA, qtyA, itemB, cf).qtyB;
+    return {
+      truth,
+      scoreValue: scoreFn(input.value, truth),
+      sle: signedLogError(input.value, truth),
+      guessValue: input.value,
+      choiceValue: null,
+    };
+  }
+
+  if (input.choice !== 'a' && input.choice !== 'b') throw new GuessError(400, 'choice required');
+  const gramsA = computeCO2(itemA, qtyA, cf).grams;
+  const gramsB = computeCO2(itemB, Number(round.qty_b), cf).grams;
+  return {
+    truth: gramsA > gramsB ? 1 : 0, // 1 ⇔ 'a'
+    scoreValue: scoreBinary((input.choice === 'a') === gramsA > gramsB),
+    sle: null,
+    guessValue: null,
+    choiceValue: input.choice,
+  };
+}
+
+/** Reveal payload for a scored guess. `truth` / `score` / `guess` are the values to show
+ *  (the stored row, when one exists, so a replay cannot overwrite it). */
+export function buildGuessResponse(args: {
+  round: RoundRow;
+  country: string;
+  truth: number;
+  score: number;
+  guess: number | null;
+  choice: 'a' | 'b' | null;
+  totals: FreeplayTotals;
+  alreadyAnswered: boolean;
+}): GuessResponse {
+  const { round, country, truth, score, guess, choice, totals, alreadyAnswered } = args;
+  const items = loadItems();
+  const itemA = items.find((i) => i.id === round.item_a)!;
+  const itemB = items.find((i) => i.id === round.item_b)!;
+  const cf = getCountry(country);
+  const factors = loadCountryFactors();
+  const qtyA = Number(round.qty_a);
+  const solved = solveEquivalent(itemA, qtyA, itemB, cf);
+  const rows = buildConversionRows(itemA, qtyA, itemB, cf, factors);
+  const base: GuessResponse = {
+    item_info_a: revealItemInfo(itemA),
+    item_info_b: revealItemInfo(itemB),
+    truth,
+    score,
+    grams_target: solved.gramsTarget,
+    breakdown_a: solved.breakdownA,
+    breakdown_b: round.round_type === 'quant' ? solved.breakdownB : computeCO2(itemB, Number(round.qty_b), cf),
+    conversion_rows: rows,
+    takeaway: takeaway(rows),
+    unit_facts: [unitFact(itemA, cf), unitFact(itemB, cf)],
+    totals,
+    already_answered: alreadyAnswered,
+  };
+  if (round.round_type === 'quant') {
+    base.guess = guess ?? undefined;
+    base.slider_min = Number(round.slider_min);
+    base.slider_max = Number(round.slider_max);
+  } else {
+    base.choice = choice ?? undefined;
+    const gramsA = computeCO2(itemA, qtyA, cf).grams;
+    const gramsB = computeCO2(itemB, Number(round.qty_b), cf).grams;
+    base.grams_a = gramsA;
+    base.grams_b = gramsB;
+    base.correct = score > 0;
+  }
+  return base;
+}
+
 export async function submitGuess(
   player: PlayerRow,
   roundId: string,
@@ -254,9 +351,6 @@ export async function submitGuess(
   if (!round) throw new GuessError(404, 'round not found');
   if (round.player_id && round.player_id !== player.id) throw new GuessError(403, 'not your round');
 
-  const items = loadItems();
-  const itemA = items.find((i) => i.id === round.item_a)!;
-  const itemB = items.find((i) => i.id === round.item_b)!;
   // daily rounds: country locks at the first guess and a 2 h session window applies (spec §5, §12)
   let guessCountry = player.country;
   if (round.set_date != null) {
@@ -275,41 +369,31 @@ export async function submitGuess(
       throw new GuessError(409, 'run over');
     }
   }
-  const cf = getCountry(guessCountry);
-  const factors = loadCountryFactors();
-  const qtyA = Number(round.qty_a);
+  const evaluated = evaluateGuess(round, guessCountry, input);
   const ms = Math.max(0, Math.min(input.ms_elapsed ?? 0, 7_200_000));
 
-  let truth: number;
-  let scoreValue: number;
-  let sle: number | null = null;
-  let guessValue: number | null = null;
-  let choiceValue: 'a' | 'b' | null = null;
-
-  if (round.round_type === 'quant') {
-    if (typeof input.value !== 'number' || !(input.value > 0)) throw new GuessError(400, 'value required');
-    const min = Number(round.slider_min);
-    const max = Number(round.slider_max);
-    if (input.value < min / 10 || input.value > max * 10) throw new GuessError(400, 'guess out of bounds');
-    truth = solveEquivalent(itemA, qtyA, itemB, cf).qtyB;
-    guessValue = input.value;
-    scoreValue = scoreFn(guessValue, truth);
-    sle = signedLogError(guessValue, truth);
-  } else {
-    if (input.choice !== 'a' && input.choice !== 'b') throw new GuessError(400, 'choice required');
-    const gramsA = computeCO2(itemA, qtyA, cf).grams;
-    const gramsB = computeCO2(itemB, Number(round.qty_b), cf).grams;
-    truth = gramsA > gramsB ? 1 : 0; // 1 ⇔ 'a'
-    choiceValue = input.choice;
-    scoreValue = scoreBinary((input.choice === 'a') === gramsA > gramsB);
-  }
-
-  await q(
+  const inserted = await q<{ id: string }>(
     `INSERT INTO guesses (id, player_id, round_id, country, guess, choice, truth, signed_log_error, score, ms_elapsed)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-     ON CONFLICT (player_id, round_id) DO NOTHING`,
-    [randomUUID(), player.id, roundId, guessCountry, guessValue, choiceValue, truth, sle, scoreValue, ms],
+     ON CONFLICT (player_id, round_id) DO NOTHING
+     RETURNING id`,
+    [
+      randomUUID(),
+      player.id,
+      roundId,
+      guessCountry,
+      evaluated.guessValue,
+      evaluated.choiceValue,
+      evaluated.truth,
+      evaluated.sle,
+      evaluated.scoreValue,
+      ms,
+    ],
   );
+  if (inserted.length) {
+    const { noteReport, reportFinishedGame } = await import('./oec-score');
+    noteReport(reportFinishedGame(player.id, roundId));
+  }
 
   // idempotency: the stored guess wins on replays (spec §12)
   const stored = (
@@ -320,38 +404,18 @@ export async function submitGuess(
   )[0];
   const alreadyAnswered =
     round.round_type === 'quant'
-      ? Number(stored.guess) !== guessValue
-      : stored.choice !== choiceValue;
+      ? Number(stored.guess) !== evaluated.guessValue
+      : stored.choice !== evaluated.choiceValue;
 
-  const solved = solveEquivalent(itemA, qtyA, itemB, cf);
-  const rows = buildConversionRows(itemA, qtyA, itemB, cf, factors);
   const totals = await freeplayTotals(player.id);
-
-  const base: GuessResponse = {
-    item_info_a: revealItemInfo(itemA),
-    item_info_b: revealItemInfo(itemB),
+  return buildGuessResponse({
+    round,
+    country: guessCountry,
     truth: Number(stored.truth),
     score: stored.score,
-    grams_target: solved.gramsTarget,
-    breakdown_a: solved.breakdownA,
-    breakdown_b: round.round_type === 'quant' ? solved.breakdownB : computeCO2(itemB, Number(round.qty_b), cf),
-    conversion_rows: rows,
-    takeaway: takeaway(rows),
-    unit_facts: [unitFact(itemA, cf), unitFact(itemB, cf)],
+    guess: stored.guess == null ? null : Number(stored.guess),
+    choice: stored.choice,
     totals,
-    already_answered: alreadyAnswered,
-  };
-  if (round.round_type === 'quant') {
-    base.guess = Number(stored.guess);
-    base.slider_min = Number(round.slider_min);
-    base.slider_max = Number(round.slider_max);
-  } else {
-    base.choice = stored.choice ?? undefined;
-    const gramsA = computeCO2(itemA, qtyA, cf).grams;
-    const gramsB = computeCO2(itemB, Number(round.qty_b), cf).grams;
-    base.grams_a = gramsA;
-    base.grams_b = gramsB;
-    base.correct = stored.score > 0;
-  }
-  return base;
+    alreadyAnswered,
+  });
 }

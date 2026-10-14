@@ -22,12 +22,15 @@ export default function GameClient({
   hasPlayer,
   playerCountry,
   lang,
+  consent,
 }: {
   countries: CountryOption[];
   suggested: string;
   hasPlayer: boolean;
   playerCountry: string | null;
   lang: Lang;
+  /** False: play in memory. No player cookie, no guesses stored, no ads. */
+  consent: boolean;
 }) {
   const [phase, setPhase] = useState<Phase>(hasPlayer ? 'loading' : 'country');
   // The run rules are open on tall screens; on short ones they start closed so the slider stays in view.
@@ -41,17 +44,33 @@ export default function GameClient({
   const [guess, setGuess] = useState<number | null>(null);
   const [country, setCountry] = useState<string | null>(playerCountry);
   const startedAt = useRef(Date.now());
+  const tokenRef = useRef<string | null>(null);
+  const guestScores = useRef<number[]>([]);
+  const guestPairs = useRef<string[]>([]);
+  const guestBest = useRef(0);
 
   const flag = countries.find((c) => c.iso3 === country)?.flag ?? '';
 
-  const fetchNext = useCallback(async () => {
+  const fetchNext = useCallback(async (iso3?: string) => {
     setPhase('loading');
     setReveal(null);
     setGuess(null);
     try {
-      const res = await fetch('/api/freeplay/next');
+      const res = consent
+        ? await fetch('/api/freeplay/next')
+        : await fetch('/api/guest/round', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              country: iso3 ?? country,
+              pairs: guestPairs.current,
+              scores: guestScores.current,
+              best: guestBest.current,
+            }),
+          });
       if (!res.ok) throw new Error(String(res.status));
-      const data = (await res.json()) as { round: ClientRound; totals: FreeplayTotals };
+      const data = (await res.json()) as { round: ClientRound; totals: FreeplayTotals; token?: string };
+      tokenRef.current = data.token ?? null;
       setRound(data.round);
       setTotals(data.totals);
       startedAt.current = Date.now();
@@ -60,13 +79,18 @@ export default function GameClient({
     } catch {
       setPhase('error');
     }
-  }, []);
+  }, [consent, country]);
 
   useEffect(() => {
     if (hasPlayer) void fetchNext();
   }, [hasPlayer, fetchNext]);
 
   async function confirmCountry(iso3: string) {
+    setCountry(iso3);
+    if (!consent) {
+      void fetchNext(iso3);
+      return;
+    }
     setPhase('loading');
     const res = await fetch('/api/player', {
       method: 'POST',
@@ -74,7 +98,6 @@ export default function GameClient({
       body: JSON.stringify({ country: iso3 }),
     });
     if (res.ok) {
-      setCountry(iso3);
       window.dispatchEvent(new Event(PLAYER_READY_EVENT));
       void fetchNext();
     } else {
@@ -86,23 +109,48 @@ export default function GameClient({
     if (!round) return;
     setPhase('loading');
     try {
-      const res = await fetch('/api/guess', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          round_id: round.round_id,
-          ms_elapsed: Date.now() - startedAt.current,
-          ...input,
-        }),
-      });
+      const res = consent
+        ? await fetch('/api/guess', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              round_id: round.round_id,
+              ms_elapsed: Date.now() - startedAt.current,
+              ...input,
+            }),
+          })
+        : await fetch('/api/guest/guess', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              token: tokenRef.current,
+              scores: guestScores.current,
+              best: guestBest.current,
+              ...input,
+            }),
+          });
       if (!res.ok) throw new Error(String(res.status));
       const data = (await res.json()) as GuessResponse;
+      if (!consent) {
+        guestPairs.current = [...guestPairs.current, [round.item_a.id, round.item_b.id].sort().join('|')].slice(-30);
+        guestScores.current = [...guestScores.current, data.score];
+        guestBest.current = data.totals.best_run_rounds;
+      }
       setReveal(data);
       setTotals(data.totals);
       setPhase('reveal');
     } catch {
       setPhase('error');
     }
+  }
+
+  function playAgain() {
+    if (!consent) {
+      guestBest.current = Math.max(guestBest.current, guestScores.current.length);
+      guestScores.current = [];
+      guestPairs.current = [];
+    }
+    void fetchNext();
   }
 
   if (phase === 'country') {
@@ -151,7 +199,7 @@ export default function GameClient({
           </p>
         </section>
         <div className="bottom-bar">
-          <button className="primary" onClick={() => void fetchNext()}>
+          <button className="primary" onClick={playAgain}>
             {t('play_again', lang)}
           </button>
         </div>

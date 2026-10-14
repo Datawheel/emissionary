@@ -29,10 +29,36 @@
   --ribbon: linear-gradient(90deg, #3ec28f 0%, #b8d24b 30%, #ffb03a 60%, #ff8a3d 80%, #e4593c 100%);
   --radius: 16px;
   --tap: 48px;
+  --track: #ece8dd;
+  --chip: #f1eee6;
+  --sunken: #f6f3ea;
+  --disabled: #d9d4c7;
+  --disabled-ink: #55506a;
+  color-scheme: light;
   /* Bricolage covers Latin (incl. French/German/Spanish accents); Cyrillic and
      Chinese fall back per glyph to the system sans faces listed after it */
   --cjk: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', 'Noto Sans SC';
   --display: 'Bricolage Grotesque', ui-rounded, ui-sans-serif, system-ui, var(--cjk), sans-serif;
+}
+
+[data-theme='dark'] {
+  --ink: #f4efe6;
+  --ink-soft: #b7b0c6;
+  --paper: #16131f;
+  --card: #241f33;
+  --line: #3c3550;
+  --rule: rgba(246, 244, 238, 0.06);
+  --spark-deep: #ffc56e;
+  --truth-deep: #8ee0c0;
+  --alert: #ff7d64;
+  --header: #100e18;
+  --header-text: #f6f4ee;
+  --track: #2e2842;
+  --chip: #2e2842;
+  --sunken: #1c1828;
+  --disabled: #3a3450;
+  --disabled-ink: #9b94ab;
+  color-scheme: dark;
 }
 
 * {
@@ -208,7 +234,7 @@ main.screen {
   display: grid;
   place-items: center;
   border-radius: 18px;
-  background: #f1eee6;
+  background: var(--chip);
 }
 
 [data-category='kitchen'] .emoji {
@@ -265,7 +291,7 @@ main.screen {
   position: relative;
   height: 10px;
   border-radius: 999px;
-  background: #ece8dd;
+  background: var(--track);
   border: 1px solid var(--line);
 }
 
@@ -345,7 +371,7 @@ input[type='range'].log-slider {
 input[type='range'].log-slider::-webkit-slider-runnable-track {
   height: 12px;
   border-radius: 999px;
-  background: #ece8dd;
+  background: var(--track);
   border: 1px solid var(--line);
 }
 
@@ -363,7 +389,7 @@ input[type='range'].log-slider::-webkit-slider-thumb {
 input[type='range'].log-slider::-moz-range-track {
   height: 12px;
   border-radius: 999px;
-  background: #ece8dd;
+  background: var(--track);
   border: 1px solid var(--line);
 }
 
@@ -419,8 +445,8 @@ input[type='range'].log-slider::-moz-range-thumb {
 
 .bottom-bar .primary:disabled {
   /* readable "not yet" state: a muted fill with legible text, not a faded copy of the button */
-  background: #d9d4c7;
-  color: #55506a;
+  background: var(--disabled);
+  color: var(--disabled-ink);
   cursor: default;
   box-shadow: none;
 }
@@ -474,7 +500,7 @@ input[type='range'].log-slider::-moz-range-thumb {
   margin-top: 10px;
   padding: 10px 12px;
   border-radius: 10px;
-  background: #f6f3ea;
+  background: var(--sunken);
   border: 1px dashed var(--line);
 }
 
@@ -608,7 +634,7 @@ details.breakdown summary {
   position: relative;
   height: 8px;
   border-radius: 999px;
-  background: #ece8dd;
+  background: var(--track);
   margin-top: 4px;
 }
 

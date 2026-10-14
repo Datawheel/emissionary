@@ -36,23 +36,31 @@ export function parseEmbedParents(raw) {
 
 /**
  * Embedded by the OEC games hub (oec.world). Dev also allows the local OEC site.
- * @param {{ dev: boolean, embedParents?: string }} options
+ * `ads` adds the AdSense hosts. The per-request policy turns that on only when
+ * the page was opened with consent=true; the build-time header also lists them
+ * so the two policies' intersection still allows the script in that case.
+ * @param {{ dev: boolean, embedParents?: string, ads?: boolean }} options
  */
-export function buildCsp({ dev, embedParents }) {
+export function buildCsp({ dev, embedParents, ads = false }) {
   const frameAncestors = [
     "'self'",
     ...(dev ? ['http://localhost:3000'] : ['https://oec.world', 'https://*.oec.world']),
     ...parseEmbedParents(embedParents),
   ].join(' ');
+  const adScript = 'https://pagead2.googlesyndication.com https://partner.googleadservices.com https://www.googletagservices.com https://adservice.google.com https://www.google.com';
+  const adImg = 'https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com';
+  const adConnect = 'https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://ep1.adtrafficquality.google https://csi.gstatic.com';
+  const adFrame = 'https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com';
   return [
     "default-src 'self'",
-    `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ''}`,
+    `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ''}${ads ? ` ${adScript}` : ''}`,
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data:",
+    `img-src 'self' data:${ads ? ` ${adImg}` : ''}`,
     "font-src 'self'",
-    "connect-src 'self'",
+    `connect-src 'self'${ads ? ` ${adConnect}` : ''}`,
     "manifest-src 'self'",
     "worker-src 'self'",
+    `frame-src ${ads ? adFrame : "'none'"}`,
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

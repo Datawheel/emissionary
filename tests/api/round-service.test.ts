@@ -10,6 +10,7 @@ import { migrate } from '../../db/migrate';
 import { syncItems } from '../../scripts/sync-items';
 import { getPool, q } from '@/lib/db';
 import { createFreeplayRound, freeplayTotals, GuessError, submitGuess, type RoundRow } from '@/lib/round-service';
+import { finishedReports } from '@/lib/oec-score';
 import type { PlayerRow } from '@/lib/player';
 
 const TEST_URL = process.env.DATABASE_URL!;
@@ -210,6 +211,47 @@ describe('Free Play survival runs', () => {
     const first = await createFreeplayRound(player);
     const again = await createFreeplayRound(player);
     expect(again.round_id).toBe(first.round_id);
+  });
+
+  it('posts the struck-out run to the OEC score API once', async () => {
+    process.env.OEC_SCORE_URL = 'https://oec.example/api/games/score';
+    const bodies: unknown[] = [];
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (_url, init) => {
+      bodies.push(JSON.parse(String(init?.body)));
+      return new Response('ok', { status: 200 });
+    });
+    try {
+      const player = await makePlayer();
+      const deal = async () => {
+        const id = randomUUID();
+        await q(
+          `INSERT INTO rounds (id, player_id, item_a, qty_a, item_b, qty_b, round_type, difficulty, run_no)
+           VALUES ($1, $2, 'hairdryer', 60, 'tv', 1, 'binary', 1, 1)`,
+          [id, player.id],
+        );
+        return id;
+      };
+      await submitGuess(player, await deal(), { choice: 'b' });
+      await submitGuess(player, await deal(), { choice: 'b' });
+      await finishedReports();
+      expect(bodies).toHaveLength(0);
+      const finished = await submitGuess(player, await deal(), { choice: 'b' });
+      await finishedReports();
+      expect(finished.score).toBe(0);
+      expect(finished.totals.run.over).toBe(true);
+      expect(bodies).toEqual([
+        {
+          game: 'emissionary',
+          meta: { mode: 'freeplay' },
+          answer: { country: 'FRA', run_no: 1 },
+          submission: { rounds: 3, score: 0, strikes: 3, scores: [0, 0, 0] },
+          won: false,
+        },
+      ]);
+    } finally {
+      fetchMock.mockRestore();
+      delete process.env.OEC_SCORE_URL;
+    }
   });
 
   it('refuses answers to a round from a run that already struck out', async () => {

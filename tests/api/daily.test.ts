@@ -12,6 +12,7 @@ import { migrate } from '../../db/migrate';
 import { syncItems } from '../../scripts/sync-items';
 import { getPool, q } from '@/lib/db';
 import { dayNumber, getDailyProgress, getDailyRounds } from '@/lib/daily-service';
+import { finishedReports } from '@/lib/oec-score';
 import { GuessError, submitGuess } from '@/lib/round-service';
 import { leaderboard } from '@/lib/leaderboard';
 import { claimName, NameError, validateName } from '@/lib/names';
@@ -203,6 +204,44 @@ describe('leaderboard', () => {
     }
     const page = await leaderboard('alltime', null, {});
     expect(page.rows.map((r) => r.rank)).toEqual([1, 1]);
+  });
+
+  it('posts the finished daily to the OEC score API once', async () => {
+    process.env.OEC_SCORE_URL = 'https://oec.example/api/games/score';
+    const bodies: unknown[] = [];
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (_url, init) => {
+      bodies.push(JSON.parse(String(init?.body)));
+      return new Response('ok', { status: 200 });
+    });
+    try {
+      const player = await makePlayer('FRA');
+      await q('UPDATE players SET oec_user_id = $1 WHERE id = $2', ['oec-1', player.id]);
+      const total = await playFullDaily(player, DATE);
+      await finishedReports();
+      expect(bodies).toHaveLength(1);
+      expect(bodies[0]).toEqual({
+        game: 'emissionary',
+        meta: { mode: 'daily', userId: 'oec-1' },
+        answer: { date: DATE, day_number: dayNumber(DATE), country: 'FRA' },
+        submission: { scores: expect.any(Array), total },
+        won: true,
+      });
+      const scores = (bodies[0] as { submission: { scores: number[] } }).submission.scores;
+      expect(scores).toHaveLength(5);
+      expect(scores.reduce((a, b) => a + b, 0)).toBe(total);
+
+      const rounds = await getDailyRounds(DATE);
+      const last = rounds[4];
+      await submitGuess(player, last.id, {
+        value: Number(last.slider_min) * 15,
+        ms_elapsed: 500,
+      });
+      await finishedReports();
+      expect(bodies).toHaveLength(1);
+    } finally {
+      fetchMock.mockRestore();
+      delete process.env.OEC_SCORE_URL;
+    }
   });
 
   it('filters by country', async () => {

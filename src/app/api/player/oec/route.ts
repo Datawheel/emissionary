@@ -6,6 +6,7 @@ import {
   verifyGamesToken,
 } from '@/lib/auth/oec';
 import { linkOecPlayer } from '@/lib/auth/oec-link';
+import { hasConsent } from '@/lib/consent';
 import { currentPlayer, setPlayerCookie } from '@/lib/player';
 import { limited } from '@/lib/ratelimit';
 
@@ -17,6 +18,7 @@ const bodySchema = z.object({ token: z.string().min(1).max(4096) });
  * from the verified JWT's `sub`; nothing else in the body is read.
  */
 export async function POST(req: NextRequest) {
+  if (!(await hasConsent())) return NextResponse.json({ error: 'consent required' }, { status: 403 });
   const tooMany = limited(req, 'oec-link', 30, 60 * 60 * 1000);
   if (tooMany) return tooMany;
   const parsed = bodySchema.safeParse(await req.json().catch(() => null));

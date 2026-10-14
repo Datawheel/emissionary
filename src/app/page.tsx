@@ -1,13 +1,16 @@
 import Link from 'next/link';
 import AppHeader from '@/components/AppHeader';
+import { embedSearch } from '@/lib/embed';
 import { t } from '@/lib/i18n';
+import { requestEmbed } from '@/lib/request-embed';
 import { requestLang } from '@/lib/request-lang';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const lang = await requestLang();
-  const q = `?lang=${lang}`;
+  const { theme, consent } = await requestEmbed();
+  const q = `?${embedSearch(lang, theme, consent)}`;
   return (
     <>
       <AppHeader lang={lang} />

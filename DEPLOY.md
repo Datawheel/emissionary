@@ -36,6 +36,7 @@ cp .env.example .env
 | `SITE_URL` | Public base URL, e.g. `https://emissionary.oec.world` (used for social-preview links). |
 | `GAMES_TOKEN_SECRET` | Must equal the OEC site's `GAMES_TOKEN_SECRET`. It verifies the signed identity oec.world sends when the game is embedded. Without it everyone stays anonymous (no error). |
 | `EMBED_PARENTS` | Optional. Extra origins allowed to embed the game, e.g. `http://localhost:3000` to test a production build against a local OEC. Leave unset in production. |
+| `OEC_SCORE_URL` | Optional. Where a finished Daily or Free Play run is POSTed, in the same shape Tradle uses (`game`, `meta.userId`, `answer`, `submission`, `won`). Unset in production means `https://oec.world/api/games/score`. Set to `off` to disable. |
 | `ADMIN_KEY` | Password for `/admin`. **It shows today's Daily Game answers**, so use a long random value (`openssl rand -base64 24`). Without it, `/admin` is disabled. |
 
 In production the server **refuses to start** while `PLAYER_TOKEN_SECRET` or `DAILY_SALT` are missing or still hold the placeholder values.

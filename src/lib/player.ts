@@ -1,8 +1,10 @@
 import { createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
 import { cookies } from 'next/headers';
+import { hasConsent } from './consent';
 import { q } from './db';
+import { PLAYER_COOKIE } from './embed';
 
-const COOKIE_NAME = 'emy_player';
+export { PLAYER_COOKIE };
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 400; // 400 days, the browser cap
 
 function secret(): string {
@@ -45,10 +47,14 @@ export async function createPlayer(country: string): Promise<PlayerRow> {
   return rows[0];
 }
 
-/** Reads the signed cookie and loads the player; null when absent/invalid. */
+/**
+ * Reads the signed cookie and loads the player; null when absent, invalid,
+ * or when this request has no consent (and then it does not touch last_seen).
+ */
 export async function currentPlayer(): Promise<PlayerRow | null> {
+  if (!(await hasConsent())) return null;
   const store = await cookies();
-  const playerId = verifyToken(store.get(COOKIE_NAME)?.value);
+  const playerId = verifyToken(store.get(PLAYER_COOKIE)?.value);
   if (!playerId) return null;
   const rows = await q<PlayerRow>(
     `UPDATE players SET last_seen_at = now() WHERE id = $1
@@ -60,7 +66,7 @@ export async function currentPlayer(): Promise<PlayerRow | null> {
 
 export async function setPlayerCookie(playerId: string): Promise<void> {
   const store = await cookies();
-  store.set(COOKIE_NAME, signToken(playerId), {
+  store.set(PLAYER_COOKIE, signToken(playerId), {
     httpOnly: true,
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',

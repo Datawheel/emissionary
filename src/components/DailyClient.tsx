@@ -22,12 +22,18 @@ export default function DailyClient({
   hasPlayer,
   playerCountry,
   lang,
+  consent,
+  qs,
 }: {
   countries: CountryOption[];
   suggested: string;
   hasPlayer: boolean;
   playerCountry: string | null;
   lang: Lang;
+  /** False: the day's rounds are scored in memory and never written. */
+  consent: boolean;
+  /** lang + theme + consent, so in-app links do not drop the embed params. */
+  qs: string;
 }) {
   const [phase, setPhase] = useState<Phase>(hasPlayer ? 'loading' : 'country');
   const [progress, setProgress] = useState<DailyProgress | null>(null);
@@ -36,18 +42,67 @@ export default function DailyClient({
   const [country, setCountry] = useState<string | null>(playerCountry);
   const [top, setTop] = useState<{ rank: number; name: string; flag: string; score: number; is_you: boolean; oec: boolean }[]>([]);
   const startedAt = useRef(Date.now());
+  const tokens = useRef<string[]>([]);
+  const localScores = useRef<(number | null)[] | null>(null);
+  const progressRef = useRef<DailyProgress | null>(null);
 
   const flag = countries.find((c) => c.iso3 === (progress?.locked_country ?? country))?.flag ?? '';
 
-  const load = useCallback(async () => {
+  const applyProgress = useCallback((data: DailyProgress) => {
+    progressRef.current = data;
+    setProgress(data);
+  }, []);
+
+  const load = useCallback(async (iso3?: string) => {
     setPhase('loading');
     setReveal(null);
     setGuess(null);
     try {
+      if (!consent) {
+        const held = localScores.current;
+        const current = progressRef.current;
+        if (held && current) {
+          const next = held.findIndex((s) => s == null);
+          const completed = next === -1;
+          const total = held.reduce<number>((sum, s) => sum + (s ?? 0), 0);
+          const data: DailyProgress = {
+            ...current,
+            scores: held,
+            next_index: completed ? null : next,
+            total,
+            completed,
+          };
+          applyProgress(data);
+          if (completed) {
+            setPhase('done');
+            const lb = await fetch('/api/leaderboard?scope=daily');
+            if (lb.ok) {
+              const page = (await lb.json()) as { rows: typeof top };
+              setTop(page.rows.slice(0, 10));
+            }
+          } else {
+            startedAt.current = Date.now();
+            setPhase('guess');
+          }
+          window.scrollTo({ top: 0 });
+          return;
+        }
+        const c = iso3 ?? country;
+        const res = await fetch(`/api/guest/daily?country=${encodeURIComponent(c ?? '')}`);
+        if (!res.ok) throw new Error(String(res.status));
+        const body = (await res.json()) as { progress: DailyProgress; tokens: string[] };
+        tokens.current = body.tokens;
+        localScores.current = body.progress.scores;
+        applyProgress(body.progress);
+        startedAt.current = Date.now();
+        setPhase('guess');
+        window.scrollTo({ top: 0 });
+        return;
+      }
       const res = await fetch('/api/daily');
       if (!res.ok) throw new Error(String(res.status));
       const data = (await res.json()) as DailyProgress;
-      setProgress(data);
+      applyProgress(data);
       if (data.completed) {
         setPhase('done');
         const lb = await fetch('/api/leaderboard?scope=daily');
@@ -63,13 +118,18 @@ export default function DailyClient({
     } catch {
       setPhase('error');
     }
-  }, []);
+  }, [consent, country, applyProgress]);
 
   useEffect(() => {
     if (hasPlayer) void load();
   }, [hasPlayer, load]);
 
   async function confirmCountry(iso3: string) {
+    setCountry(iso3);
+    if (!consent) {
+      void load(iso3);
+      return;
+    }
     setPhase('loading');
     const res = await fetch('/api/player', {
       method: 'POST',
@@ -77,7 +137,6 @@ export default function DailyClient({
       body: JSON.stringify({ country: iso3 }),
     });
     if (res.ok) {
-      setCountry(iso3);
       window.dispatchEvent(new Event(PLAYER_READY_EVENT));
       void load();
     } else setPhase('error');
@@ -86,13 +145,22 @@ export default function DailyClient({
   async function submit(round: ClientRound, input: { value?: number; choice?: 'a' | 'b' }) {
     setPhase('loading');
     try {
-      const res = await fetch('/api/guess', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ round_id: round.round_id, ms_elapsed: Date.now() - startedAt.current, ...input }),
-      });
+      const index = progressRef.current?.next_index ?? 0;
+      const res = consent
+        ? await fetch('/api/guess', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ round_id: round.round_id, ms_elapsed: Date.now() - startedAt.current, ...input }),
+          })
+        : await fetch('/api/guest/guess', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: tokens.current[index], scores: [], best: 0, ...input }),
+          });
       if (!res.ok) throw new Error(String(res.status));
-      setReveal((await res.json()) as GuessResponse);
+      const data = (await res.json()) as GuessResponse;
+      if (!consent && localScores.current) localScores.current[index] = data.score;
+      setReveal(data);
       setPhase('reveal');
     } catch {
       setPhase('error');
@@ -156,7 +224,7 @@ export default function DailyClient({
                 <span className="value">{r.score}</span>
               </div>
             ))}
-            <a href={`/leaderboard?lang=${lang}`} className="muted" style={{ display: 'block', padding: 10 }}>
+            <a href={`/leaderboard?${qs}`} className="muted" style={{ display: 'block', padding: 10 }}>
               {t('leaderboard', lang)} →
             </a>
           </section>

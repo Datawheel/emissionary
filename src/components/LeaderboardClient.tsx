@@ -212,7 +212,7 @@ function Distribution({ page, lang }: { page: LeaderboardPage; lang: Lang }) {
               flex: 1,
               height: `${Math.max(3, (100 * n) / maxCount)}%`,
               borderRadius: 4,
-              background: i === youBucket ? 'var(--spark)' : '#ded8ca',
+              background: i === youBucket ? 'var(--spark)' : 'var(--track)',
             }}
             title={String(n)}
           />

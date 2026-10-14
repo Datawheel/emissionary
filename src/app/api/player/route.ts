@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { hasConsent } from '@/lib/consent';
 import { createPlayer, currentPlayer, setPlayerCookie } from '@/lib/player';
 import { loadCountryFactors } from '@/lib/data';
 import { q } from '@/lib/db';
@@ -12,6 +13,7 @@ function validCountry(iso3: string): boolean {
 }
 
 export async function POST(req: NextRequest) {
+  if (!(await hasConsent())) return NextResponse.json({ error: 'consent required' }, { status: 403 });
   if (!rateLimit(`player:${clientIp(req)}`, 10, 60 * 60 * 1000)) {
     return NextResponse.json({ error: 'rate limited' }, { status: 429 });
   }

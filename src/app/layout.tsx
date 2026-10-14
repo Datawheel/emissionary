@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from 'next';
 import { clueTitle } from '@/lib/format';
 import { loadItems } from '@/lib/data';
 import { t } from '@/lib/i18n';
+import { requestEmbed } from '@/lib/request-embed';
 import { requestLang } from '@/lib/request-lang';
+import Ads from '@/components/Ads';
 import OecSessionLink from '@/components/OecSessionLink';
 import { parseEmbedParents } from '@/lib/csp.mjs';
 import './globals.css';
@@ -36,16 +38,21 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  themeColor: '#1a1626',
-};
+export async function generateViewport(): Promise<Viewport> {
+  const { theme } = await requestEmbed();
+  return {
+    width: 'device-width',
+    initialScale: 1,
+    themeColor: theme === 'dark' ? '#16131f' : '#1a1626',
+    colorScheme: theme,
+  };
+}
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const lang = await requestLang();
+  const { theme, consent } = await requestEmbed();
   return (
-    <html lang={lang === 'zh' ? 'zh-Hans' : lang}>
+    <html lang={lang === 'zh' ? 'zh-Hans' : lang} data-theme={theme}>
       <head>
         <link
           rel="preload"
@@ -57,7 +64,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         {children}
-        <OecSessionLink extraParents={parseEmbedParents(process.env.EMBED_PARENTS)} />
+        <Ads consent={consent} />
+        <OecSessionLink consent={consent} extraParents={parseEmbedParents(process.env.EMBED_PARENTS)} />
         <script
           dangerouslySetInnerHTML={{
             // The worker caches /_next/static cache-first: right for production (hashed, immutable

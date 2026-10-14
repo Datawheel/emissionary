@@ -6,7 +6,9 @@ import { buildCsp } from './src/lib/csp.mjs';
  * src/proxy.ts (EMBED_PARENTS), the build-time value here covers everything else.
  */
 const dev = process.env.NODE_ENV !== 'production';
-const csp = buildCsp({ dev, embedParents: process.env.EMBED_PARENTS });
+// ads: true here only so this header does not veto the per-request CSP from
+// src/proxy.ts. That one includes AdSense hosts solely when ?consent=true.
+const csp = buildCsp({ dev, embedParents: process.env.EMBED_PARENTS, ads: true });
 
 const securityHeaders = [
   { key: 'Content-Security-Policy', value: csp },
