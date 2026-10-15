@@ -1,5 +1,6 @@
 import { marked } from 'marked';
 import AppHeader from '@/components/AppHeader';
+import BackLink from '@/components/BackLink';
 import { getCountry, loadCountryFactors, loadItems, loadSources } from '@/lib/data';
 import { computeCO2 } from '@/lib/emissions';
 import { countryName } from '@/lib/country-names';
@@ -55,6 +56,7 @@ export default async function AboutPage() {
     <>
       <AppHeader lang={lang} />
       <main className="screen" style={{ maxWidth: 640 }}>
+        <BackLink lang={lang} />
         <h1 style={{ fontSize: '1.4rem' }}>{t('about', lang)}</h1>
 
         <section className="card">

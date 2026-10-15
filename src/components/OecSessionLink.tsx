@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
+import { captureShareUrl } from '@/lib/share-url';
 
 /** Fired once a player exists, so a link that had nothing to bind to can retry. */
 export const PLAYER_READY_EVENT = 'emy:player-ready';
@@ -52,6 +53,8 @@ export default function OecSessionLink({ extraParents = [] }: { extraParents?: s
 
   // a string dependency: the array prop is a new object after every router.refresh()
   const parentsKey = extraParents.join(',');
+
+  useEffect(captureShareUrl, []);
 
   useEffect(() => {
     const extraParents = parentsKey ? parentsKey.split(',') : [];

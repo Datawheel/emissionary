@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from 'react';
 import type { LeaderboardPage } from '@/lib/leaderboard';
 import type { Lang } from '@/lib/types';
 import { pluralWord, t } from '@/lib/i18n';
+import Loader from './Loader';
+import BackLink from './BackLink';
 import type { CountryOption } from '@/lib/country-names';
 import NamePrompt, { namePromptDismissed } from './NamePrompt';
 import OecBadge from './OecBadge';
@@ -72,6 +74,7 @@ export default function LeaderboardClient({
 
   return (
     <main className="screen">
+      <BackLink lang={lang} />
       <h1 style={{ fontSize: '1.3rem' }}>{t('leaderboard', lang)}</h1>
       <p className="muted">{t('practice_note', lang)}</p>
       {showNamePrompt && (
@@ -118,7 +121,7 @@ export default function LeaderboardClient({
       </select>
 
       {loading || !page ? (
-        <p className="muted">{t('loading', lang)}</p>
+        <Loader lang={lang} />
       ) : (
         <section className="card">
           {page.rows.length === 0 && <p className="muted">—</p>}
@@ -200,8 +203,9 @@ function Distribution({ page, lang }: { page: LeaderboardPage; lang: Lang }) {
   return (
     <section className="card">
       <h2 style={{ fontSize: '1rem', marginBottom: 4 }}>{t('all_players', lang)}</h2>
+      {youBucket != null && <p className="muted">{t('histogram_note', lang)}</p>}
       <div
-        style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 72, marginTop: 8 }}
+        style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 160, marginTop: 28 }}
         role="img"
         aria-label={t('all_players', lang)}
       >
@@ -209,13 +213,33 @@ function Distribution({ page, lang }: { page: LeaderboardPage; lang: Lang }) {
           <div
             key={i}
             style={{
+              position: 'relative',
               flex: 1,
               height: `${Math.max(3, (100 * n) / maxCount)}%`,
               borderRadius: 4,
               background: i === youBucket ? 'var(--spark)' : '#ded8ca',
             }}
             title={String(n)}
-          />
+          >
+            {i === youBucket && (
+              <span
+                style={{
+                  position: 'absolute',
+                  bottom: '100%',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  marginBottom: 4,
+                  whiteSpace: 'nowrap',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  color: 'var(--spark-deep)',
+                }}
+              >
+                {t('you', lang)}
+                {youValue != null ? ` · ${Math.round(youValue)}` : ''}
+              </span>
+            )}
+          </div>
         ))}
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between' }} className="muted">

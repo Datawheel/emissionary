@@ -5,6 +5,8 @@ import type { ClientRound, GuessResponse } from '@/lib/api-types';
 import type { DailyProgress } from '@/lib/daily-service';
 import type { Lang } from '@/lib/types';
 import { t } from '@/lib/i18n';
+import BackLink from './BackLink';
+import Loader from './Loader';
 import RoundView from './RoundView';
 import CountryPicker from './CountryPicker';
 import type { CountryOption } from '@/lib/country-names';
@@ -114,7 +116,7 @@ export default function DailyClient({
   if (!progress || phase === 'loading') {
     return (
       <main className="screen" style={{ paddingTop: 60, textAlign: 'center' }}>
-        <p className="muted">{t('loading', lang)}</p>
+        <Loader lang={lang} />
       </main>
     );
   }
@@ -123,6 +125,7 @@ export default function DailyClient({
   if (phase === 'done') {
     return (
       <main className="screen">
+        <BackLink lang={lang} />
         <h1 style={{ fontSize: '1.3rem', textAlign: 'center' }}>
           {t('daily_game', lang)} #{progress.day_number}
         </h1>
