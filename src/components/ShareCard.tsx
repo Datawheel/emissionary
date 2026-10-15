@@ -4,6 +4,7 @@ import { useState } from 'react';
 import type { Lang } from '@/lib/types';
 import { t } from '@/lib/i18n';
 import { shareSquare } from '@/lib/scoring';
+import { shareAddress } from '@/lib/share-url';
 
 /**
  * Wordle-style share text (spec §11): day number, flag, score, one square per
@@ -30,7 +31,7 @@ export default function ShareCard({
 }) {
   const [copied, setCopied] = useState(false);
   // only rendered client-side (after the daily progress fetch), so window is defined
-  const host = typeof window === 'undefined' ? '' : window.location.host;
+  const host = typeof window === 'undefined' ? '' : shareAddress();
   const text = buildShareText(dayNo, flag, scores, maxTotal, host);
 
   async function share() {

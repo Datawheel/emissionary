@@ -9,6 +9,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ClientRound, FreeplayTotals, GuessResponse } from '@/lib/api-types';
 import type { Lang } from '@/lib/types';
 import { pluralWord, t } from '@/lib/i18n';
+import Loader from './Loader';
 import RoundView from './RoundView';
 import CountryPicker from './CountryPicker';
 import type { CountryOption } from '@/lib/country-names';
@@ -122,7 +123,7 @@ export default function GameClient({
   if (!round || (phase === 'loading' && !reveal)) {
     return (
       <main className="screen" style={{ paddingTop: 60, textAlign: 'center' }}>
-        <p className="muted">{t('loading', lang)}</p>
+        <Loader lang={lang} />
       </main>
     );
   }

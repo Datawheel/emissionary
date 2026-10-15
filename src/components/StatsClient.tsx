@@ -7,6 +7,7 @@
 import { useEffect, useState } from 'react';
 import type { Lang, Localized } from '@/lib/types';
 import { L, LOCALE_TAGS, pluralWord, t } from '@/lib/i18n';
+import Loader from './Loader';
 
 interface ItemStat {
   item: string;
@@ -46,7 +47,7 @@ export default function StatsClient({ lang }: { lang: Lang }) {
   }, []);
 
   if (failed) return <main className="screen"><p className="muted">{t('error_retry', lang)}</p></main>;
-  if (!data) return <main className="screen"><p className="muted">{t('loading', lang)}</p></main>;
+  if (!data) return <main className="screen"><Loader lang={lang} /></main>;
 
   const maxAbs = Math.max(0.1, ...data.per_item.map((i) => Math.abs(i.median_signed_log_error)));
 

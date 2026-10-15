@@ -5,6 +5,7 @@ import type { ClientRound, GuessResponse } from '@/lib/api-types';
 import type { DailyProgress } from '@/lib/daily-service';
 import type { Lang } from '@/lib/types';
 import { t } from '@/lib/i18n';
+import Loader from './Loader';
 import RoundView from './RoundView';
 import CountryPicker from './CountryPicker';
 import type { CountryOption } from '@/lib/country-names';
@@ -114,7 +115,7 @@ export default function DailyClient({
   if (!progress || phase === 'loading') {
     return (
       <main className="screen" style={{ paddingTop: 60, textAlign: 'center' }}>
-        <p className="muted">{t('loading', lang)}</p>
+        <Loader lang={lang} />
       </main>
     );
   }
