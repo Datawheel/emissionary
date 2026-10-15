@@ -31,7 +31,7 @@ export default function ShareCard({
 }) {
   const [copied, setCopied] = useState(false);
   // only rendered client-side (after the daily progress fetch), so window is defined
-  const host = typeof window === 'undefined' ? '' : shareAddress();
+  const host = typeof window === 'undefined' ? '' : shareAddress(lang);
   const text = buildShareText(dayNo, flag, scores, maxTotal, host);
 
   async function share() {

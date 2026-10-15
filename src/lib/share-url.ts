@@ -1,39 +1,48 @@
+import type { Lang } from './types';
+
 /**
- * The address to print in the share text. Embedded in the OEC hub, the wrapper
- * passes its own page as ?share=; it is only trusted when it points at an OEC
- * origin, so the param cannot put an arbitrary link in a player's share text.
- * Returns host + path without the scheme, e.g. "dev.oec.world/en/games/emissionary".
+ * The OEC wrapper's host from a referrer, or null. Embedded in the OEC hub the
+ * share text points at the wrapper page, not the bare game host. The game learns
+ * the parent from document.referrer (same approach as World Trade Cup) and only
+ * trusts OEC origins (localhost too in dev).
  */
-export function parseShareUrl(raw: string | null | undefined, dev: boolean): string | null {
-  if (!raw) return null;
+export function wrapperHost(referrer: string | null | undefined, dev: boolean): string | null {
+  if (!referrer) return null;
   try {
-    const u = new URL(raw);
+    const u = new URL(referrer);
     const oec = u.protocol === 'https:' && (u.hostname === 'oec.world' || u.hostname.endsWith('.oec.world'));
     const local = dev && u.protocol === 'http:' && u.hostname === 'localhost';
-    if (!oec && !local) return null;
-    return `${u.host}${u.pathname}`.replace(/\/+$/, '');
+    return oec || local ? u.host : null;
   } catch {
     return null;
   }
 }
 
-const SHARE_KEY = 'emy:share-url';
+/** The wrapper page for a language; the wrapper has just en/es. Host + path, no scheme. */
+export function wrapperPage(host: string, lang: Lang): string {
+  return `${host}/${lang === 'es' ? 'es' : 'en'}/games/emissionary`;
+}
 
-/** Client only. Call on app load: ?share= exists just on the entry URL, in-game links drop it. */
-export function captureShareUrl(): void {
+const HOST_KEY = 'emy:wrapper-host';
+
+/**
+ * Client only. Call on app load: document.referrer is the wrapper only on the
+ * entry page (a reload or in-game navigation replaces it), so keep it for the session.
+ */
+export function captureWrapperHost(): void {
   try {
-    const raw = new URLSearchParams(window.location.search).get('share');
-    const addr = parseShareUrl(raw, process.env.NODE_ENV !== 'production');
-    if (addr) sessionStorage.setItem(SHARE_KEY, addr);
+    const host = wrapperHost(document.referrer, process.env.NODE_ENV !== 'production');
+    if (host) sessionStorage.setItem(HOST_KEY, host);
   } catch {
     /* storage blocked: the share text falls back to this host */
   }
 }
 
-/** Client only. The wrapper's page address kept by captureShareUrl, else this host. */
-export function shareAddress(): string {
+/** Client only. What the share text prints: the wrapper page when embedded, else this host. */
+export function shareAddress(lang: Lang): string {
   try {
-    return sessionStorage.getItem(SHARE_KEY) ?? window.location.host;
+    const host = sessionStorage.getItem(HOST_KEY);
+    return host ? wrapperPage(host, lang) : window.location.host;
   } catch {
     return window.location.host;
   }
