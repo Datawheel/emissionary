@@ -600,6 +600,8 @@ const UI_STRINGS = {
     ru: 'Каждый столбец — группа игроков с близкими результатами. Оранжевый — ваша группа.',
     zh: '每根柱子代表成绩相近的一组玩家，橙色是你所在的组。',
   },
+  /** in-page link back to the start screen */
+  home: { en: 'Home', es: 'Inicio', fr: 'Accueil', de: 'Start', ru: 'Главная', zh: '首页' },
   anonymous_you: { en: 'Anonymous 🦊', es: 'Anónimo 🦊', fr: 'Anonyme 🦊', de: 'Anonym 🦊', ru: 'Аноним 🦊', zh: '匿名 🦊' },
   rules_title: { en: 'Rules', es: 'Reglas', fr: 'Règles', de: 'Regeln', ru: 'Правила', zh: '规则' },
   oec_account: { en: 'OEC account', es: 'Cuenta OEC', fr: 'Compte OEC', de: 'OEC-Konto', ru: 'Аккаунт OEC', zh: 'OEC 账户' },

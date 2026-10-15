@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import type { Lang, Localized } from '@/lib/types';
 import { L, LOCALE_TAGS, pluralWord, t } from '@/lib/i18n';
 import Loader from './Loader';
+import BackLink from './BackLink';
 
 interface ItemStat {
   item: string;
@@ -53,6 +54,7 @@ export default function StatsClient({ lang }: { lang: Lang }) {
 
   return (
     <main className="screen">
+      <BackLink lang={lang} />
       <h1 style={{ fontSize: '1.3rem' }}>{t('stats', lang)}</h1>
       <section className="card" style={{ display: 'flex', justifyContent: 'space-around', textAlign: 'center' }}>
         <div>

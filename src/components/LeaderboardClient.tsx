@@ -5,6 +5,7 @@ import type { LeaderboardPage } from '@/lib/leaderboard';
 import type { Lang } from '@/lib/types';
 import { pluralWord, t } from '@/lib/i18n';
 import Loader from './Loader';
+import BackLink from './BackLink';
 import type { CountryOption } from '@/lib/country-names';
 import NamePrompt, { namePromptDismissed } from './NamePrompt';
 import OecBadge from './OecBadge';
@@ -73,6 +74,7 @@ export default function LeaderboardClient({
 
   return (
     <main className="screen">
+      <BackLink lang={lang} />
       <h1 style={{ fontSize: '1.3rem' }}>{t('leaderboard', lang)}</h1>
       <p className="muted">{t('practice_note', lang)}</p>
       {showNamePrompt && (

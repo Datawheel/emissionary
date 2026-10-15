@@ -1,10 +1,19 @@
 'use client';
 
+import { useSyncExternalStore } from 'react';
 import type { Lang } from '@/lib/types';
 import { LANG_NAMES, LANGS, t } from '@/lib/i18n';
 
-/** Compact language switcher: shows the current code, opens a native select. */
+const noopSubscribe = () => () => {};
+
+/**
+ * Compact language switcher: shows the current code, opens a native select.
+ * Hidden when embedded (e.g. in oec.world): the wrapper sets ?lang= and owns the choice.
+ */
 export default function LanguageMenu({ lang }: { lang: Lang }) {
+  const embedded = useSyncExternalStore(noopSubscribe, () => window !== window.top, () => false);
+  if (embedded) return null;
+
   function change(next: string) {
     const url = new URL(window.location.href);
     url.searchParams.set('lang', next);
